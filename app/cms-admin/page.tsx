@@ -25,6 +25,7 @@ import NavigationEditor from '@/components/cms/NavigationEditor';
 import CustomSectionsEditor from '@/components/cms/CustomSectionsEditor';
 import CustomPagesManager from '@/components/cms/CustomPagesManager';
 import ContentOverview from '@/components/cms/ContentOverview';
+import QuestionnairesAdmin from '@/components/cms/questionnaires/QuestionnairesAdmin';
 
 // Numéro du dernier message affiché : un message récent n'est pas effacé par le minuteur d'un message plus ancien
 let toastSeq = 0;
@@ -2405,6 +2406,7 @@ export default function CMSAdmin() {
     { id: 'menu',         label: '🧭 Menu', count: null },
     { id: 'fil-ariane',   label: '🔗 Fil d’Ariane', count: null },
     { id: 'custom-pages', label: '📄 Pages libres', count: null },
+    { id: 'questionnaires', label: '📋 Questionnaires', count: null },
     { id: 'media',    label: '🖼️ Médiathèque', count: null },
     { id: 'booking',  label: '📅 Réservations', count: null },
     { id: 'messages', label: '💬 Messages', count: messages.filter(m => m.status === 'unread').length || null },
@@ -3057,6 +3059,8 @@ export default function CMSAdmin() {
         })()}
 
         {/* ── PAGES LIBRES ── */}
+        {tab === 'questionnaires' && <QuestionnairesAdmin />}
+
         {tab === 'custom-pages' && (
           <div style={{ maxWidth: 1100, margin: '0 auto' }}>
             <CustomPagesManager />

@@ -61,6 +61,8 @@ const PUBLIC_ROUTES: Record<string, string> = {
   '/api/cms/public-content': 'lecture publique du contenu ; les brouillons exigent une session (preview)',
   '/api/keep-alive': 'cron Vercel qui garde la base active',
   '/api/cms-html': 'page HTML statique d’information',
+  '/api/questionnaires/[slug]': 'lecture publique d’un questionnaire actif (QR code) ; aucune réponse exposée',
+  '/api/questionnaires/[slug]/submit': 'envoi public des réponses d’un questionnaire actif ; tout est revalidé côté serveur',
 }
 
 function routeFiles(dir: string, out: string[] = []) {
