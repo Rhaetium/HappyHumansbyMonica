@@ -19,6 +19,7 @@
     "@netlify/plugin-nextjs": "^5.15.9",
     "@phosphor-icons/react": "^2.1.10",
     "@supabase/supabase-js": "^2.39.0",
+    "ai": "^7.0.161",
     "bcryptjs": "^3.0.3",
     "clsx": "^2.0.0",
     "file-saver": "^2.0.5",
