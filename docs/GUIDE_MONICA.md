@@ -129,8 +129,9 @@ Un bouton de réservation ne peut fonctionner que si **le rendez-vous existe vra
 3. **Laissez le champ vide si vous n'avez pas de rendez-vous dédié** : le bouton ouvre alors votre **agenda général** (la liste de vos rendez-vous), jamais une adresse cassée. Le texte gris « ex : seance-decouverte-coaching » n'est qu'un exemple, il n'est pas enregistré.
 4. Enregistrez : **💾 Sauvegarder** en bas de l'onglet **⚙️ Paramètres**.
 
-**Le site vous prévient tout seul.** Si votre compte Calendly n'a **aucun rendez-vous public**, la page « Réserver » n'affiche plus un agenda vide : le visiteur voit un message (« Aucune disponibilité pour le moment ») avec un lien pour vous écrire. En même temps, une **alerte apparaît dans l'onglet 💬 Messages** du CMS (et vous recevez un e-mail) : elle indique quoi corriger. Une seule alerte est créée par tranche de 6 h, pour ne pas inonder votre boîte.
-- Pour **changer le message vu par le visiteur** : onglet **🗂️ Pages → Réservation**, champs « Section 1 — Aucune dispo : titre / message ».
+**Le site vous prévient tout seul.** Si votre compte Calendly n'a **aucun rendez-vous public**, l'agenda vide est remplacé partout par un message clair : page « Réserver », **carte de réservation de l'accueil** (et sa fenêtre « Réserver une séance découverte »), et **carte « Séance découverte » de la page Coaching**. Le visiteur voit « Aucune disponibilité pour le moment » avec un lien pour vous écrire, au lieu d'un bouton qui ne mène nulle part. En même temps, une **alerte apparaît dans l'onglet 💬 Messages** du CMS (et vous recevez un e-mail) : elle indique quoi corriger. Une seule alerte est créée par tranche de 6 h, pour ne pas inonder votre boîte.
+- Pour **changer le message vu par le visiteur** : onglet **🗂️ Pages → Réservation**, champs « Section 1 — Aucune dispo : titre / message ». Le même texte sert sur l'accueil et la page « Réserver » ; la page Coaching a son propre titre (« Programmes — Aucune dispo : titre du bouton »).
+- **Dans le doute, le bouton reste.** Si le site n'arrive pas à vérifier votre compte (Calendly lent ou injoignable), il affiche le bouton normalement plutôt qu'un faux « aucune disponibilité ».
 
 Cliquez **💾 Sauvegarder** en bas de la page. Délai d'affichage : ~30 secondes.
 
