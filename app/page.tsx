@@ -6,6 +6,7 @@ import Footer from '@/components/Footer'
 import { useCmsContent } from '@/hooks/useCmsContent'
 import { useSiteSettings } from '@/hooks/useSiteSettings'
 import { useCalendly } from '@/hooks/useCalendly'
+import CalendlyGate from '@/components/CalendlyGate'
 import { DEFAULT_CONTACT_EMAIL } from '@/lib/site-contact'
 import { HOME_DEFAULTS } from '@/lib/cms-defaults/home'
 import { PAGE_SECTIONS, resolveSections } from '@/lib/cms-sections'
@@ -38,6 +39,9 @@ export default function LandingPage() {
   const settings = useSiteSettings()
   const contactEmail = settings.contact_email || DEFAULT_CONTACT_EMAIL
   const { eventUrl } = useCalendly()
+  // Adresse de réservation visée par les boutons de la page d'accueil (carte + modale) : sert à
+  // vérifier, avant d'afficher un bouton, que le compte Calendly a bien des rendez-vous publics.
+  const bookingUrl = eventUrl('coaching')
   const [bookingOpen, setBookingOpen] = useState(false)
   const [form, setForm] = useState({ name: '', email: '', message: '' })
   const [sent, setSent] = useState(false)
@@ -176,9 +180,16 @@ export default function LandingPage() {
             <p className="mt-3 text-sm text-stone-500">{c.get('booking_widget_subtitle')}</p>
           </div>
             
-          {/* Calendly CTA Card */}
+          {/* Calendly CTA Card — masquée si le compte Calendly n'a aucun rendez-vous public */}
+          <CalendlyGate
+            url={bookingUrl}
+            contactEmail={contactEmail}
+            blockedTitle={c.t_aucune_disponibilite_titre}
+            blockedText={c.t_aucune_disponibilite_texte}
+            className="mx-auto max-w-sm rounded-2xl bg-[#fdf6ec] p-8 text-center shadow-sm"
+          >
           <a
-            href={eventUrl('coaching')}
+            href={bookingUrl}
             target="_blank"
             rel="noopener noreferrer"
             className="group relative mx-auto flex max-w-sm flex-col items-center rounded-2xl bg-gradient-to-br from-[#2d5f54] via-[#2f6b61] to-[#3d7a72] p-8 text-center shadow-xl transition-all duration-300 hover:scale-[1.02] hover:shadow-2xl hover:shadow-[#2d5f54]/20"
@@ -236,6 +247,7 @@ export default function LandingPage() {
               </span>
             </div>
           </a>
+          </CalendlyGate>
         </div>
       </section>
     ),
@@ -322,17 +334,24 @@ export default function LandingPage() {
               ✕
             </button>
             <div className="text-center py-8">
-              <h2 className="text-xl font-semibold text-stone-900 mb-2">{c.get('booking_modal_title')}</h2>
-              <p className="text-sm text-stone-500 mt-1 mb-6">{c.get('booking_modal_subtitle')}</p>
-              <a
-                href={eventUrl('coaching')}
-                target="_blank"
-                rel="noopener noreferrer"
-                className="inline-flex items-center gap-2 rounded-full bg-[#2d5f54] px-8 py-3.5 text-sm font-semibold text-white shadow hover:bg-[#1e3a34] transition"
-                onClick={() => setBookingOpen(false)}
+              <CalendlyGate
+                url={bookingUrl}
+                contactEmail={contactEmail}
+                blockedTitle={c.t_aucune_disponibilite_titre}
+                blockedText={c.t_aucune_disponibilite_texte}
               >
-                {c.t_reserver_via_calendly}
-              </a>
+                <h2 className="text-xl font-semibold text-stone-900 mb-2">{c.get('booking_modal_title')}</h2>
+                <p className="text-sm text-stone-500 mt-1 mb-6">{c.get('booking_modal_subtitle')}</p>
+                <a
+                  href={bookingUrl}
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  className="inline-flex items-center gap-2 rounded-full bg-[#2d5f54] px-8 py-3.5 text-sm font-semibold text-white shadow hover:bg-[#1e3a34] transition"
+                  onClick={() => setBookingOpen(false)}
+                >
+                  {c.t_reserver_via_calendly}
+                </a>
+              </CalendlyGate>
             </div>
           </div>
         </div>

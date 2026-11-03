@@ -48,3 +48,12 @@ export function calendlyAvailabilityFromProfile(json: unknown): CalendlyAvailabi
   if (typeof profile.slug !== 'string') return 'unknown'
   return profile.unavailability_reason ? 'unavailable' : 'available'
 }
+
+/**
+ * Faut-il **masquer** un bouton/agenda Calendly ? Uniquement sur un `unavailable` avéré.
+ * `available` et `unknown` gardent le bouton : si la vérification échoue, on préfère un bouton
+ * qui mène à Calendly plutôt qu'un faux « aucune disponibilité ».
+ */
+export function shouldHideCalendlyCta(availability: CalendlyAvailability): boolean {
+  return availability === 'unavailable'
+}
