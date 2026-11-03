@@ -3,6 +3,8 @@ import Script from 'next/script'
 import { useSearchParams } from 'next/navigation'
 import { useCalendly } from '@/hooks/useCalendly'
 import { useCalendlyAvailability } from '@/hooks/useCalendlyAvailability'
+import { shouldHideCalendlyCta } from '@/lib/calendly-availability'
+import { CalendlyBlocked } from '@/components/CalendlyGate'
 import { calendlyServiceFrom, calendlyWidgetUrl, type CalendlyService } from '@/lib/calendly-config'
 
 /**
@@ -77,23 +79,15 @@ function CalendlyEmbed({
   const availability = useCalendlyAvailability(url)
 
   // `unavailable` = certitude (API Calendly). `unknown` = on n'a pas pu vérifier → on garde l'agenda.
-  if (availability === 'unavailable') {
+  if (shouldHideCalendlyCta(availability)) {
     return (
-      <div
+      <CalendlyBlocked
+        title={blockedTitle}
+        text={blockedText}
+        contactEmail={contactEmail}
         className="rounded-2xl bg-[#fdf6ec] px-6 py-10 text-center"
         style={{ minWidth: 320, minHeight: 700 }}
-      >
-        <p className="font-serif text-xl text-stone-900">{blockedTitle}</p>
-        <p className="mx-auto mt-3 max-w-md text-sm leading-relaxed text-stone-600">{blockedText}</p>
-        {contactEmail && (
-          <a
-            href={`mailto:${contactEmail}`}
-            className="mt-6 inline-flex items-center gap-2 rounded-full bg-[#2d5f54] px-5 py-2.5 text-sm font-semibold text-white hover:opacity-90"
-          >
-            {contactEmail}
-          </a>
-        )}
-      </div>
+      />
     )
   }
 

@@ -3,6 +3,7 @@ import {
   calendlyProfileSlug,
   calendlyProfileApiUrl,
   calendlyAvailabilityFromProfile,
+  shouldHideCalendlyCta,
 } from '@/lib/calendly-availability'
 
 describe('calendlyProfileSlug', () => {
@@ -72,5 +73,21 @@ describe('calendlyAvailabilityFromProfile', () => {
     expect(calendlyAvailabilityFromProfile({})).toBe('unknown')
     expect(calendlyAvailabilityFromProfile({ error: 'not found' })).toBe('unknown')
     expect(calendlyAvailabilityFromProfile({ unavailability_reason: null })).toBe('unknown')
+  })
+})
+
+describe('shouldHideCalendlyCta', () => {
+  it('ne masque le bouton que sur une indisponibilité avérée', () => {
+    expect(shouldHideCalendlyCta('unavailable')).toBe(true)
+  })
+
+  it('garde le bouton quand l’agenda est ouvert', () => {
+    expect(shouldHideCalendlyCta('available')).toBe(false)
+  })
+
+  it('garde le bouton dans le doute : jamais de faux « aucune disponibilité »', () => {
+    // `unknown` = la vérification a échoué (réseau, Calendly lent…). Un bouton qui mène à Calendly
+    // vaut mieux qu'un message « aucune dispo » affiché à tort.
+    expect(shouldHideCalendlyCta('unknown')).toBe(false)
   })
 })

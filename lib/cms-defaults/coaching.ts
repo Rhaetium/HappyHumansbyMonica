@@ -81,6 +81,8 @@ export const COACHING_DEFAULTS: Record<string, string> = { ...DEFAULTS, ...DEFAU
   t_bureau_elegant_ambiance_coaching: "Bureau élégant, ambiance coaching professionnel",
   t_coaching_individuel_introspection_: "Coaching individuel — introspection et clarté",
   t_coaching_d_equipe_et: "Coaching d'équipe et leadership organisationnel",
+  // Affiché à la place du bouton d'une carte de programme dont le rendez-vous Calendly n'a rien de public
+  t_aucune_disponibilite_titre: "Aucune disponibilité pour le moment",
   // ── Référencement (Google, réseaux sociaux) — lu par generateMetadata via lib/page-seo.ts ──
   seo_title: "Coaching individuel & philo-coaching",
   seo_description: "Monica Schneider, Executive Coach certifiée AoEC, accompagne managers, marketers et dirigeants en transition de poste. Méthode Happiness Design. Séance découverte gratuite.",
