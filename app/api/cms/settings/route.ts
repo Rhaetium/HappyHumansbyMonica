@@ -2,7 +2,7 @@ import { NextRequest, NextResponse } from 'next/server';
 import { createClient } from '@supabase/supabase-js';
 import { requireCmsAuth } from '@/lib/cms-auth'
 import { DEFAULT_CONTACT_EMAIL } from '@/lib/site-contact'
-import { CALENDLY_BASE_DEFAULT, CALENDLY_EVENTS_DEFAULT } from '@/lib/calendly-config';
+import { CALENDLY_BASE_DEFAULT, CALENDLY_EVENT_PLACEHOLDER } from '@/lib/calendly-config';
 import { EMAIL_SUBJECT_DEFAULTS, EMAIL_SUBJECT_SETTING } from '@/lib/email-subjects';
 
 function getSupabase() {
@@ -47,11 +47,11 @@ const DEFAULT_SETTINGS = [
   { key: 'contact_email',    label: 'Email de contact',            group_name: 'general',  type: 'text',     value: DEFAULT_CONTACT_EMAIL },
     // Réservation : un seul endroit pour changer le compte Calendly et les rendez-vous proposés
   { key: 'calendly_base_url', label: 'Compte Calendly (ex : https://calendly.com/mon-compte)', group_name: 'booking', type: 'text', value: CALENDLY_BASE_DEFAULT },
-  { key: 'calendly_event_coaching', label: 'Rendez-vous — Coaching individuel (fin de l’adresse)', group_name: 'booking', type: 'text', value: CALENDLY_EVENTS_DEFAULT.coaching },
-  { key: 'calendly_event_happiness_design', label: 'Rendez-vous — Happiness Design', group_name: 'booking', type: 'text', value: CALENDLY_EVENTS_DEFAULT['happiness-design'] },
-  { key: 'calendly_event_sparring', label: 'Rendez-vous — Sparring Partner', group_name: 'booking', type: 'text', value: CALENDLY_EVENTS_DEFAULT['sparring-partner'] },
-  { key: 'calendly_event_entreprises', label: 'Rendez-vous — Entreprises', group_name: 'booking', type: 'text', value: CALENDLY_EVENTS_DEFAULT.entreprises },
-  { key: 'calendly_event_relations', label: 'Rendez-vous — Relations', group_name: 'booking', type: 'text', value: CALENDLY_EVENTS_DEFAULT.relations },
+  { key: 'calendly_event_coaching', label: 'Rendez-vous — Coaching individuel (fin de l’adresse)', group_name: 'booking', type: 'text', value: '', placeholder: CALENDLY_EVENT_PLACEHOLDER },
+  { key: 'calendly_event_happiness_design', label: 'Rendez-vous — Happiness Design', group_name: 'booking', type: 'text', value: '', placeholder: CALENDLY_EVENT_PLACEHOLDER },
+  { key: 'calendly_event_sparring', label: 'Rendez-vous — Sparring Partner', group_name: 'booking', type: 'text', value: '', placeholder: CALENDLY_EVENT_PLACEHOLDER },
+  { key: 'calendly_event_entreprises', label: 'Rendez-vous — Entreprises', group_name: 'booking', type: 'text', value: '', placeholder: CALENDLY_EVENT_PLACEHOLDER },
+  { key: 'calendly_event_relations', label: 'Rendez-vous — Relations', group_name: 'booking', type: 'text', value: '', placeholder: CALENDLY_EVENT_PLACEHOLDER },
   { key: 'contact_phone',    label: 'Téléphone',                   group_name: 'general',  type: 'text',     value: '' },
   { key: 'address',          label: 'Adresse / Ville',             group_name: 'general',  type: 'text',     value: '' },
   { key: 'linkedin_url',     label: 'LinkedIn URL',                group_name: 'social',   type: 'text',     value: 'https://fr.linkedin.com/in/monica-schneider-philo-coaching' },

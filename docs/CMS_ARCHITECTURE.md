@@ -259,6 +259,8 @@ Les valeurs qui ne sont propres à aucune page vivent dans la table `cms_setting
 
 `public-settings` complète toujours les clés absentes avec ces valeurs de secours : un bouton de réservation n'est jamais vide, même sur une base neuve. L'agenda Calendly attend l'arrivée des réglages avant de s'afficher (`ready` dans `useCalendly`) : son script lit `data-url` une seule fois, donc le lancer trop tôt l'aurait initialisé sur le compte par défaut.
 
+**Rendez-vous par service : jamais de slug deviné.** Les clés `calendly_event_*` n'ont **aucune valeur de secours** (`CALENDLY_EVENTS_DEFAULT` est vide). Un slug d'événement ne peut pas être deviné, et un slug périmé casse le bouton (« This Calendly URL is not valid »). Sans réglage saisi, le service retombe donc sur l'**agenda du compte** (`calendly_base_url`), ce qui reste un lien valide. Les noms d'exemple vivent dans `CALENDLY_EVENT_SUGGESTIONS` et ne servent que de `placeholder` dans l'admin : ils ne sont jamais envoyés à Calendly.
+
 ## Ce qui n'est PAS dans le CMS
 
 - Les textes de l'interface d'administration elle-même (`/cms-admin`, barre d'édition en ligne, médiathèque).
