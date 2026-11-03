@@ -7,11 +7,13 @@ import Link from 'next/link'
 import CalendlyWidget from '@/components/CalendlyWidget'
 import { useCmsContent } from '@/hooks/useCmsContent'
 import { useCalendly } from '@/hooks/useCalendly'
+import { useSiteSettings } from '@/hooks/useSiteSettings'
 import { BOOKING_DEFAULTS } from '@/lib/cms-defaults/booking'
 
 export default function BookingPage() {
   const c = useCmsContent('booking', BOOKING_DEFAULTS)
   const { profileUrl } = useCalendly()
+  const settings = useSiteSettings()
 
   return (
     <>
@@ -37,13 +39,19 @@ export default function BookingPage() {
                 {c.t_chargement_du_calendrier}
               </div>
             }>
-              <CalendlyWidget loadingLabel={String(c.t_chargement_du_calendrier)} labels={{
-                coaching: c.service_label_coaching,
-                'happiness-design': c.service_label_happiness_design,
-                'sparring-partner': c.service_label_sparring_partner,
-                entreprises: c.service_label_entreprises,
-                relations: c.service_label_relations,
-              }} />
+              <CalendlyWidget
+                loadingLabel={String(c.t_chargement_du_calendrier)}
+                blockedTitle={String(c.t_aucune_disponibilite_titre)}
+                blockedText={String(c.t_aucune_disponibilite_texte)}
+                contactEmail={settings.contact_email}
+                labels={{
+                  coaching: c.service_label_coaching,
+                  'happiness-design': c.service_label_happiness_design,
+                  'sparring-partner': c.service_label_sparring_partner,
+                  entreprises: c.service_label_entreprises,
+                  relations: c.service_label_relations,
+                }}
+              />
             </Suspense>
             <p className="mt-4 text-center text-xs text-stone-400">
               {c.display_problem}{' '}

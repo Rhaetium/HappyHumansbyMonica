@@ -252,7 +252,7 @@ Les valeurs qui ne sont propres à aucune page vivent dans la table `cms_setting
 | Groupe | Clés | Utilisé par |
 |---|---|---|
 | 🌍 Général | `contact_email` | pied de page, page d'accueil, e-mail de contact du schéma JSON-LD |
-| 📅 Réservation (Calendly) | `calendly_base_url`, `calendly_event_*` (5 services) | `hooks/useCalendly.ts` → accueil, coaching, page Réservation, agenda intégré |
+| 📅 Réservation (Calendly) | `calendly_base_url`, `calendly_event_*` (5 services) | `hooks/useCalendly.ts` → accueil, coaching, page Réservation, agenda intégré ; `GET /api/calendly/status` vérifie la disponibilité |
 | 📧 Emails automatiques | `email_subject_*` | `lib/email-subjects.ts` → e-mails de réservation et de contact |
 
 **Règle** : aucune adresse Calendly, aucun email de contact écrit en dur dans une page. Les valeurs de secours sont centralisées dans `lib/calendly-config.ts`, `lib/site-contact.ts` et `lib/site-social.ts`, et le test `__tests__/cms/no-hardcoded-text.test.ts` échoue si une page en contient une.
@@ -260,6 +260,8 @@ Les valeurs qui ne sont propres à aucune page vivent dans la table `cms_setting
 `public-settings` complète toujours les clés absentes avec ces valeurs de secours : un bouton de réservation n'est jamais vide, même sur une base neuve. L'agenda Calendly attend l'arrivée des réglages avant de s'afficher (`ready` dans `useCalendly`) : son script lit `data-url` une seule fois, donc le lancer trop tôt l'aurait initialisé sur le compte par défaut.
 
 **Rendez-vous par service : jamais de slug deviné.** Les clés `calendly_event_*` n'ont **aucune valeur de secours** (`CALENDLY_EVENTS_DEFAULT` est vide). Un slug d'événement ne peut pas être deviné, et un slug périmé casse le bouton (« This Calendly URL is not valid »). Sans réglage saisi, le service retombe donc sur l'**agenda du compte** (`calendly_base_url`), ce qui reste un lien valide. Les noms d'exemple vivent dans `CALENDLY_EVENT_SUGGESTIONS` et ne servent que de `placeholder` dans l'admin : ils ne sont jamais envoyés à Calendly.
+
+**Compte sans rendez-vous public : message au visiteur + alerte au CMS.** Un compte Calendly peut exister sans aucun rendez-vous publié : l'agenda intégré affiche alors « No openings at the moment » dans une iframe muette (l'API JS de Calendly n'expose pas ce cas), donc le visiteur croit à une panne. `lib/calendly-availability.ts` (logique pure) interroge l'API publique `calendly.com/api/booking/profiles/<compte>`, qui renvoie `unavailability_reason` dans ce cas. L'appel se fait **côté serveur** (`GET /api/calendly/status`, route publique déclarée dans `__tests__/api/cms-protected-routes.test.ts`) car cette API ne renvoie **aucun en-tête CORS**. Le composant `CalendlyWidget` remplace alors l'agenda par un message (textes `t_aucune_disponibilite_*` de la page « Réservation ») et un lien `mailto:` ; la route dépose en plus une alerte **unread** dans `contact_messages` (`type = 'booking_alert'`, anti-doublon 6 h) et envoie un e-mail à `ADMIN_EMAIL`. Toute réponse inattendue est traitée comme `unknown` : on **ne remplace jamais l'agenda par erreur** — seul un `unavailable` avéré masque l'iframe.
 
 ## Ce qui n'est PAS dans le CMS
 
