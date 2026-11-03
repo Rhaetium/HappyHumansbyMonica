@@ -118,13 +118,20 @@ Onglet **🔗 Fil d'Ariane**.
 
 ## 3 sexies. Changer l'adresse de réservation, l'email affiché, les objets d'e-mails
 Onglet **⚙️ Paramètres** :
-- **📅 Réservation (Calendly)** : l'**adresse de votre compte Calendly** (ex. `https://calendly.com/happyhumans-coaching`) et le **nom du rendez-vous** pour chaque service (coaching, Happiness Design, sparring, entreprises, relations). Modifier ici change **tous les boutons de réservation du site** et l'agenda de la page « Réserver » — aucun code à toucher.
+- **📅 Réservation (Calendly)** : l'**adresse de votre compte Calendly** (ex. `https://calendly.com/happyhumans-coaching`) et, pour chaque service, le **nom du rendez-vous** (la fin de l'adresse). Modifier ici change **tous les boutons de réservation du site** et l'agenda de la page « Réserver » — aucun code à toucher.
 - **🌍 Général → Email de contact** : l'adresse affichée en bas du site et dans les messages envoyés aux visiteurs.
 - **📧 Emails automatiques** : l'**objet** des messages reçus par les visiteurs (confirmation de séance, accusé de contact) et celui de vos notifications. `{name}` est remplacé par le nom du visiteur.
 
+### ⚠️ Si personne ne peut réserver
+Un bouton de réservation ne peut fonctionner que si **le rendez-vous existe vraiment dans Calendly**. Vérifiez dans cet ordre :
+1. **Votre compte Calendly a bien un rendez-vous « séance découverte »**, et il est **publié** (pas en brouillon).
+2. **Le champ « Rendez-vous » du service** (coaching, Happiness Design, sparring, entreprises, relations) est **rempli avec la fin exacte de l'adresse** du rendez-vous. Le plus simple : ouvrez votre lien de réservation dans un onglet, puis recopiez ce qui suit votre nom de compte. Exemple pour `https://calendly.com/happyhumans-coaching/seance-decouverte-coaching` → `seance-decouverte-coaching`.
+3. **Laissez le champ vide si vous n'avez pas de rendez-vous dédié** : le bouton ouvre alors votre **agenda général** (la liste de vos rendez-vous), jamais une adresse cassée. Le texte gris « ex : seance-decouverte-coaching » n'est qu'un exemple, il n'est pas enregistré.
+4. Enregistrez : **💾 Sauvegarder** en bas de l'onglet **⚙️ Paramètres**.
+
 Cliquez **💾 Sauvegarder** en bas de la page. Délai d'affichage : ~30 secondes.
 
-> Si vous changez de compte Calendly, pensez à vérifier chaque rendez-vous : l'adresse finale est `compte/nom-du-rendez-vous`.
+> Si vous changez de compte Calendly, pensez à vérifier chaque rendez-vous : l'adresse finale est `compte/nom-du-rendez-vous`. Un rendez-vous renommé dans Calendly change la fin de l'adresse : il faut la mettre à jour ici.
 
 ## 4. Réorganiser ou masquer des sections d'une page
 **🗂️ Pages** → la page → bloc **Structure** : flèches ↑ ↓ pour changer l'ordre, bouton **Masquer / Afficher** pour retirer ou remettre une section. Puis enregistrer et publier.

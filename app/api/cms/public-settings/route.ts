@@ -5,7 +5,6 @@ import {
   CALENDLY_BASE_DEFAULT,
   CALENDLY_BASE_SETTING,
   CALENDLY_EVENT_SETTING,
-  CALENDLY_EVENTS_DEFAULT,
 } from '@/lib/calendly-config';
 
 // Endpoint public pour les paramètres globaux du site (logo, taille, nom)
@@ -36,11 +35,10 @@ export async function GET() {
   (data || []).forEach((r: { key: string; value: string }) => { if (r.value) settings[r.key] = r.value; });
 
   // Replis : un réglage jamais enregistré (ou vidé) ne doit pas laisser un bouton sans adresse.
+  // Les rendez-vous par service, eux, n'ont pas de repli : un slug deviné donnerait une adresse
+  // invalide (« This Calendly URL is not valid »). Sans slug, le service retombe sur l'agenda du compte.
   settings.contact_email ||= DEFAULT_CONTACT_EMAIL;
   settings[CALENDLY_BASE_SETTING] ||= CALENDLY_BASE_DEFAULT;
-  for (const [service, key] of Object.entries(CALENDLY_EVENT_SETTING)) {
-    settings[key] ||= CALENDLY_EVENTS_DEFAULT[service as keyof typeof CALENDLY_EVENTS_DEFAULT];
-  }
 
   return NextResponse.json(
     { settings },

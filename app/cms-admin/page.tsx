@@ -3906,7 +3906,7 @@ export default function CMSAdmin() {
 
                         <div style={{ display: 'flex', flexDirection: 'column', gap: '1.1rem' }}>
                           {settingsGroup !== 'visibility' && groupItems.filter(s => !(settingsGroup === 'branding' && BRANDING_PANEL_KEYS.includes(s.key))).map(s => {
-                            const field = s as { key: string; label: string; type: string; options?: string[]; optionLabels?: string[] };
+                            const field = s as { key: string; label: string; type: string; options?: string[]; optionLabels?: string[]; placeholder?: string };
                             return (
                             <div key={s.key}>
                               <label style={lbl} htmlFor={`set-${s.key}`}>{s.label}</label>
@@ -3943,7 +3943,7 @@ export default function CMSAdmin() {
                               ) : (
                                 <input id={`set-${s.key}`} value={editedSettings[s.key] || ''}
                                   onChange={e => setEditedSettings(prev => ({ ...prev, [s.key]: e.target.value }))}
-                                  style={inp} placeholder={s.label} />
+                                  style={inp} placeholder={field.placeholder || s.label} />
                               )}
                             </div>
                             );
