@@ -1218,6 +1218,7 @@ const SETTINGS_GROUPS: Record<string, { label: string; emoji: string }> = {
   social:     { label: 'Réseaux sociaux',   emoji: '📱' },
   emails:     { label: 'Emails automatiques', emoji: '📧' },
   seo:        { label: 'SEO global',        emoji: '🔍' },
+  'search-console': { label: 'Search Console', emoji: '🔎' },
   geo:        { label: 'Géo & Business',    emoji: '📍' },
   visibility: { label: 'Visibilité pages',  emoji: '👁️' },
   footer:     { label: 'Footer',            emoji: '📄' },
@@ -4000,6 +4001,25 @@ export default function CMSAdmin() {
                             </div>
                           </div>
                         )}
+                        {/* ── SEARCH CONSOLE — guide pas à pas ── */}
+                        {settingsGroup === 'search-console' && (
+                          <div style={{ marginBottom: '1.75rem', padding: '1.25rem 1.5rem', background: '#f7faf9', border: '1.5px solid #d7e5e0', borderRadius: '.85rem' }}>
+                            <p style={{ margin: '0 0 .6rem', fontSize: '.92rem', fontWeight: 700, color: '#2d5f54' }}>
+                              🔎 Relier le site à Google Search Console
+                            </p>
+                            <ol style={{ margin: 0, paddingLeft: '1.2rem', fontSize: '.86rem', color: '#444', lineHeight: 1.7 }}>
+                              <li>Ouvrez <a href="https://search.google.com/search-console" target="_blank" rel="noopener noreferrer" style={{ color: '#2d5f54', fontWeight: 600 }}>search.google.com/search-console</a> et ajoutez une propriété « Préfixe d’URL » : <code style={{ background: '#ece8e2', padding: '.1rem .35rem', borderRadius: '.25rem' }}>{editedSettings['gsc_property'] || 'https://happyhumans.vercel.app/'}</code></li>
+                              <li>Choisissez la méthode <strong>Balise HTML</strong>, puis <strong>copiez la balise entière</strong> et collez-la dans le champ ci-dessous.</li>
+                              <li>Enregistrez, puis cliquez sur <strong>Vérifier</strong> dans Search Console.</li>
+                              <li>Dans le menu « Sitemaps », soumettez <code style={{ background: '#ece8e2', padding: '.1rem .35rem', borderRadius: '.25rem' }}>sitemap.xml</code>.</li>
+                            </ol>
+                            <p style={{ margin: '.75rem 0 0', fontSize: '.82rem', color: '#666', lineHeight: 1.5 }}>
+                              Le site n’a besoin que de la balise : collez-la telle quelle, le jeton est extrait
+                              automatiquement. L’état de la connexion s’affiche ensuite en haut du tableau de bord.
+                            </p>
+                          </div>
+                        )}
+
                         {/* ── VISIBILITÉ — toggles ── */}
                         {settingsGroup === 'visibility' && (
                           <div style={{ marginBottom: '1.5rem' }}>

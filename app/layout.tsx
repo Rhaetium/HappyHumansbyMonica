@@ -15,6 +15,7 @@ import {
   DEFAULT_SEO_KEYWORDS,
   parseKeywords,
 } from '@/lib/site-seo';
+import { extractVerificationToken } from '@/lib/search-console';
 import { SITE_URL } from '@/lib/site-url';
 import { buildThemeCSS, resolveTheme, GOOGLE_FONTS_HREF } from '@/lib/themes';
 import DuotoneFilter from '@/components/DuotoneFilter';
@@ -36,6 +37,8 @@ export async function generateMetadata(): Promise<Metadata> {
   const ogImage = kv.og_image || '/og-images/og-default.svg';
   const personName = kv.geo_person_name || DEFAULT_PERSON_NAME;
   const keywords = parseKeywords(kv.seo_keywords);
+  // Google Search Console : Monica colle la balise fournie par Google, on n'en garde que le jeton.
+  const googleVerification = extractVerificationToken(kv.gsc_verification);
 
   return {
     ...baseMetadata,
@@ -47,6 +50,7 @@ export async function generateMetadata(): Promise<Metadata> {
     keywords,
     authors: [{ name: personName, url: SITE_URL }],
     creator: personName,
+    ...(googleVerification ? { verification: { google: googleVerification } } : {}),
     openGraph: {
       ...baseMetadata.openGraph,
       title: seoTitle,
