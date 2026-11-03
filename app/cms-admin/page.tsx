@@ -27,6 +27,7 @@ import NavigationEditor from '@/components/cms/NavigationEditor';
 import CustomSectionsEditor from '@/components/cms/CustomSectionsEditor';
 import CustomPagesManager from '@/components/cms/CustomPagesManager';
 import ContentOverview from '@/components/cms/ContentOverview';
+import SearchConsoleStats from '@/components/cms/SearchConsoleStats';
 
 // Numéro du dernier message affiché : un message récent n'est pas effacé par le minuteur d'un message plus ancien
 let toastSeq = 0;
@@ -2450,6 +2451,7 @@ export default function CMSAdmin() {
     { id: 'new',      label: '✏️ Nouvel article', count: null },
     { id: 'pages',    label: '🗂️ Pages', count: null },
     { id: 'contenu',  label: '🔎 Contenu', count: contentIndex.filter(f => f.isPending).length || null },
+    { id: 'stats-google', label: '📊 Statistiques Google', count: null },
     { id: 'menu',         label: '🧭 Menu', count: null },
     { id: 'fil-ariane',   label: '🔗 Fil d’Ariane', count: null },
     { id: 'custom-pages', label: '📄 Pages libres', count: null },
@@ -3162,6 +3164,8 @@ export default function CMSAdmin() {
             />
           )
         )}
+
+        {tab === 'stats-google' && <SearchConsoleStats />}
 
         {tab === 'pages' && (
           <div>
