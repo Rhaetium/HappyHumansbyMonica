@@ -14,6 +14,8 @@ import CarouselGenerator from '@/components/admin/CarouselGenerator';
 import BlogGenerator from '@/components/admin/BlogGenerator';
 import { PAGE_DEFAULTS } from '@/lib/cms-page-defaults';
 import { basePage, draftPage, isDraftPage, planDraftSave } from '@/lib/cms-drafts';
+import { matchesMessageFilter, messageKind, unreadVisitorCount, unreadAlertCount, type MessageFilter } from '@/lib/cms-messages';
+import { healthNeedsAttention, healthProblemCount, type HealthCheck } from '@/lib/cms-health';
 import { buildContentIndex, fieldAnchor, labelParts, replacementStats, type ContentField, type ReplacementPlanItem } from '@/lib/cms-search';
 import { PAGE_SECTIONS, parseLayout, fullOrder, serializeLayout, moveSection, toggleSection, type SectionDef, type SectionsLayout } from '@/lib/cms-sections';
 import { LIST_DEFS, parseItems, readList, serializeList, blankItem, moveListItem, setListItemField, duplicateListItem, removeListItem, type ListItem } from '@/lib/cms-lists';
@@ -243,12 +245,12 @@ const PAGES_CONFIG: Record<string, { label: string; emoji: string; sections: { k
       { key: 'contact_email_label', label: 'Contact — Mention « Ou directement par email : »', type: 'text' },
       { key: 'sections_layout', label: 'Structure — Ordre et affichage des sections', type: 'sections' },
       { key: 'custom_sections', label: 'Blocs personnalisés — ajouter des sections', type: 'custom-sections' },
-      { key: 'hero_image', label: 'Hero — Photo de fond', type: 'image' },
-      { key: 'hero_badge',            label: 'Hero — Badge (ex: Monica Schneider · Executive Coach)',  type: 'text' },
-      { key: 'hero_title',            label: 'Hero — Titre principal',                                type: 'text' },
-      { key: 'hero_subtitle',         label: 'Hero — Sous-titre / certifications',                   type: 'textarea' },
-      { key: 'hero_cta_primary',      label: 'Hero — Bouton principal',                              type: 'text' },
-      { key: 'hero_cta_contact',      label: 'Hero — Bouton contact',                                type: 'text' },
+      { key: 'hero_image', label: 'Bandeau d’ouverture — Photo de fond', type: 'image' },
+      { key: 'hero_badge',            label: 'Bandeau d’ouverture — Badge (ex: Monica Schneider · Executive Coach)',  type: 'text' },
+      { key: 'hero_title',            label: 'Bandeau d’ouverture — Titre principal',                                type: 'text' },
+      { key: 'hero_subtitle',         label: 'Bandeau d’ouverture — Sous-titre / certifications',                   type: 'textarea' },
+      { key: 'hero_cta_primary',      label: 'Bandeau d’ouverture — Bouton principal',                              type: 'text' },
+      { key: 'hero_cta_contact',      label: 'Bandeau d’ouverture — Bouton contact',                                type: 'text' },
       { key: 'services_badge',        label: 'Services — Badge section',                             type: 'text' },
       { key: 'services_title',        label: 'Services — Titre section',                             type: 'text' },
       { key: 'services_b2c_title',    label: 'Services — Particuliers : Titre',                      type: 'text' },
@@ -272,16 +274,16 @@ const PAGES_CONFIG: Record<string, { label: string; emoji: string; sections: { k
       { key: 'home_card_order_4', label: 'Ordre — Position 4', type: 'select',
         options: ['coaching', 'organisations', 'happiness-design', 'relations'],
         optionLabels: ['⭐ Coaching', '🏢 Entreprises', '☀️ Happiness Design', '💚 Relations'] },
-      { key: 'booking_badge',        label: 'Booking — Badge',                                       type: 'text' },
-      { key: 'booking_modal_title',  label: 'Booking modal — Titre',                                type: 'text' },
-      { key: 'booking_modal_subtitle', label: 'Booking modal — Sous-titre',                         type: 'textarea' },
+      { key: 'booking_badge',        label: 'Réservation — Badge',                                       type: 'text' },
+      { key: 'booking_modal_title',  label: 'Réservation (fenêtre) — Titre',                                type: 'text' },
+      { key: 'booking_modal_subtitle', label: 'Réservation (fenêtre) — Sous-titre',                         type: 'textarea' },
       { key: 'contact_section_badge',   label: 'Contact — Badge section',                            type: 'text' },
       { key: 'contact_section_title',  label: 'Contact — Titre section',                            type: 'text' },
       { key: 'contact_section_subtitle', label: 'Contact — Sous-titre section',                    type: 'text' },
-      { key: 'form_success_title',   label: 'Formulaire — Titre succès',                           type: 'text' },
-      { key: 'form_success_body',    label: 'Formulaire — Corps succès',                           type: 'text' },
-      { key: 'form_sending',         label: 'Formulaire — Texte envoi',                            type: 'text' },
-      { key: 'form_submit',          label: 'Formulaire — Bouton envoi',                           type: 'text' },
+      { key: 'form_success_title',   label: 'Formulaire de contact — Titre succès',                           type: 'text' },
+      { key: 'form_success_body',    label: 'Formulaire de contact — Corps succès',                           type: 'text' },
+      { key: 'form_sending',         label: 'Formulaire de contact — Texte envoi',                            type: 'text' },
+      { key: 'form_submit',          label: 'Formulaire de contact — Bouton envoi',                           type: 'text' },
       { key: 'booking_widget_title', label: 'Réservation — Titre « Choisissez votre créneau »', type: 'text' },
       { key: 'booking_widget_subtitle', label: 'Réservation — Sous-titre « Séance découverte offerte (1h) ou programme de… »', type: 'text' },
       { key: 't_aucune_disponibilite_titre', label: 'Réservation — Aucune dispo : titre', type: 'text' },
@@ -325,9 +327,9 @@ const PAGES_CONFIG: Record<string, { label: string; emoji: string; sections: { k
       { key: 'hd_badge',          label: 'Section HD — Badge',             type: 'text' },
       { key: 'hd_text',           label: 'Section HD — Texte',             type: 'textarea' },
       { key: 'hd_cta',            label: 'Section HD — CTA',               type: 'text' },
-      { key: 'footer_cta_title',  label: 'Footer CTA — Titre',             type: 'text' },
-      { key: 'footer_cta_coaching', label: 'Footer CTA — Coaching',        type: 'text' },
-      { key: 'footer_cta_booking',  label: 'Footer CTA — Réservation',     type: 'text' },
+      { key: 'footer_cta_title',  label: 'Pied de page · appel à l’action — Titre',             type: 'text' },
+      { key: 'footer_cta_coaching', label: 'Pied de page · appel à l’action — Coaching',        type: 'text' },
+      { key: 'footer_cta_booking',  label: 'Pied de page · appel à l’action — Réservation',     type: 'text' },
       { key: 'parcours_badge', label: 'Parcours — Badge « Parcours »', type: 'text' },
       { key: 'parcours_title', label: 'Parcours — Titre « Le parcours »', type: 'text' },
       { key: 'parcours_subtitle', label: 'Parcours — Sous-titre « Deviens qui tu es »', type: 'text' },
@@ -357,11 +359,11 @@ const PAGES_CONFIG: Record<string, { label: string; emoji: string; sections: { k
       { key: 'sections_layout', label: 'Structure — Ordre et affichage des sections', type: 'sections' },
       { key: 'custom_sections', label: 'Blocs personnalisés — ajouter des sections', type: 'custom-sections' },
       { key: 'hero_image',          label: 'Image hero',                    type: 'image' },
-      { key: 'hero_badge',          label: 'Hero — Badge',                  type: 'text' },
-      { key: 'hero_title',          label: 'Hero — Titre',                  type: 'text' },
-      { key: 'hero_subtitle',       label: 'Hero — Sous-titre',             type: 'textarea' },
-      { key: 'hero_cta_primary',    label: 'Hero — CTA principal',          type: 'text' },
-      { key: 'hero_cta_contact',    label: 'Hero — CTA contact',            type: 'text' },
+      { key: 'hero_badge',          label: 'Bandeau d’ouverture — Badge',                  type: 'text' },
+      { key: 'hero_title',          label: 'Bandeau d’ouverture — Titre',                  type: 'text' },
+      { key: 'hero_subtitle',       label: 'Bandeau d’ouverture — Sous-titre',             type: 'textarea' },
+      { key: 'hero_cta_primary',    label: 'Bandeau d’ouverture — CTA principal',          type: 'text' },
+      { key: 'hero_cta_contact',    label: 'Bandeau d’ouverture — CTA contact',            type: 'text' },
       { key: 'coaching_b2c_badge',  label: 'Coaching B2C — Badge',          type: 'text' },
       { key: 'coaching_b2c_image',  label: 'Coaching individuel — Image',   type: 'image' },
       { key: 'coaching_b2c_title',  label: 'Coaching individuel — Titre',   type: 'text' },
@@ -402,10 +404,10 @@ const PAGES_CONFIG: Record<string, { label: string; emoji: string; sections: { k
     sections: [
       { key: 'sections_layout', label: 'Structure — Ordre et affichage des sections', type: 'sections' },
       { key: 'custom_sections', label: 'Blocs personnalisés — ajouter des sections', type: 'custom-sections' },
-      { key: 'hero_image',   label: 'Hero — Image',                  type: 'image' },
-      { key: 'hero_badge',   label: 'Hero — Badge',                  type: 'text' },
-      { key: 'page_title',   label: 'Hero — Titre',                  type: 'text' },
-      { key: 'intro_text',   label: 'Hero — Introduction',           type: 'textarea' },
+      { key: 'hero_image',   label: 'Bandeau d’ouverture — Image',                  type: 'image' },
+      { key: 'hero_badge',   label: 'Bandeau d’ouverture — Badge',                  type: 'text' },
+      { key: 'page_title',   label: 'Bandeau d’ouverture — Titre',                  type: 'text' },
+      { key: 'intro_text',   label: 'Bandeau d’ouverture — Introduction',           type: 'textarea' },
       { key: 'section_image',label: 'Offres — Image',                type: 'image' },
       { key: 'offres_badge', label: 'Offres — Badge',                type: 'text' },
       { key: 'section_title',label: 'Offres — Titre',                type: 'text' },
@@ -459,12 +461,12 @@ const PAGES_CONFIG: Record<string, { label: string; emoji: string; sections: { k
     sections: [
       { key: 'sections_layout', label: 'Structure — Ordre et affichage des sections', type: 'sections' },
       { key: 'custom_sections', label: 'Blocs personnalisés — ajouter des sections', type: 'custom-sections' },
-      { key: 'hero_image', label: 'Hero — Photo de fond', type: 'image' },
-      { key: 'hero_badge',    label: 'Hero — Badge',               type: 'text' },
-      { key: 'page_title',    label: 'Hero — Titre principal (H1)', type: 'text' },
-      { key: 'page_subtitle', label: 'Hero — Sous-titre',          type: 'textarea' },
-      { key: 'intro_text',    label: 'Hero — Texte intro',         type: 'textarea' },
-      { key: 'hero_cta',      label: 'Hero — Bouton CTA',          type: 'text' },
+      { key: 'hero_image', label: 'Bandeau d’ouverture — Photo de fond', type: 'image' },
+      { key: 'hero_badge',    label: 'Bandeau d’ouverture — Badge',               type: 'text' },
+      { key: 'page_title',    label: 'Bandeau d’ouverture — Titre principal (H1)', type: 'text' },
+      { key: 'page_subtitle', label: 'Bandeau d’ouverture — Sous-titre',          type: 'textarea' },
+      { key: 'intro_text',    label: 'Bandeau d’ouverture — Texte intro',         type: 'textarea' },
+      { key: 'hero_cta',      label: 'Bandeau d’ouverture — Bouton CTA',          type: 'text' },
       { key: 'pourqui_badge',   label: 'Pour qui — Badge',          type: 'text' },
       { key: 'pourqui_title',   label: 'Pour qui — Titre',          type: 'text' },
       { key: 'pourqui_1_title', label: 'Pour qui 1 — Titre',        type: 'text' },
@@ -622,16 +624,16 @@ const PAGES_CONFIG: Record<string, { label: string; emoji: string; sections: { k
       { key: 'multiculture_mc_desc',            label: 'Multiculture — Desc MC',          type: 'textarea' },
       { key: 'multiculture_note',               label: 'Multiculture — Note',             type: 'textarea' },
       { key: 'multiculture_cta',                label: 'Multiculture — CTA',             type: 'text' },
-      { key: 'booking_badge',       label: 'Booking — Badge',                  type: 'text' },
-      { key: 'booking_title',       label: 'Booking — Titre',                  type: 'text' },
-      { key: 'booking_subtitle',    label: 'Booking — Sous-titre',            type: 'textarea' },
-      { key: 'booking_cta_button',  label: 'Booking — Bouton CTA',            type: 'text' },
+      { key: 'booking_badge',       label: 'Réservation — Badge',                  type: 'text' },
+      { key: 'booking_title',       label: 'Réservation — Titre',                  type: 'text' },
+      { key: 'booking_subtitle',    label: 'Réservation — Sous-titre',            type: 'textarea' },
+      { key: 'booking_cta_button',  label: 'Réservation — Bouton CTA',            type: 'text' },
       { key: 'theory_badge',        label: 'Théorie — Badge',                 type: 'text' },
       { key: 'theory_title',        label: 'Théorie — Titre',                 type: 'text' },
       { key: 'theory_subtitle',     label: 'Théorie — Sous-titre',            type: 'textarea' },
       { key: 'theory_modal_cta',    label: 'Théorie modal — CTA',            type: 'text' },
-      { key: 'footer_site_name',    label: 'Footer — Nom du site',            type: 'text' },
-      { key: 'footer_copyright',    label: 'Footer — Copyright',              type: 'text' },
+      { key: 'footer_site_name',    label: 'Pied de page — Nom du site',            type: 'text' },
+      { key: 'footer_copyright',    label: 'Pied de page — Copyright',              type: 'text' },
       { key: 'comm_rule1_title', label: 'Règle 1 — Titre', type: 'text' },
       { key: 'comm_rule1_desc', label: 'Règle 1 — Description', type: 'text' },
       { key: 'comm_rule1_example', label: 'Règle 1 — Exemple', type: 'text' },
@@ -740,11 +742,11 @@ const PAGES_CONFIG: Record<string, { label: string; emoji: string; sections: { k
       { key: 'hero_badge',        label: 'Badge hero',               type: 'text' },
       { key: 'page_title',        label: 'Titre de la page',         type: 'text' },
       { key: 'intro_text',        label: "Texte d'introduction",     type: 'textarea' },
-      { key: 'form_name_label',   label: 'Formulaire — Label Nom',   type: 'text' },
-      { key: 'form_email_label',  label: 'Formulaire — Label Email', type: 'text' },
-      { key: 'form_subject_label', label: 'Formulaire — Label Sujet', type: 'text' },
-      { key: 'form_message_label', label: 'Formulaire — Label Message', type: 'text' },
-      { key: 'form_submit_label', label: 'Formulaire — Bouton Envoyer', type: 'text' },
+      { key: 'form_name_label',   label: 'Formulaire de contact — Label Nom',   type: 'text' },
+      { key: 'form_email_label',  label: 'Formulaire de contact — Label Email', type: 'text' },
+      { key: 'form_subject_label', label: 'Formulaire de contact — Label Sujet', type: 'text' },
+      { key: 'form_message_label', label: 'Formulaire de contact — Label Message', type: 'text' },
+      { key: 'form_submit_label', label: 'Formulaire de contact — Bouton Envoyer', type: 'text' },
       { key: 'success_title',     label: 'Message succès — Titre',   type: 'text' },
       { key: 'success_text',      label: 'Message succès — Texte',   type: 'textarea' },
       { key: 'photo', label: 'Photo — photo', type: 'image' },
@@ -836,12 +838,12 @@ const PAGES_CONFIG: Record<string, { label: string; emoji: string; sections: { k
     sections: [
       { key: 'sections_layout', label: 'Structure — Ordre et affichage des sections', type: 'sections' },
       { key: 'custom_sections', label: 'Blocs personnalisés — ajouter des sections', type: 'custom-sections' },
-      { key: 'hero_image', label: 'Hero — Photo de fond', type: 'image' },
-      { key: 'hero_badge',          label: 'Hero — Badge',                                  type: 'text' },
-      { key: 'hero_title',          label: 'Hero — Titre principal',                        type: 'text' },
-      { key: 'hero_desc',           label: 'Hero — Sous-titre / description',               type: 'textarea' },
-      { key: 'hero_cta_primary',    label: 'Hero — Bouton réservation',                     type: 'text' },
-      { key: 'hero_cta_secondary',  label: 'Hero — Bouton question',                        type: 'text' },
+      { key: 'hero_image', label: 'Bandeau d’ouverture — Photo de fond', type: 'image' },
+      { key: 'hero_badge',          label: 'Bandeau d’ouverture — Badge',                                  type: 'text' },
+      { key: 'hero_title',          label: 'Bandeau d’ouverture — Titre principal',                        type: 'text' },
+      { key: 'hero_desc',           label: 'Bandeau d’ouverture — Sous-titre / description',               type: 'textarea' },
+      { key: 'hero_cta_primary',    label: 'Bandeau d’ouverture — Bouton réservation',                     type: 'text' },
+      { key: 'hero_cta_secondary',  label: 'Bandeau d’ouverture — Bouton question',                        type: 'text' },
       { key: 'section_badge',       label: 'Cas d\'usage — Badge',                          type: 'text' },
       { key: 'section_title',       label: 'Cas d\'usage — Titre section',                  type: 'text' },
       { key: 'sparring_use_cases', label: 'Cas d\'usage — Cartes (ajouter, retirer, réordonner)', type: 'list' },
@@ -1148,9 +1150,9 @@ const PAGES_CONFIG: Record<string, { label: string; emoji: string; sections: { k
       { key: 'compte_badge', label: 'Bandeau « Espace client » (haut des 3 pages)', type: 'text' },
       { key: 'login_title', label: 'Connexion — Titre', type: 'text' },
       { key: 'login_subtitle', label: 'Connexion — Sous-titre', type: 'textarea' },
-      { key: 'login_email_label', label: 'Formulaire — Label du champ email', type: 'text' },
-      { key: 'login_email_placeholder', label: 'Formulaire — Exemple dans le champ email', type: 'text' },
-      { key: 'login_password_label', label: 'Formulaire — Label du champ mot de passe', type: 'text' },
+      { key: 'login_email_label', label: 'Formulaire de contact — Label du champ email', type: 'text' },
+      { key: 'login_email_placeholder', label: 'Formulaire de contact — Exemple dans le champ email', type: 'text' },
+      { key: 'login_password_label', label: 'Formulaire de contact — Label du champ mot de passe', type: 'text' },
       { key: 'login_password_placeholder', label: 'Connexion — Exemple dans le champ mot de passe', type: 'text' },
       { key: 'login_submit', label: 'Connexion — Bouton', type: 'text' },
       { key: 'login_submitting', label: 'Connexion — Bouton pendant la connexion', type: 'text' },
@@ -1221,7 +1223,24 @@ const SETTINGS_GROUPS: Record<string, { label: string; emoji: string }> = {
   footer:     { label: 'Footer',            emoji: '📄' },
 };
 
-// ─── Maintenance Mode Toggle ──────────────────────────────────
+// ─── Longueur d'un texte pour Google ──────────────────────────
+// Repère de rédaction : Google coupe le titre au-delà de ~60 caractères et la description
+// au-delà de ~160. On l'affiche en direct sous le champ, sans jamais bloquer la saisie —
+// un texte trop long reste enregistrable, c'est un conseil, pas une règle.
+const SEO_TITLE_IDEAL = 60;
+const SEO_DESCRIPTION_IDEAL = 160;
+
+function SeoLengthHint({ value, ideal }: { value: string; ideal: number }) {
+  const length = value.length;
+  const over = length > ideal;
+  return (
+    <p style={{ margin: '.35rem 0 0', fontSize: '.78rem', color: over ? '#c2410c' : length === 0 ? '#aaa' : '#16a34a', fontWeight: 600 }}>
+      {length} caractère{length > 1 ? 's' : ''} · conseillé : jusqu’à {ideal}
+      {over ? ` — Google coupera probablement la fin` : ''}
+    </p>
+  );
+}
+
 function MaintenanceModeToggle() {
   const [enabled, setEnabled] = useState(false);
   const [loading, setLoading] = useState(true);
@@ -1471,6 +1490,7 @@ export default function CMSAdmin() {
   const [showMediaLibrary, setShowMediaLibrary] = useState(false);
   // Santé de la base (Supabase peut être en pause sur le free tier)
   const [dbStatus, setDbStatus] = useState<'ok' | 'down' | 'checking'>('checking');
+  const [healthChecks, setHealthChecks] = useState<HealthCheck[] | null>(null);
   // Recherche de champ dans l'onglet Pages
   const [fieldSearch, setFieldSearch] = useState('');
   // Champ à ouvrir et mettre en évidence, quand on arrive d'un résultat de l'onglet « 🔎 Contenu »
@@ -1495,6 +1515,7 @@ export default function CMSAdmin() {
 
   // Messages contact
   const [messages, setMessages] = useState<ContactMessage[]>([]);
+  const [messageFilter, setMessageFilter] = useState<MessageFilter>('all');
   const [loadingMessages, setLoadingMessages] = useState(false);
 
   // Booking (créneaux + demandes de réservation)
@@ -1909,6 +1930,27 @@ export default function CMSAdmin() {
     const id = setInterval(check, 60_000);
     return () => { alive = false; clearInterval(id); };
   }, [authed]);
+
+  // ── Santé du site (réservation en ligne, etc.) ────────────
+  // Chargée quand on ouvre le tableau de bord : un problème qui empêche le site de rendre
+  // service doit se voir en haut, sans devoir fouiller l'onglet Messages.
+  useEffect(() => {
+    if (!authed || tab !== 'dashboard') return;
+    let alive = true;
+    const check = async () => {
+      try {
+        const r = await fetch('/api/cms/health');
+        if (r.status === 401) { if (alive) setAuthed(false); return; }
+        const d = await r.json();
+        if (alive) setHealthChecks(Array.isArray(d.checks) ? d.checks : []);
+      } catch {
+        if (alive) setHealthChecks([]);
+      }
+    };
+    check();
+    const id = setInterval(check, 120_000);
+    return () => { alive = false; clearInterval(id); };
+  }, [authed, tab]);
 
   // Save settings
   const saveSettings = async () => {
@@ -2412,7 +2454,7 @@ export default function CMSAdmin() {
     { id: 'custom-pages', label: '📄 Pages libres', count: null },
     { id: 'media',    label: '🖼️ Médiathèque', count: null },
     { id: 'booking',  label: '📅 Réservations', count: null },
-    { id: 'messages', label: '💬 Messages', count: messages.filter(m => m.status === 'unread').length || null },
+    { id: 'messages', label: '💬 Messages', count: unreadVisitorCount(messages) || null },
     { id: 'settings', label: '⚙️ Paramètres', count: null },
   ];
 
@@ -2570,6 +2612,37 @@ export default function CMSAdmin() {
               </p>
             </div>
 
+            {/* Santé du site — ce qui empêche le site de rendre service, en haut de page */}
+            {healthChecks && healthNeedsAttention(healthChecks).length > 0 && (
+              <div style={{ marginBottom: '1.5rem', display: 'flex', flexDirection: 'column', gap: '.75rem' }}>
+                {healthProblemCount(healthChecks) > 0 && (
+                  <p style={{ margin: 0, fontSize: '.8rem', fontWeight: 700, color: '#991b1b', textTransform: 'uppercase', letterSpacing: '.05em' }}>
+                    {healthProblemCount(healthChecks)} problème{healthProblemCount(healthChecks) > 1 ? 's' : ''} à corriger
+                  </p>
+                )}
+                {healthNeedsAttention(healthChecks).map(c => {
+                  const error = c.level === 'error';
+                  return (
+                    <div key={c.id} style={{
+                      background: error ? '#fff5f5' : '#fffbeb',
+                      border: `1.5px solid ${error ? '#fecaca' : '#fde68a'}`,
+                      borderRadius: '1rem', padding: '1.1rem 1.4rem',
+                    }}>
+                      <p style={{ margin: 0, fontWeight: 700, fontSize: '.95rem', color: error ? '#991b1b' : '#92400e', display: 'flex', alignItems: 'center', gap: '.5rem' }}>
+                        <span>{error ? '🚨' : '⚠️'}</span> {c.title}
+                      </p>
+                      <p style={{ margin: '.45rem 0 0', fontSize: '.88rem', color: '#444', lineHeight: 1.5 }}>{c.detail}</p>
+                      {c.fix && (
+                        <p style={{ margin: '.5rem 0 0', fontSize: '.88rem', color: '#166534', fontWeight: 600, lineHeight: 1.5 }}>
+                          ✅ À faire : {c.fix}
+                        </p>
+                      )}
+                    </div>
+                  );
+                })}
+              </div>
+            )}
+
             {/* Cartes stats */}
             <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(180px, 1fr))', gap: '1rem', marginBottom: '1.5rem' }}>
               <div style={{ background: 'white', borderRadius: '1rem', padding: '1.25rem 1.5rem', boxShadow: '0 1px 4px rgba(0,0,0,.06)' }}>
@@ -2580,9 +2653,13 @@ export default function CMSAdmin() {
                 <p style={{ fontSize: '.75rem', fontWeight: 700, color: '#aaa', textTransform: 'uppercase', letterSpacing: '.06em', margin: '0 0 .4rem' }}>Brouillons</p>
                 <p style={{ fontSize: '2rem', fontWeight: 700, color: '#c9a96e', margin: 0 }}>{articles.filter(a => !a.published).length}</p>
               </div>
-              <div style={{ background: 'white', borderRadius: '1rem', padding: '1.25rem 1.5rem', boxShadow: '0 1px 4px rgba(0,0,0,.06)', cursor: 'pointer' }} onClick={() => handleTabChange('messages')}>
+              <div style={{ background: 'white', borderRadius: '1rem', padding: '1.25rem 1.5rem', boxShadow: '0 1px 4px rgba(0,0,0,.06)', cursor: 'pointer' }} onClick={() => { setMessageFilter('visitor'); handleTabChange('messages'); }}>
                 <p style={{ fontSize: '.75rem', fontWeight: 700, color: '#aaa', textTransform: 'uppercase', letterSpacing: '.06em', margin: '0 0 .4rem' }}>Messages non lus</p>
-                <p style={{ fontSize: '2rem', fontWeight: 700, color: messages.filter(m => m.status === 'unread').length > 0 ? '#dc2626' : '#2d5f54', margin: 0 }}>{messages.filter(m => m.status === 'unread').length}</p>
+                <p style={{ fontSize: '2rem', fontWeight: 700, color: unreadVisitorCount(messages) > 0 ? '#dc2626' : '#2d5f54', margin: 0 }}>{unreadVisitorCount(messages)}</p>
+              </div>
+              <div style={{ background: 'white', borderRadius: '1rem', padding: '1.25rem 1.5rem', boxShadow: '0 1px 4px rgba(0,0,0,.06)', cursor: 'pointer' }} onClick={() => { setMessageFilter('alert'); handleTabChange('messages'); }}>
+                <p style={{ fontSize: '.75rem', fontWeight: 700, color: '#aaa', textTransform: 'uppercase', letterSpacing: '.06em', margin: '0 0 .4rem' }}>Alertes techniques</p>
+                <p style={{ fontSize: '2rem', fontWeight: 700, color: unreadAlertCount(messages) > 0 ? '#c2410c' : '#2d5f54', margin: 0 }}>{unreadAlertCount(messages)}</p>
               </div>
               <div style={{ background: 'white', borderRadius: '1rem', padding: '1.25rem 1.5rem', boxShadow: '0 1px 4px rgba(0,0,0,.06)' }}>
                 <p style={{ fontSize: '.75rem', fontWeight: 700, color: '#aaa', textTransform: 'uppercase', letterSpacing: '.06em', margin: '0 0 .4rem' }}>Base de données</p>
@@ -3369,6 +3446,12 @@ export default function CMSAdmin() {
                                             placeholder={section.label}
                                           />
                                         )}
+                                        {section.key === 'seo_title' && (
+                                          <SeoLengthHint value={editedContent[key] ?? ''} ideal={SEO_TITLE_IDEAL} />
+                                        )}
+                                        {section.key === 'seo_description' && (
+                                          <SeoLengthHint value={editedContent[key] ?? ''} ideal={SEO_DESCRIPTION_IDEAL} />
+                                        )}
                                       </div>
                                     );
                                   })}
@@ -3564,46 +3647,88 @@ export default function CMSAdmin() {
         {/* ── MESSAGES ── */}
         {tab === 'messages' && (
           <div>
-            <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '1.5rem' }}>
-              <h2 style={{ fontSize: '1.15rem', fontWeight: 700, color: '#2d5f54' }}>💬 Messages reçus</h2>
+            <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '1rem', gap: '1rem', flexWrap: 'wrap' }}>
+              <h2 style={{ fontSize: '1.15rem', fontWeight: 700, color: '#2d5f54', margin: 0 }}>💬 Messages reçus</h2>
               <button onClick={loadMessages} style={{ padding: '.45rem 1rem', background: '#f5f0eb', border: 'none', borderRadius: '.5rem', cursor: 'pointer', fontSize: '.85rem', color: '#555' }}>↻ Actualiser</button>
             </div>
+
+            {/* Séparation des deux flux : les demandes de visiteurs et les alertes du site */}
+            <div style={{ display: 'flex', gap: '.4rem', flexWrap: 'wrap', marginBottom: '1.25rem' }}>
+              {([
+                { id: 'all',     label: 'Tous',     n: messages.length },
+                { id: 'unread',  label: 'Non lus',  n: messages.filter(m => m.status !== 'read').length },
+                { id: 'visitor', label: '👤 Messages', n: messages.filter(m => messageKind(m.type) === 'visitor').length },
+                { id: 'alert',   label: '🚨 Alertes techniques', n: messages.filter(m => messageKind(m.type) === 'alert').length },
+              ] as { id: MessageFilter; label: string; n: number }[]).map(f => (
+                <button key={f.id} onClick={() => setMessageFilter(f.id)}
+                  style={{
+                    padding: '.45rem .9rem', borderRadius: '999px', cursor: 'pointer', fontSize: '.82rem', fontWeight: messageFilter === f.id ? 700 : 500,
+                    background: messageFilter === f.id ? '#2d5f54' : 'white',
+                    color: messageFilter === f.id ? 'white' : '#555',
+                    border: `1.5px solid ${messageFilter === f.id ? '#2d5f54' : '#e0dbd5'}`,
+                  }}>
+                  {f.label} <span style={{ opacity: .8 }}>({f.n})</span>
+                </button>
+              ))}
+            </div>
+
             {loadingMessages ? (
               <p style={{ textAlign: 'center', color: '#888', padding: '3rem' }}>Chargement…</p>
             ) : messages.length === 0 ? (
               <p style={{ textAlign: 'center', color: '#aaa', padding: '3rem' }}>Aucun message pour le moment.</p>
-            ) : (
-              <div style={{ display: 'flex', flexDirection: 'column', gap: '.75rem' }}>
-                {messages.map(m => (
-                  <div key={m.id} style={{ background: 'white', borderRadius: '1rem', padding: '1.25rem 1.5rem', boxShadow: '0 1px 4px rgba(0,0,0,.06)', borderLeft: m.status === 'unread' ? '4px solid #2d5f54' : '4px solid #e0dbd5' }}>
-                    <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'flex-start', gap: '1rem' }}>
-                      <div>
-                        <p style={{ fontWeight: 700, fontSize: '.95rem', color: '#1a1a1a', marginBottom: '.2rem' }}>{m.name} <span style={{ fontWeight: 400, color: '#888' }}>— {m.email}</span></p>
-                        <p style={{ fontSize: '.8rem', color: '#aaa', marginBottom: '.75rem' }}>{fmt(m.created_at)}</p>
-                        <p style={{ fontSize: '.9rem', color: '#444', whiteSpace: 'pre-wrap' }}>{m.message}</p>
+            ) : (() => {
+              const visible = messages.filter(m => matchesMessageFilter(m, messageFilter));
+              if (visible.length === 0) {
+                return <p style={{ textAlign: 'center', color: '#aaa', padding: '3rem' }}>Aucun message dans cette catégorie.</p>;
+              }
+              return (
+                <div style={{ display: 'flex', flexDirection: 'column', gap: '.75rem' }}>
+                  {visible.map(m => {
+                    const alert = messageKind(m.type) === 'alert';
+                    return (
+                      <div key={m.id} style={{
+                        background: alert ? '#fffaf5' : 'white',
+                        borderRadius: '1rem', padding: '1.25rem 1.5rem', boxShadow: '0 1px 4px rgba(0,0,0,.06)',
+                        borderLeft: `4px solid ${alert ? '#c2410c' : m.status === 'unread' ? '#2d5f54' : '#e0dbd5'}`,
+                      }}>
+                        <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'flex-start', gap: '1rem' }}>
+                          <div style={{ minWidth: 0 }}>
+                            <p style={{ fontWeight: 700, fontSize: '.95rem', color: '#1a1a1a', marginBottom: '.2rem', display: 'flex', alignItems: 'center', gap: '.45rem', flexWrap: 'wrap' }}>
+                              {alert && (
+                                <span style={{ fontSize: '.68rem', fontWeight: 700, textTransform: 'uppercase', letterSpacing: '.05em', color: '#9a3412', background: '#ffedd5', border: '1px solid #fed7aa', borderRadius: '999px', padding: '.05rem .5rem' }}>
+                                  🚨 Alerte technique
+                                </span>
+                              )}
+                              {m.name}
+                              {!alert && <span style={{ fontWeight: 400, color: '#888' }}>— {m.email}</span>}
+                            </p>
+                            <p style={{ fontSize: '.8rem', color: '#aaa', marginBottom: '.75rem' }}>{fmt(m.created_at)}</p>
+                            <p style={{ fontSize: '.9rem', color: '#444', whiteSpace: 'pre-wrap' }}>{m.message}</p>
+                          </div>
+                          <div style={{ display: 'flex', flexDirection: 'column', gap: '.4rem', flexShrink: 0 }}>
+                            {m.status !== 'read' && (
+                              <button onClick={async () => {
+                                await fetch(`/api/cms/contact-messages/${m.id}`, { method: 'PATCH', headers: { 'Content-Type': 'application/json', 'x-cms-token': localStorage.getItem('cms_token') || '' }, body: JSON.stringify({ status: 'read' }) });
+                                setMessages(prev => prev.map(x => x.id === m.id ? { ...x, status: 'read' } : x));
+                              }} style={{ padding: '.35rem .75rem', background: '#2d5f54', color: 'white', border: 'none', borderRadius: '.4rem', cursor: 'pointer', fontSize: '.78rem', fontWeight: 600 }}>
+                                ✓ Marquer lu
+                              </button>
+                            )}
+                            <button onClick={async () => {
+                              if (!confirm('Supprimer ce message ?')) return;
+                              await fetch(`/api/cms/contact-messages/${m.id}`, { method: 'DELETE', headers: { 'x-cms-token': localStorage.getItem('cms_token') || '' } });
+                              setMessages(prev => prev.filter(x => x.id !== m.id));
+                            }} style={{ padding: '.35rem .75rem', background: '#fee2e2', color: '#b91c1c', border: 'none', borderRadius: '.4rem', cursor: 'pointer', fontSize: '.78rem', fontWeight: 600 }}>
+                              🗑 Supprimer
+                            </button>
+                          </div>
+                        </div>
                       </div>
-                      <div style={{ display: 'flex', flexDirection: 'column', gap: '.4rem', flexShrink: 0 }}>
-                        {m.status !== 'read' && (
-                          <button onClick={async () => {
-                            await fetch(`/api/cms/contact-messages/${m.id}`, { method: 'PATCH', headers: { 'Content-Type': 'application/json', 'x-cms-token': localStorage.getItem('cms_token') || '' }, body: JSON.stringify({ status: 'read' }) });
-                            setMessages(prev => prev.map(x => x.id === m.id ? { ...x, status: 'read' } : x));
-                          }} style={{ padding: '.35rem .75rem', background: '#2d5f54', color: 'white', border: 'none', borderRadius: '.4rem', cursor: 'pointer', fontSize: '.78rem', fontWeight: 600 }}>
-                            ✓ Marquer lu
-                          </button>
-                        )}
-                        <button onClick={async () => {
-                          if (!confirm('Supprimer ce message ?')) return;
-                          await fetch(`/api/cms/contact-messages/${m.id}`, { method: 'DELETE', headers: { 'x-cms-token': localStorage.getItem('cms_token') || '' } });
-                          setMessages(prev => prev.filter(x => x.id !== m.id));
-                        }} style={{ padding: '.35rem .75rem', background: '#fee2e2', color: '#b91c1c', border: 'none', borderRadius: '.4rem', cursor: 'pointer', fontSize: '.78rem', fontWeight: 600 }}>
-                          🗑 Supprimer
-                        </button>
-                      </div>
-                    </div>
-                  </div>
-                ))}
-              </div>
-            )}
+                    );
+                  })}
+                </div>
+              );
+            })()}
           </div>
         )}
         {/* ── PARAMÃˆTRES ── */}
