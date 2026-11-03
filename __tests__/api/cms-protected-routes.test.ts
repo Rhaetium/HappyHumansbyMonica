@@ -59,6 +59,7 @@ const PUBLIC_ROUTES: Record<string, string> = {
   '/api/cms/public-settings': 'lecture publique des réglages d’affichage',
   '/api/cms/public-temoignages': 'lecture publique des témoignages',
   '/api/cms/public-content': 'lecture publique du contenu ; les brouillons exigent une session (preview)',
+  '/api/calendly/status': 'vérifie la disponibilité d’un compte Calendly pour l’agenda public (lecture seule, aucun réglage exposé)',
   '/api/keep-alive': 'cron Vercel qui garde la base active',
   '/api/cms-html': 'page HTML statique d’information',
 }

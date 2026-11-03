@@ -129,6 +129,9 @@ Un bouton de réservation ne peut fonctionner que si **le rendez-vous existe vra
 3. **Laissez le champ vide si vous n'avez pas de rendez-vous dédié** : le bouton ouvre alors votre **agenda général** (la liste de vos rendez-vous), jamais une adresse cassée. Le texte gris « ex : seance-decouverte-coaching » n'est qu'un exemple, il n'est pas enregistré.
 4. Enregistrez : **💾 Sauvegarder** en bas de l'onglet **⚙️ Paramètres**.
 
+**Le site vous prévient tout seul.** Si votre compte Calendly n'a **aucun rendez-vous public**, la page « Réserver » n'affiche plus un agenda vide : le visiteur voit un message (« Aucune disponibilité pour le moment ») avec un lien pour vous écrire. En même temps, une **alerte apparaît dans l'onglet 💬 Messages** du CMS (et vous recevez un e-mail) : elle indique quoi corriger. Une seule alerte est créée par tranche de 6 h, pour ne pas inonder votre boîte.
+- Pour **changer le message vu par le visiteur** : onglet **🗂️ Pages → Réservation**, champs « Section 1 — Aucune dispo : titre / message ».
+
 Cliquez **💾 Sauvegarder** en bas de la page. Délai d'affichage : ~30 secondes.
 
 > Si vous changez de compte Calendly, pensez à vérifier chaque rendez-vous : l'adresse finale est `compte/nom-du-rendez-vous`. Un rendez-vous renommé dans Calendly change la fin de l'adresse : il faut la mettre à jour ici.

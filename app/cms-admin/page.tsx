@@ -714,6 +714,8 @@ const PAGES_CONFIG: Record<string, { label: string; emoji: string; sections: { k
       { key: 'footer_note',          label: 'Note footer',                         type: 'textarea' },
       { key: 'email_booking_text',   label: 'Texte email booking',                 type: 'text' },
       { key: 't_chargement_du_calendrier', label: 'Section 1 — Texte « Chargement du calendrier… »', type: 'text' },
+      { key: 't_aucune_disponibilite_titre', label: 'Section 1 — Aucune dispo : titre', type: 'text' },
+      { key: 't_aucune_disponibilite_texte', label: 'Section 1 — Aucune dispo : message', type: 'textarea' },
       { key: 't_ouvrir_calendly_directement', label: 'Section 1 — Lien « Ouvrir Calendly directement → »', type: 'text' },
       { key: 'service_label_coaching', label: 'Agenda — Pastille service « Coaching individuel »', type: 'text' },
       { key: 'service_label_happiness_design', label: 'Agenda — Pastille service « Programme Happiness Design »', type: 'text' },

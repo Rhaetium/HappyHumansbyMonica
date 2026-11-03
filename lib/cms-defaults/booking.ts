@@ -18,6 +18,9 @@ export const BOOKING_DEFAULTS: Record<string, string> = {
   t_chargement_du_calendrier: "Chargement du calendrier…",
   t_ouvrir_calendly_directement: "Ouvrir Calendly directement →",
   t_vous_preferez_reserver_par: "Vous préférez réserver par email ?",
+  // Affichés à la place de l'agenda quand le compte Calendly n'a aucun rendez-vous public
+  t_aucune_disponibilite_titre: "Aucune disponibilité pour le moment",
+  t_aucune_disponibilite_texte: "L'agenda n'est pas ouvert pour l'instant. Écrivez-moi : je vous proposerai une séance dès que possible.",
   // ── Référencement (Google, réseaux sociaux) — lu par generateMetadata via lib/page-seo.ts ──
   seo_title: "Réserver une séance — Monica Schneider",
   seo_description: "Réservez une séance découverte gratuite (1h) avec Monica Schneider. Executive coaching, philosophical counselling et Happiness Design.",
