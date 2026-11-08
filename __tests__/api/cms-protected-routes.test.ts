@@ -37,6 +37,16 @@ describe('routes d’administration : refusées sans authentification', () => {
     expect(res.status).toBe(401)
   })
 
+  it('le BON mot de passe dans un en-tête « x-cms-auth » ne les ouvre plus', async () => {
+    const { POST } = await import('@/app/api/send-email/route')
+    const res = await POST(new NextRequest('http://localhost/api/send-email', {
+      method: 'POST',
+      headers: { 'content-type': 'application/json', 'x-cms-auth': 'mot-de-passe-de-test' },
+      body: JSON.stringify({ type: 'admin', to: 'victime@example.com', data: { name: 'x' } }),
+    }))
+    expect(res.status).toBe(401)
+  })
+
   it('le cookie fabriqué « hh_cms_edit=1 » ne les ouvre pas non plus', async () => {
     const { POST } = await import('@/app/api/send-email/route')
     const res = await POST(new NextRequest('http://localhost/api/send-email', {
@@ -75,13 +85,51 @@ function routeFiles(dir: string, out: string[] = []) {
   return out
 }
 
+describe('connexion : aucune fuite d’information sur le mot de passe', () => {
+  it('la route de débogage /api/cms/test-auth n’existe plus', () => {
+    expect(fs.existsSync(path.join(root, 'app/api/cms/test-auth/route.ts'))).toBe(false)
+  })
+
+  it('/api/cms/auth n’expose plus PUT (longueur du mot de passe)', async () => {
+    const mod = await import('@/app/api/cms/auth/route')
+    expect('PUT' in mod).toBe(false)
+  })
+
+  it('GET /api/cms/auth ne renvoie pas le jeton de session (cookie httpOnly)', async () => {
+    const { GET, POST } = await import('@/app/api/cms/auth/route')
+    const login = await POST(new Request('http://localhost/api/cms/auth', { method: 'POST', body: JSON.stringify({ password: 'mot-de-passe-de-test' }) }))
+    const cookie = login.headers.get('set-cookie')?.split(';')[0] ?? ''
+    expect(cookie).toMatch(/^happyhumans_cms_session=.+/)
+    const res = await GET(new Request('http://localhost/api/cms/auth', { headers: { cookie } }))
+    expect(await res.json()).toEqual({ ok: true })
+  })
+
+  it('aucun code du site ne garde le mot de passe dans le navigateur', () => {
+    const offenders = ['app', 'components', 'hooks', 'lib'].flatMap(d => routeFilesAll(path.join(root, d)))
+      .filter(f => /localStorage\.setItem\(\s*['"]cms_password/.test(fs.readFileSync(f, 'utf8')))
+    expect(offenders).toEqual([])
+  })
+})
+
+function routeFilesAll(dir: string, out: string[] = []): string[] {
+  if (!fs.existsSync(dir)) return out
+  for (const e of fs.readdirSync(dir, { withFileTypes: true })) {
+    const p = path.join(dir, e.name)
+    if (e.isDirectory()) routeFilesAll(p, out)
+    else if (/\.(ts|tsx)$/.test(e.name)) out.push(p)
+  }
+  return out
+}
+
 describe('garde-fou : aucune route API ouverte sans décision explicite', () => {
   const files = routeFiles(path.join(root, 'app/api'))
   it.each(files.map(f => ['/api' + f.slice(path.join(root, 'app/api').length).replace(/\\/g, '/').replace(/\/route\.(ts|js)$/, ''), f]))(
     '%s',
     (route, file) => {
       const src = fs.readFileSync(file, 'utf8')
-      const guarded = /requireCmsAuth|getCmsAuthStatus|verifyEditSession|isValidCmsPassword/.test(src)
+      // Seul un APPEL à requireCmsAuth() protège une route. Avant, la simple mention de getCmsAuthStatus
+      // suffisait : /api/cms/test-auth la citait sans rien bloquer, et révélait si un mot de passe était le bon.
+      const guarded = /requireCmsAuth\(/.test(src)
       const allowed = route in PUBLIC_ROUTES
       expect(
         guarded || allowed,

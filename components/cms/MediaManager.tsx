@@ -18,10 +18,7 @@ export default function MediaManager({ data, onSave }: any) {
 
     const newMedia = [...media];
 
-    // Get CMS password from localStorage
-    const cmsPassword = typeof window !== 'undefined' ? localStorage.getItem('cms_password') : null;
-    console.log('[MediaManager] Uploading, cmsPassword:', cmsPassword ? 'SET' : 'NULL');
-
+    // Authentification : le cookie de session CMS, envoyé automatiquement (même origine).
     for (let i = 0; i < files.length; i++) {
       const file = files[i];
       setUploadProgress(`Upload ${i + 1}/${files.length}...`);
@@ -30,15 +27,9 @@ export default function MediaManager({ data, onSave }: any) {
         const formData = new FormData();
         formData.append('file', file);
 
-        const headers: HeadersInit = {};
-        if (cmsPassword) {
-          headers['x-cms-auth'] = cmsPassword;
-        }
-
         const response = await fetch('/api/cms/upload', {
           method: 'POST',
           body: formData,
-          headers,
         });
 
         if (!response.ok) {

@@ -196,11 +196,8 @@ export function getCmsAuthStatus(req: Request): CmsAuthStatus {
     return 'misconfigured';
   }
 
-  const headerPassword = req.headers.get('x-cms-auth');
-  if (headerPassword && isValidCmsPassword(headerPassword)) {
-    return 'ok';
-  }
-
+  // Le mot de passe n'est vérifié qu'à la connexion (POST /api/cms/auth). Avant, chaque route d'admin
+  // acceptait aussi le mot de passe en clair dans un en-tête « x-cms-auth » : autant de portes pour le deviner.
   const secret = getSessionSecret();
   const cookies = parseCookies(req.headers.get('cookie'));
   const sessionCookie = cookies[CMS_SESSION_COOKIE];
