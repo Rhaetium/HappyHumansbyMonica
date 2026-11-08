@@ -96,7 +96,12 @@ export function parseBlogResponse(raw: string): BlogDraft {
     .slice(0, 200)
 
   const body = lines.filter((l, i) => i !== h1Index && !isHashtagLine(l))
-  const excerpt = (body.find(l => l.trim() && !l.trim().startsWith('#')) ?? '').trim().replace(/\*\*/g, '').slice(0, 200)
+  // L'accroche est la première ligne de texte avant tout intertitre ; elle est retirée du corps
+  // (sinon le blog l'affiche deux fois : en résumé puis en tête de l'article).
+  const firstText = body.findIndex(l => l.trim())
+  const hasLead = firstText >= 0 && !body[firstText].trim().startsWith('#')
+  const excerpt = hasLead ? body[firstText].trim().replace(/\*\*/g, '').slice(0, 200) : ''
+  if (hasLead && excerpt.length < 200) body.splice(firstText, 1)
 
   const hashtagLines = lines.filter(isHashtagLine).join(' ')
   const hashtags = [...new Set((hashtagLines.match(HASHTAG_RE) ?? []).map(h => h.toLowerCase()))].slice(0, 12)
@@ -136,14 +141,21 @@ export function parseCarouselResponse(raw: string, topic: string): CarouselDraft
     .filter(s => s.title || s.content)
     .slice(0, 10)
   if (!slides.length) throw new Error('Aucune slide dans la réponse.')
-  const hashtags = (Array.isArray(data.hashtags) ? data.hashtags : [])
+  let caption = text(data.caption)
+  let hashtags = (Array.isArray(data.hashtags) ? data.hashtags : [])
     .map(text)
     .filter(Boolean)
     .map(h => (h.startsWith('#') ? h : `#${h}`).replace(/\s+/g, ''))
+  // Certains modèles glissent les hashtags dans la légende : on les en sort.
+  const inCaption = caption.match(HASHTAG_RE) ?? []
+  if (inCaption.length) {
+    hashtags = [...hashtags, ...inCaption]
+    caption = caption.replace(HASHTAG_RE, '').replace(/[ \t]{2,}/g, ' ').trim()
+  }
   return {
     title: text(data.title) || topic.trim(),
     slides,
-    caption: text(data.caption),
-    hashtags: [...new Set(hashtags)].slice(0, 15),
+    caption,
+    hashtags: [...new Set(hashtags.map(h => h.toLowerCase()))].slice(0, 15),
   }
 }

@@ -39,6 +39,8 @@ describe('parseBlogResponse', () => {
     expect(d.title).toBe('Poser ses limites au travail')
     expect(d.excerpt).toBe('Dire non sans culpabiliser, ça s’apprend.')
     expect(d.content).not.toContain('# Poser')
+    expect(d.content).not.toContain('Dire non sans culpabiliser') // l'accroche n'est pas répétée dans le corps
+    expect(d.content.startsWith('## Pourquoi')).toBe(true)
     expect(d.content).toContain('## Pourquoi c’est difficile') // intertitres intacts (avant : « ### ## … »)
     expect(d.content).not.toContain('#limites')
     expect(d.hashtags).toEqual(['#limites', '#travail', '#bienêtre'])
@@ -65,6 +67,13 @@ describe('parseCarouselResponse', () => {
       caption: 'Et vous ?',
       hashtags: ['#calme', '#bienêtre'],
     })
+  })
+
+  it('sort les hashtags glissés dans la légende (sortie réelle de Llama 3.3)', () => {
+    const raw = '{"title":"Ralentir","slides":[{"title":"a","content":"b"}],"caption":"Il est peut-être temps de ralentir ! #ralentir #bienêtre #Ralentir","hashtags":[]}'
+    const c = parseCarouselResponse(raw, 'x')
+    expect(c.caption).toBe('Il est peut-être temps de ralentir !')
+    expect(c.hashtags).toEqual(['#ralentir', '#bienêtre'])
   })
 
   it('titre absent → le sujet ; aucune slide → erreur', () => {
