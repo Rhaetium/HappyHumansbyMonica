@@ -62,6 +62,8 @@ const PUBLIC_ROUTES: Record<string, string> = {
   '/api/calendly/status': 'vérifie la disponibilité d’un compte Calendly pour l’agenda public (lecture seule, aucun réglage exposé)',
   '/api/keep-alive': 'cron Vercel qui garde la base active',
   '/api/cms-html': 'page HTML statique d’information',
+  '/api/questionnaires/[slug]': 'lecture publique d’un questionnaire actif (QR code) ; aucune réponse exposée',
+  '/api/questionnaires/[slug]/submit': 'envoi public des réponses d’un questionnaire actif ; tout est revalidé côté serveur',
 }
 
 function routeFiles(dir: string, out: string[] = []) {

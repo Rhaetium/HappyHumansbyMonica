@@ -10,6 +10,7 @@ import Breadcrumb from '@/components/Breadcrumb'
 import LogoQuickEditor from '@/components/cms/LogoQuickEditor'
 import SiteLogo, { resolveLogo } from '@/components/SiteLogo'
 import { useSiteSettings } from '@/hooks/useSiteSettings'
+import { UI_LABELS } from '@/lib/ui-labels'
 
 const ICONS: Record<string, string> = {
   star: '<path d="M12 2l2.4 7.4H22l-6.2 4.5 2.4 7.4L12 17l-6.2 4.3 2.4-7.4L2 9.4h7.6z"/>',
@@ -78,7 +79,7 @@ export default function Header() {
       <nav className="fixed top-0 z-50 w-full border-b border-stone-100 bg-white/95 backdrop-blur-sm">
         <div className="mx-auto flex max-w-7xl items-center justify-between px-4 py-3 sm:px-6">
 
-          <Link href="/" className={`flex items-center gap-3 transition-colors duration-200 ${logoPosition === 'center' ? 'mx-auto' : ''}`} aria-label={`${siteName} accueil`}>
+          <Link href="/" className={`flex items-center gap-3 transition-colors duration-200 ${logoPosition === 'center' ? 'mx-auto' : ''}`} aria-label={UI_LABELS.homeLink(siteName)}>
             <SiteLogo url={logo.url} size={logo.size} shape={logo.shape} alt={showName ? '' : siteName} className="flex-shrink-0" />
             {showName && (
               <span
@@ -156,7 +157,7 @@ export default function Header() {
           </div>
 
           <button onClick={() => { setOpen(!open); setDropOpen(false) }}
-            className="flex h-9 w-9 flex-col items-center justify-center gap-1.5 rounded-lg lg:hidden" aria-label="Menu">
+            className="flex h-9 w-9 flex-col items-center justify-center gap-1.5 rounded-lg lg:hidden" aria-label={UI_LABELS.menu}>
             <span className={`block h-0.5 w-5 bg-stone-700 transition-transform duration-200 ${open ? 'rotate-45 translate-y-2' : ''}`} />
             <span className={`block h-0.5 w-5 bg-stone-700 transition-opacity duration-200 ${open ? 'opacity-0' : ''}`} />
             <span className={`block h-0.5 w-5 bg-stone-700 transition-transform duration-200 ${open ? '-rotate-45 -translate-y-2' : ''}`} />

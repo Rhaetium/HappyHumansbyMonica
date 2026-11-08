@@ -3,6 +3,7 @@
 import Link from 'next/link';
 import { usePathname } from 'next/navigation';
 import { useCmsContent } from '@/hooks/useCmsContent';
+import { UI_LABELS } from '@/lib/ui-labels';
 import { FIL_ARIANE_DEFAULTS } from '@/lib/cms-defaults/fil-ariane';
 import { buildCrumbs, isBreadcrumbHidden } from '@/lib/breadcrumb';
 
@@ -43,7 +44,7 @@ export default function Breadcrumb() {
   if (crumbs.length < 2) return null;
 
   return (
-    <nav aria-label="Fil d’Ariane" className="hh-crumb mt-[72px] border-b border-stone-100 bg-stone-50/80 px-4 py-3 backdrop-blur-sm md:px-6">
+    <nav aria-label={UI_LABELS.breadcrumb} className="hh-crumb mt-[72px] border-b border-stone-100 bg-stone-50/80 px-4 py-3 backdrop-blur-sm md:px-6">
       <div className="mx-auto max-w-7xl">
         <ol className="no-scrollbar flex items-center gap-1.5 overflow-x-auto text-xs md:text-sm">
           {crumbs.map((crumb, index) => {
