@@ -2,6 +2,7 @@
 import { describe, it, expect, beforeAll, afterAll, beforeEach } from 'vitest'
 import { NextRequest } from 'next/server'
 import type { AddressInfo } from 'node:net'
+import { CMS_SESSION_COOKIE, getCmsSessionToken } from '@/lib/cms-auth'
 // scripts/mock-supabase.cjs est du CJS sans types : require volontaire.
 const { createMockSupabase } = require('../../scripts/mock-supabase.cjs')
 
@@ -37,10 +38,12 @@ beforeEach(() => {
   )
 })
 
+// Authentification par une vraie session signée (comme le navigateur après connexion).
+const sessionCookie = () => `${CMS_SESSION_COOKIE}=${getCmsSessionToken()}`
 const req = (method: string, path: string, body?: unknown, auth = true) =>
   new NextRequest(`http://localhost${path}`, {
     method,
-    headers: { 'content-type': 'application/json', ...(auth ? { 'x-cms-auth': PW } : {}) },
+    headers: { 'content-type': 'application/json', ...(auth ? { cookie: sessionCookie() } : {}) },
     body: body === undefined ? undefined : JSON.stringify(body),
   })
 const putDraft = (block_key: string, value: string) => content.PUT(req('PUT', '/api/cms/content', { page: 'coaching', block_key, value, draft: true }))

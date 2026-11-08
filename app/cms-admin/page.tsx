@@ -1486,7 +1486,6 @@ export default function CMSAdmin() {
   const [checkingSession, setCheckingSession] = useState(true);
   const [authed, setAuthed] = useState(false);
   const [pwd, setPwd] = useState('');
-  const [apiPwd, setApiPwd] = useState(''); // Kept for API calls
   const [authErr, setAuthErr] = useState('');
   const [tab, setTab] = useState('dashboard');
   const [toast, setToast] = useState('');
@@ -1601,7 +1600,6 @@ export default function CMSAdmin() {
     if (res.status !== 401) return false;
     setAuthed(false);
     setPwd('');
-    setApiPwd('');
     setAuthErr(message);
     showToast(message);
     return true;
@@ -1700,13 +1698,10 @@ export default function CMSAdmin() {
       });
       const data = await res.json().catch(() => ({}));
       if (res.ok) {
+        // La session (cookie httpOnly signé) suffit pour toutes les routes, envois d'images compris :
+        // le mot de passe n'est plus gardé en mémoire ni dans le navigateur.
         setAuthed(true);
         setPwd('');
-        setApiPwd(pwd); // Keep for API calls
-        // Store password for API auth (used by upload endpoints)
-        if (typeof window !== 'undefined') {
-          localStorage.setItem('cms_password', pwd);
-        }
       } else {
         setAuthErr(data.error || 'Mot de passe incorrect');
       }
@@ -1721,15 +1716,15 @@ export default function CMSAdmin() {
     await fetch('/api/cms/auth', { method: 'DELETE' }).catch(() => {});
     setAuthed(false);
     setPwd('');
-    setApiPwd('');
     setAuthErr('');
     setShowMediaLibrary(false);
     resetArticleEditor();
-    // Clear stored password
-    if (typeof window !== 'undefined') {
-      localStorage.removeItem('cms_password');
-    }
   };
+
+  // Les anciennes versions de l'admin gardaient le mot de passe en clair dans le navigateur : on l'efface.
+  useEffect(() => {
+    try { localStorage.removeItem('cms_password'); } catch { /* stockage indisponible */ }
+  }, []);
 
   useEffect(() => {
     if (checkingSession || authed) return;

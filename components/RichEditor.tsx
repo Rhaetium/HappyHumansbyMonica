@@ -9,7 +9,6 @@ type Props = {
   onChange: (html: string) => void;
   placeholder?: string;
   onImageUpload?: (url: string) => void;
-  cmsPassword?: string;
 };
 
 const TOOLS = [
@@ -38,7 +37,6 @@ export default function RichEditor({
   onChange,
   placeholder = "Commence \u00e0 \u00e9crire ton article ici\u2026",
   onImageUpload,
-  cmsPassword,
 }: Props) {
   const editorRef = useRef<HTMLDivElement>(null);
   const lastHtml = useRef(value);
@@ -132,13 +130,9 @@ export default function RichEditor({
     const fd = new FormData();
     fd.append('file', file);
     fd.append('folder', 'articles');
-    const headers: HeadersInit = {};
-    if (cmsPassword) {
-      headers['x-cms-auth'] = cmsPassword;
-    }
+    // Authentification : le cookie de session CMS, envoyé automatiquement (même origine).
     const res = await fetch('/api/cms/media-upload', {
       method: 'POST',
-      headers,
       body: fd,
     });
     const data = await res.json();
