@@ -263,6 +263,14 @@ Les valeurs qui ne sont propres à aucune page vivent dans la table `cms_setting
 
 **Compte sans rendez-vous public : message au visiteur + alerte au CMS.** Un compte Calendly peut exister sans aucun rendez-vous publié : l'agenda intégré affiche alors « No openings at the moment » dans une iframe muette (l'API JS de Calendly n'expose pas ce cas), donc le visiteur croit à une panne. `lib/calendly-availability.ts` (logique pure) interroge l'API publique `calendly.com/api/booking/profiles/<compte>`, qui renvoie `unavailability_reason` dans ce cas. L'appel se fait **côté serveur** (`GET /api/calendly/status`, route publique déclarée dans `__tests__/api/cms-protected-routes.test.ts`) car cette API ne renvoie **aucun en-tête CORS**. Le composant `CalendlyWidget` remplace alors l'agenda par un message (textes `t_aucune_disponibilite_*` de la page « Réservation ») et un lien `mailto:` ; la route dépose en plus une alerte **unread** dans `contact_messages` (`type = 'booking_alert'`, anti-doublon 6 h) et envoie un e-mail à `ADMIN_EMAIL`. Toute réponse inattendue est traitée comme `unknown` : on **ne remplace jamais l'agenda par erreur** — seul un `unavailable` avéré masque l'iframe.
 
+## IA de l'admin (questionnaires, blog, carrousels)
+
+- **Un seul point d'entrée** : `generateText()` dans `lib/ai-text.ts`. Le fournisseur est choisi d'après les variables Vercel, dans cet ordre : `ANTHROPIC_API_KEY` (Claude, payant) → `CLOUDFLARE_ACCOUNT_ID` + `CLOUDFLARE_API_TOKEN` (Workers AI, gratuit) → `GROQ_API_KEY` (gratuit). Aucun → erreur 503 lisible dans l'admin.
+- **Consignes** : `lib/questionnaire-ai.ts` (questionnaires) et `lib/content-ai.ts` (blog, carrousels), écrites pour Happy Humans. Les anciennes consignes « voyage » (ex-Heldonica) ont été retirées.
+- **Modèles gratuits moins rigoureux** : `normalizeGeneratedQuestionnaire` répare ce qui peut l'être sans rien inventer (échelle hors limites → 1 à 5, champs sans rapport avec le type, options en double, identifiants). Le reste est refusé par `validateQuestionnaire`, comme une saisie manuelle.
+- **Toujours un brouillon** : rien n'est enregistré ni publié par l'IA ; l'admin relit d'abord.
+- Le SDK Anthropic n'est chargé que s'il sert (`import()` dynamique) : les routes restent légères sans clé Claude.
+
 ## Ce qui n'est PAS dans le CMS
 
 - Les textes de l'interface d'administration elle-même (`/cms-admin`, barre d'édition en ligne, médiathèque).

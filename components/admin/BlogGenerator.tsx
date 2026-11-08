@@ -57,12 +57,12 @@ export default function BlogGenerator({ onGenerated }: BlogGeneratorProps) {
       
       <div style={{ marginBottom: '1.25rem' }}>
         <label style={{ display: 'block', fontWeight: 600, fontSize: '.85rem', color: '#555', marginBottom: '.35rem' }}>
-          Sujet du voyage *
+          Sujet de l'article *
         </label>
         <input
           value={topic}
           onChange={e => setTopic(e.target.value)}
-          placeholder="Ex: Weekend à Lisbonne, Road trip en Toscane, Randonnée au Portugal..."
+          placeholder="Ex : Poser ses limites au travail, Retrouver de l'élan après un burn-out, Mieux communiquer en couple…"
           style={{ width: '100%', padding: '.65rem .9rem', border: '1.5px solid #e0dbd5', borderRadius: '.5rem', fontSize: '.88rem', background: '#fff' }}
         />
       </div>
@@ -75,10 +75,10 @@ export default function BlogGenerator({ onGenerated }: BlogGeneratorProps) {
             onChange={e => setStyle(e.target.value as any)}
             style={{ width: '100%', padding: '.65rem .9rem', border: '1.5px solid #e0dbd5', borderRadius: '.5rem', fontSize: '.88rem', background: '#fff' }}
           >
-            <option value="story">📖 Histoire / Récit</option>
+            <option value="story">📖 Situation vécue + enseignements</option>
             <option value="guide">📋 Guide pratique</option>
-            <option value="list">📝 Liste de tips</option>
-            <option value="review">⭐ Avis / Retour</option>
+            <option value="list">📝 Liste de conseils</option>
+            <option value="review">💭 Réflexion</option>
           </select>
         </div>
         <div>
@@ -88,9 +88,9 @@ export default function BlogGenerator({ onGenerated }: BlogGeneratorProps) {
             onChange={e => setLength(e.target.value as any)}
             style={{ width: '100%', padding: '.65rem .9rem', border: '1.5px solid #e0dbd5', borderRadius: '.5rem', fontSize: '.88rem', background: '#fff' }}
           >
-            <option value="short"> court (200-300 mots)</option>
-            <option value="medium">✓ Moyen (400-600 mots)</option>
-            <option value="long"> long (800-1000 mots)</option>
+            <option value="short">Court (300-400 mots)</option>
+            <option value="medium">Moyen (600-800 mots)</option>
+            <option value="long">Long (1000-1200 mots)</option>
           </select>
         </div>
       </div>
