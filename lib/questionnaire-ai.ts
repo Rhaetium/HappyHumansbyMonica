@@ -1,9 +1,7 @@
-// Générateur de questionnaires assisté par IA (Claude).
+// Générateur de questionnaires assisté par IA (Claude, Cloudflare Workers AI ou Groq : voir lib/ai-text.ts).
 // Le modèle propose un brouillon ; rien n'est enregistré sans relecture et validation dans l'admin.
-import Anthropic from '@anthropic-ai/sdk'
-import { validateQuestionnaire, type QuestionnaireInput, type ValidationResult } from '@/lib/questionnaires'
-
-export const QUESTIONNAIRE_MODEL = 'claude-opus-5-5'
+import { generateText, AiError } from '@/lib/ai-text'
+import { LIMITS, validateQuestionnaire, type QuestionnaireInput, type ValidationResult } from '@/lib/questionnaires'
 
 export type GenerateRequest = {
   topic: string
@@ -55,6 +53,50 @@ export function extractJsonObject(text: string): unknown {
   return JSON.parse(candidate.slice(start, end + 1))
 }
 
+const CHOICE_OPTIONS_MAX = 10
+const DEFAULT_SCALE = { min: 1, max: 5 }
+
+/**
+ * Répare les écarts fréquents des modèles gratuits avant la validation, sans rien inventer :
+ * échelle incohérente ou trop large → 1 à 5 ; champs sans rapport avec le type retirés ;
+ * options vides ou en double retirées ; identifiants renumérotés q1, q2… ; textes trop longs tronqués.
+ * Ce qui reste irréparable (type inconnu, choix avec moins de 2 options, libellé vide) est refusé
+ * ensuite par validateQuestionnaire, comme pour une saisie manuelle.
+ */
+export function normalizeGeneratedQuestionnaire(raw: unknown): Record<string, unknown> {
+  const body = (raw && typeof raw === 'object' ? raw : {}) as Record<string, unknown>
+  const text = (v: unknown) => (typeof v === 'string' ? v.trim() : '')
+  const questions = (Array.isArray(body.questions) ? body.questions : [])
+    .filter((q): q is Record<string, unknown> => !!q && typeof q === 'object')
+    .map((q, i) => {
+      const type = text(q.type).toLowerCase()
+      const out: Record<string, unknown> = {
+        id: `q${i + 1}`,
+        label: text(q.label).slice(0, LIMITS.labelMax),
+        type,
+        required: q.required === true,
+      }
+      if (type === 'scale') {
+        const min = Number(q.min)
+        const max = Number(q.max)
+        const valid = Number.isInteger(min) && Number.isInteger(max) && max > min && max - min <= LIMITS.scaleSpanMax
+        Object.assign(out, valid ? { min, max } : DEFAULT_SCALE)
+        if (text(q.minLabel)) out.minLabel = text(q.minLabel)
+        if (text(q.maxLabel)) out.maxLabel = text(q.maxLabel)
+      }
+      if (type === 'choice') {
+        const options = (Array.isArray(q.options) ? q.options : []).map(text).filter(Boolean)
+        out.options = [...new Set(options)].slice(0, CHOICE_OPTIONS_MAX).map(o => o.slice(0, LIMITS.optionMax))
+      }
+      return out
+    })
+  return {
+    title: text(body.title).slice(0, LIMITS.titleMax),
+    description: text(body.description).slice(0, LIMITS.descriptionMax),
+    questions,
+  }
+}
+
 /** Transforme la sortie brute du modèle en questionnaire validé (même règles que le formulaire manuel). */
 export function parseGeneratedQuestionnaire(text: string, category: string): ValidationResult<QuestionnaireInput> {
   let parsed: unknown
@@ -63,41 +105,18 @@ export function parseGeneratedQuestionnaire(text: string, category: string): Val
   } catch (e) {
     return { ok: false, errors: [`Réponse IA illisible : ${e instanceof Error ? e.message : 'erreur inconnue'}`] }
   }
-  const body = (parsed ?? {}) as Record<string, unknown>
-  return validateQuestionnaire({ ...body, category, is_active: false, slug: undefined })
+  return validateQuestionnaire({ ...normalizeGeneratedQuestionnaire(parsed), category, is_active: false, slug: undefined })
 }
 
-export class QuestionnaireAiError extends Error {
-  constructor(message: string, readonly status: number) {
-    super(message)
-  }
-}
+/** Conservé pour la route : même forme (message + statut HTTP) que les erreurs du module IA. */
+export { AiError as QuestionnaireAiError }
 
 export async function generateQuestionnaire(req: GenerateRequest): Promise<ValidationResult<QuestionnaireInput>> {
-  const apiKey = process.env.ANTHROPIC_API_KEY?.trim()
-  if (!apiKey) throw new QuestionnaireAiError('Génération IA non configurée : variable ANTHROPIC_API_KEY manquante.', 503)
-
-  const client = new Anthropic({ apiKey })
-  // max_tokens couvre aussi la réflexion du modèle (toujours active sur ce modèle) : 4000 coupait
-  // les questionnaires longs. `fallbacks: 'default'` : si le modèle décline par erreur un sujet
-  // légitime (bien-être, émotions…), l'API relance la même demande sur un modèle de repli.
-  const message = await client.beta.messages.create({
-    model: QUESTIONNAIRE_MODEL,
-    max_tokens: 16000,
+  const { text } = await generateText({
     system: SYSTEM_PROMPT,
-    output_config: { effort: 'medium' },
-    betas: ['server-side-fallback-2026-07-01'],
-    fallbacks: 'default',
-    messages: [{ role: 'user', content: buildGenerationPrompt(req) }],
+    prompt: buildGenerationPrompt(req),
+    // ~150 tokens par question (libellé + options) ; large marge pour les modèles bavards.
+    maxTokens: 600 + req.questionCount * 250,
   })
-
-  if (message.stop_reason === 'refusal') throw new QuestionnaireAiError('Le modèle a refusé cette demande. Reformulez le sujet.', 422)
-  if (message.stop_reason === 'max_tokens') throw new QuestionnaireAiError('Réponse trop longue : demandez moins de questions.', 422)
-
-  const text = message.content
-    .filter((b): b is Anthropic.Beta.BetaTextBlock => b.type === 'text')
-    .map(b => b.text)
-    .join('\n')
-
   return parseGeneratedQuestionnaire(text, req.category?.trim() || 'general')
 }
