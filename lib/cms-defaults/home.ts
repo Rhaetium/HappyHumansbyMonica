@@ -43,6 +43,9 @@ export const HOME_DEFAULTS: Record<string, string> = {
   // Misc
   booking_modal_title: 'Choisissez votre créneau',
   booking_modal_subtitle: 'Séance découverte offerte · 1h · Sans engagement',
+  // Affichés à la place des boutons de réservation quand le compte Calendly n'a aucun rendez-vous public
+  t_aucune_disponibilite_titre: "Aucune disponibilité pour le moment",
+  t_aucune_disponibilite_texte: "L'agenda n'est pas ouvert pour l'instant. Écrivez-moi : je vous proposerai une séance dès que possible.",
   // ── Textes câblés automatiquement (étaient en dur dans la page) ──
   t_bureau_elegant_avec_lumiere: "Bureau élégant avec lumière naturelle, ambiance coaching professionnel",
   t_seance_decouverte: "Séance découverte",

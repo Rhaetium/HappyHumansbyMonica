@@ -2,8 +2,9 @@ import { NextRequest, NextResponse } from 'next/server';
 import { createClient } from '@supabase/supabase-js';
 import { requireCmsAuth } from '@/lib/cms-auth'
 import { DEFAULT_CONTACT_EMAIL } from '@/lib/site-contact'
-import { CALENDLY_BASE_DEFAULT, CALENDLY_EVENTS_DEFAULT } from '@/lib/calendly-config';
+import { CALENDLY_BASE_DEFAULT, CALENDLY_EVENT_PLACEHOLDER } from '@/lib/calendly-config';
 import { EMAIL_SUBJECT_DEFAULTS, EMAIL_SUBJECT_SETTING } from '@/lib/email-subjects';
+import { DEFAULT_PERSON_JOB_TITLE, DEFAULT_PERSON_NAME, DEFAULT_SEO_KEYWORDS } from '@/lib/site-seo';
 
 function getSupabase() {
   const url = process.env.NEXT_PUBLIC_SUPABASE_URL;
@@ -47,11 +48,11 @@ const DEFAULT_SETTINGS = [
   { key: 'contact_email',    label: 'Email de contact',            group_name: 'general',  type: 'text',     value: DEFAULT_CONTACT_EMAIL },
     // Réservation : un seul endroit pour changer le compte Calendly et les rendez-vous proposés
   { key: 'calendly_base_url', label: 'Compte Calendly (ex : https://calendly.com/mon-compte)', group_name: 'booking', type: 'text', value: CALENDLY_BASE_DEFAULT },
-  { key: 'calendly_event_coaching', label: 'Rendez-vous — Coaching individuel (fin de l’adresse)', group_name: 'booking', type: 'text', value: CALENDLY_EVENTS_DEFAULT.coaching },
-  { key: 'calendly_event_happiness_design', label: 'Rendez-vous — Happiness Design', group_name: 'booking', type: 'text', value: CALENDLY_EVENTS_DEFAULT['happiness-design'] },
-  { key: 'calendly_event_sparring', label: 'Rendez-vous — Sparring Partner', group_name: 'booking', type: 'text', value: CALENDLY_EVENTS_DEFAULT['sparring-partner'] },
-  { key: 'calendly_event_entreprises', label: 'Rendez-vous — Entreprises', group_name: 'booking', type: 'text', value: CALENDLY_EVENTS_DEFAULT.entreprises },
-  { key: 'calendly_event_relations', label: 'Rendez-vous — Relations', group_name: 'booking', type: 'text', value: CALENDLY_EVENTS_DEFAULT.relations },
+  { key: 'calendly_event_coaching', label: 'Rendez-vous — Coaching individuel (fin de l’adresse)', group_name: 'booking', type: 'text', value: '', placeholder: CALENDLY_EVENT_PLACEHOLDER },
+  { key: 'calendly_event_happiness_design', label: 'Rendez-vous — Happiness Design', group_name: 'booking', type: 'text', value: '', placeholder: CALENDLY_EVENT_PLACEHOLDER },
+  { key: 'calendly_event_sparring', label: 'Rendez-vous — Sparring Partner', group_name: 'booking', type: 'text', value: '', placeholder: CALENDLY_EVENT_PLACEHOLDER },
+  { key: 'calendly_event_entreprises', label: 'Rendez-vous — Entreprises', group_name: 'booking', type: 'text', value: '', placeholder: CALENDLY_EVENT_PLACEHOLDER },
+  { key: 'calendly_event_relations', label: 'Rendez-vous — Relations', group_name: 'booking', type: 'text', value: '', placeholder: CALENDLY_EVENT_PLACEHOLDER },
   { key: 'contact_phone',    label: 'Téléphone',                   group_name: 'general',  type: 'text',     value: '' },
   { key: 'address',          label: 'Adresse / Ville',             group_name: 'general',  type: 'text',     value: '' },
   { key: 'linkedin_url',     label: 'LinkedIn URL',                group_name: 'social',   type: 'text',     value: 'https://fr.linkedin.com/in/monica-schneider-philo-coaching' },
@@ -65,11 +66,17 @@ const DEFAULT_SETTINGS = [
   { key: EMAIL_SUBJECT_SETTING.admin_notice, label: 'Email — Objet des notifications à Monica ({name} = nom du visiteur)', group_name: 'emails', type: 'text', value: EMAIL_SUBJECT_DEFAULTS.admin_notice },
   { key: 'seo_title',        label: 'Titre SEO par défaut',        group_name: 'seo',        type: 'text',     value: 'Happy Humans — Monica Schneider · Executive Coach' },
   { key: 'seo_description',  label: 'Description SEO par défaut', group_name: 'seo',        type: 'textarea', value: 'Monica Schneider — Executive Coach certifiée AoEC & EMCC. Coaching individuel, Happiness Design™, Sparring Partner. Paris & international.' },
+  { key: 'seo_keywords',     label: 'Mots-clés (séparés par des virgules)', group_name: 'seo', type: 'textarea', value: DEFAULT_SEO_KEYWORDS.join(', ') },
   { key: 'og_image',         label: 'Image Open Graph (réseaux)', group_name: 'seo',        type: 'image',    value: '' },
   { key: 'seo_robots',       label: 'Robots global',              group_name: 'seo',        type: 'text',     value: 'index, follow' },
   { key: 'seo_canonical_domain', label: 'Domaine canonique',      group_name: 'seo',        type: 'text',     value: 'https://happyhumans.vercel.app' },
+  // Google Search Console : un seul champ à coller, la balise est extraite automatiquement
+  { key: 'gsc_verification', label: 'Balise de vérification Google Search Console', group_name: 'search-console', type: 'textarea', value: '', placeholder: '<meta name="google-site-verification" content="…" />' },
+  { key: 'gsc_property',     label: 'Adresse de la propriété (à valider dans Search Console)', group_name: 'search-console', type: 'text', value: 'https://happyhumans.vercel.app/' },
   // Geo / business
   { key: 'geo_business_name',    label: 'Nom entreprise (schema.org)',  group_name: 'geo', type: 'text',     value: 'Happy Humans — Monica Schneider' },
+  { key: 'geo_person_name',      label: 'Nom de la personne (schema.org)', group_name: 'geo', type: 'text',  value: DEFAULT_PERSON_NAME },
+  { key: 'geo_person_job_title', label: 'Fonction de la personne (schema.org)', group_name: 'geo', type: 'text', value: DEFAULT_PERSON_JOB_TITLE },
   { key: 'geo_address',          label: 'Adresse complète',             group_name: 'geo', type: 'text',     value: 'Paris, France' },
   { key: 'geo_lat',              label: 'Latitude (GPS)',               group_name: 'geo', type: 'text',     value: '48.8566' },
   { key: 'geo_lng',              label: 'Longitude (GPS)',              group_name: 'geo', type: 'text',     value: '2.3522' },

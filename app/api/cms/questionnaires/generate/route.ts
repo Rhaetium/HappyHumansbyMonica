@@ -3,6 +3,8 @@ import { requireCmsAuth } from '@/lib/cms-auth'
 import { generateQuestionnaire, QuestionnaireAiError } from '@/lib/questionnaire-ai'
 
 export const dynamic = 'force-dynamic'
+// Une génération (réflexion du modèle comprise) peut dépasser une minute.
+export const maxDuration = 120
 
 // Génère un BROUILLON : rien n'est enregistré ici. L'admin relit, puis enregistre via POST /api/cms/questionnaires.
 export async function POST(req: NextRequest) {

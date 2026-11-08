@@ -7,11 +7,16 @@ import Link from 'next/link'
 import CalendlyWidget from '@/components/CalendlyWidget'
 import { useCmsContent } from '@/hooks/useCmsContent'
 import { useCalendly } from '@/hooks/useCalendly'
+import { useCalendlyAvailability } from '@/hooks/useCalendlyAvailability'
+import { shouldHideCalendlyCta } from '@/lib/calendly-availability'
+import { useSiteSettings } from '@/hooks/useSiteSettings'
 import { BOOKING_DEFAULTS } from '@/lib/cms-defaults/booking'
 
 export default function BookingPage() {
   const c = useCmsContent('booking', BOOKING_DEFAULTS)
   const { profileUrl } = useCalendly()
+  const availability = useCalendlyAvailability(profileUrl)
+  const settings = useSiteSettings()
 
   return (
     <>
@@ -37,25 +42,35 @@ export default function BookingPage() {
                 {c.t_chargement_du_calendrier}
               </div>
             }>
-              <CalendlyWidget loadingLabel={String(c.t_chargement_du_calendrier)} labels={{
-                coaching: c.service_label_coaching,
-                'happiness-design': c.service_label_happiness_design,
-                'sparring-partner': c.service_label_sparring_partner,
-                entreprises: c.service_label_entreprises,
-                relations: c.service_label_relations,
-              }} />
+              <CalendlyWidget
+                loadingLabel={String(c.t_chargement_du_calendrier)}
+                blockedTitle={String(c.t_aucune_disponibilite_titre)}
+                blockedText={String(c.t_aucune_disponibilite_texte)}
+                contactEmail={settings.contact_email}
+                labels={{
+                  coaching: c.service_label_coaching,
+                  'happiness-design': c.service_label_happiness_design,
+                  'sparring-partner': c.service_label_sparring_partner,
+                  entreprises: c.service_label_entreprises,
+                  relations: c.service_label_relations,
+                }}
+              />
             </Suspense>
-            <p className="mt-4 text-center text-xs text-stone-400">
-              {c.display_problem}{' '}
-              <a
-                href={profileUrl}
-                target="_blank"
-                rel="noopener noreferrer"
-                className="text-[#2d5f54] hover:underline"
-              >
-                {c.t_ouvrir_calendly_directement}
-              </a>
-            </p>
+            {/* « Ouvrir Calendly directement » n'a pas de sens quand l'agenda n'a rien de public :
+                le lien mènerait au même écran vide. On le masque, le message ci-dessus prend le relais. */}
+            {!shouldHideCalendlyCta(availability) && (
+              <p className="mt-4 text-center text-xs text-stone-400">
+                {c.display_problem}{' '}
+                <a
+                  href={profileUrl}
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  className="text-[#2d5f54] hover:underline"
+                >
+                  {c.t_ouvrir_calendly_directement}
+                </a>
+              </p>
+            )}
           </div>
         </section>
 

@@ -1,7 +1,7 @@
 import { describe, it, expect } from 'vitest'
 import {
   CALENDLY_BASE_DEFAULT,
-  CALENDLY_EVENTS_DEFAULT,
+  CALENDLY_EVENT_SUGGESTIONS,
   CALENDLY_SERVICES,
   calendlyBase,
   calendlyEventUrl,
@@ -28,23 +28,41 @@ describe('calendlyBase', () => {
 })
 
 describe('calendlySlug', () => {
-  it('utilise le réglage du service, sinon le défaut', () => {
+  it('utilise le réglage du service, sinon aucun slug (jamais un slug deviné)', () => {
     expect(calendlySlug('coaching', 'nouveau-rendez-vous')).toBe('nouveau-rendez-vous')
-    expect(calendlySlug('coaching', '')).toBe(CALENDLY_EVENTS_DEFAULT.coaching)
+    expect(calendlySlug('coaching', '')).toBe('')
+    expect(calendlySlug('coaching', null)).toBe('')
+    expect(calendlySlug('coaching', undefined)).toBe('')
     expect(calendlySlug('coaching', '  /avec-slash  ')).toBe('avec-slash')
   })
 })
 
 describe('calendlyEventUrl', () => {
-  it('compose compte + rendez-vous', () => {
-    expect(calendlyEventUrl('coaching')).toBe(`${CALENDLY_BASE_DEFAULT}/${CALENDLY_EVENTS_DEFAULT.coaching}`)
-    expect(calendlyEventUrl('entreprise' as never)).toContain(CALENDLY_BASE_DEFAULT)
+  it('compose compte + rendez-vous quand un slug est fourni', () => {
+    expect(calendlyEventUrl('coaching', CALENDLY_BASE_DEFAULT, 'seance-decouverte-coaching')).toBe(
+      `${CALENDLY_BASE_DEFAULT}/seance-decouverte-coaching`,
+    )
+  })
+
+  it('retombe sur l’agenda du compte quand le service n’a pas de slug', () => {
+    // Un slug deviné casserait le bouton : sans réglage, on renvoie le compte seul.
+    expect(calendlyEventUrl('coaching')).toBe(CALENDLY_BASE_DEFAULT)
+    expect(calendlyEventUrl('coaching', null, '')).toBe(CALENDLY_BASE_DEFAULT)
+    expect(calendlyEventUrl('entreprise' as never)).toBe(CALENDLY_BASE_DEFAULT)
   })
 
   it('suit les réglages du CMS', () => {
     expect(calendlyEventUrl('happiness-design', 'https://calendly.com/autre', 'decouverte-hd')).toBe(
       'https://calendly.com/autre/decouverte-hd',
     )
+  })
+
+  it('les suggestions ne sont jamais utilisées comme adresse', () => {
+    for (const service of CALENDLY_SERVICES) {
+      const url = calendlyEventUrl(service)
+      expect(url).toBe(CALENDLY_BASE_DEFAULT)
+      expect(url).not.toContain(CALENDLY_EVENT_SUGGESTIONS[service])
+    }
   })
 })
 

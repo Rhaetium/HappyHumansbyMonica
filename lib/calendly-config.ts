@@ -8,18 +8,40 @@
 
 export const CALENDLY_BASE_DEFAULT = 'https://calendly.com/happyhumans-coaching'
 
-/** Slug Calendly par service (la partie après le compte : /<compte>/<slug>). */
+/**
+ * Services qui peuvent avoir leur propre rendez-vous Calendly.
+ *
+ * La valeur est volontairement **vide** : un slug d'événement ne peut pas être deviné, et un slug
+ * périmé casse le bouton (Calendly répond « This Calendly URL is not valid »). Tant que Monica n'a
+ * pas saisi le nom du rendez-vous dans le CMS, le service retombe sur l'agenda du compte.
+ */
 export const CALENDLY_EVENTS_DEFAULT = {
-  coaching: 'seance-decouverte-coaching',
-  'happiness-design': 'seance-decouverte-happiness-design',
-  'sparring-partner': 'seance-decouverte-sparring',
-  entreprises: 'seance-decouverte-entreprises',
-  relations: 'seance-decouverte-relations',
+  coaching: '',
+  'happiness-design': '',
+  'sparring-partner': '',
+  entreprises: '',
+  relations: '',
 } as const
 
 export type CalendlyService = keyof typeof CALENDLY_EVENTS_DEFAULT
 
 export const CALENDLY_SERVICES = Object.keys(CALENDLY_EVENTS_DEFAULT) as CalendlyService[]
+
+/**
+ * Nom du rendez-vous à créer dans Calendly pour chaque service — **exemples**, pas des replis.
+ * Ils sont affichés comme texte indicatif dans le CMS (⚙️ Paramètres → 📅 Réservation) pour montrer
+ * la forme attendue ; ils ne sont jamais envoyés à Calendly (l'adresse resterait invalide).
+ */
+export const CALENDLY_EVENT_SUGGESTIONS: Record<CalendlyService, string> = {
+  coaching: 'seance-decouverte-coaching',
+  'happiness-design': 'seance-decouverte-happiness-design',
+  'sparring-partner': 'seance-decouverte-sparring',
+  entreprises: 'seance-decouverte-entreprises',
+  relations: 'seance-decouverte-relations',
+}
+
+/** Texte indicatif du champ « Rendez-vous » dans le CMS : la forme attendue, jamais une adresse. */
+export const CALENDLY_EVENT_PLACEHOLDER = 'ex : seance-decouverte-coaching'
 
 /** Clé de réglage (table `cms_settings_kv`) qui porte le slug d'un service. */
 export const CALENDLY_EVENT_SETTING: Record<CalendlyService, string> = {

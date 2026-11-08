@@ -118,13 +118,24 @@ Onglet **🔗 Fil d'Ariane**.
 
 ## 3 sexies. Changer l'adresse de réservation, l'email affiché, les objets d'e-mails
 Onglet **⚙️ Paramètres** :
-- **📅 Réservation (Calendly)** : l'**adresse de votre compte Calendly** (ex. `https://calendly.com/happyhumans-coaching`) et le **nom du rendez-vous** pour chaque service (coaching, Happiness Design, sparring, entreprises, relations). Modifier ici change **tous les boutons de réservation du site** et l'agenda de la page « Réserver » — aucun code à toucher.
+- **📅 Réservation (Calendly)** : l'**adresse de votre compte Calendly** (ex. `https://calendly.com/happyhumans-coaching`) et, pour chaque service, le **nom du rendez-vous** (la fin de l'adresse). Modifier ici change **tous les boutons de réservation du site** et l'agenda de la page « Réserver » — aucun code à toucher.
 - **🌍 Général → Email de contact** : l'adresse affichée en bas du site et dans les messages envoyés aux visiteurs.
 - **📧 Emails automatiques** : l'**objet** des messages reçus par les visiteurs (confirmation de séance, accusé de contact) et celui de vos notifications. `{name}` est remplacé par le nom du visiteur.
 
+### ⚠️ Si personne ne peut réserver
+Un bouton de réservation ne peut fonctionner que si **le rendez-vous existe vraiment dans Calendly**. Vérifiez dans cet ordre :
+1. **Votre compte Calendly a bien un rendez-vous « séance découverte »**, et il est **publié** (pas en brouillon).
+2. **Le champ « Rendez-vous » du service** (coaching, Happiness Design, sparring, entreprises, relations) est **rempli avec la fin exacte de l'adresse** du rendez-vous. Le plus simple : ouvrez votre lien de réservation dans un onglet, puis recopiez ce qui suit votre nom de compte. Exemple pour `https://calendly.com/happyhumans-coaching/seance-decouverte-coaching` → `seance-decouverte-coaching`.
+3. **Laissez le champ vide si vous n'avez pas de rendez-vous dédié** : le bouton ouvre alors votre **agenda général** (la liste de vos rendez-vous), jamais une adresse cassée. Le texte gris « ex : seance-decouverte-coaching » n'est qu'un exemple, il n'est pas enregistré.
+4. Enregistrez : **💾 Sauvegarder** en bas de l'onglet **⚙️ Paramètres**.
+
+**Le site vous prévient tout seul.** Si votre compte Calendly n'a **aucun rendez-vous public**, l'agenda vide est remplacé partout par un message clair : page « Réserver », **carte de réservation de l'accueil** (et sa fenêtre « Réserver une séance découverte »), et **carte « Séance découverte » de la page Coaching**. Le visiteur voit « Aucune disponibilité pour le moment » avec un lien pour vous écrire, au lieu d'un bouton qui ne mène nulle part. En même temps, une **alerte apparaît dans l'onglet 💬 Messages** du CMS (et vous recevez un e-mail) : elle indique quoi corriger. Une seule alerte est créée par tranche de 6 h, pour ne pas inonder votre boîte.
+- Pour **changer le message vu par le visiteur** : onglet **🗂️ Pages → Réservation**, champs « Section 1 — Aucune dispo : titre / message ». Le même texte sert sur l'accueil et la page « Réserver » ; la page Coaching a son propre titre (« Programmes — Aucune dispo : titre du bouton »).
+- **Dans le doute, le bouton reste.** Si le site n'arrive pas à vérifier votre compte (Calendly lent ou injoignable), il affiche le bouton normalement plutôt qu'un faux « aucune disponibilité ».
+
 Cliquez **💾 Sauvegarder** en bas de la page. Délai d'affichage : ~30 secondes.
 
-> Si vous changez de compte Calendly, pensez à vérifier chaque rendez-vous : l'adresse finale est `compte/nom-du-rendez-vous`.
+> Si vous changez de compte Calendly, pensez à vérifier chaque rendez-vous : l'adresse finale est `compte/nom-du-rendez-vous`. Un rendez-vous renommé dans Calendly change la fin de l'adresse : il faut la mettre à jour ici.
 
 ## 4. Réorganiser ou masquer des sections d'une page
 **🗂️ Pages** → la page → bloc **Structure** : flèches ↑ ↓ pour changer l'ordre, bouton **Masquer / Afficher** pour retirer ou remettre une section. Puis enregistrer et publier.

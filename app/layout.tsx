@@ -9,6 +9,13 @@ import InlineEditor from '@/components/InlineEditor';
 import { getKvSettings } from '@/lib/cms-settings-server';
 import { DEFAULT_CONTACT_EMAIL } from '@/lib/site-contact';
 import { DEFAULT_PROFILES } from '@/lib/site-social';
+import {
+  DEFAULT_PERSON_JOB_TITLE,
+  DEFAULT_PERSON_NAME,
+  DEFAULT_SEO_KEYWORDS,
+  parseKeywords,
+} from '@/lib/site-seo';
+import { extractVerificationToken } from '@/lib/search-console';
 import { SITE_URL } from '@/lib/site-url';
 import { buildThemeCSS, resolveTheme, GOOGLE_FONTS_HREF } from '@/lib/themes';
 import DuotoneFilter from '@/components/DuotoneFilter';
@@ -28,6 +35,10 @@ export async function generateMetadata(): Promise<Metadata> {
   const seoTitle = kv.seo_title || DEFAULT_TITLE;
   const seoDescription = kv.seo_description || DEFAULT_DESCRIPTION;
   const ogImage = kv.og_image || '/og-images/og-default.svg';
+  const personName = kv.geo_person_name || DEFAULT_PERSON_NAME;
+  const keywords = parseKeywords(kv.seo_keywords);
+  // Google Search Console : Monica colle la balise fournie par Google, on n'en garde que le jeton.
+  const googleVerification = extractVerificationToken(kv.gsc_verification);
 
   return {
     ...baseMetadata,
@@ -36,6 +47,10 @@ export async function generateMetadata(): Promise<Metadata> {
       template: '%s | Happy Humans',
     },
     description: seoDescription,
+    keywords,
+    authors: [{ name: personName, url: SITE_URL }],
+    creator: personName,
+    ...(googleVerification ? { verification: { google: googleVerification } } : {}),
     openGraph: {
       ...baseMetadata.openGraph,
       title: seoTitle,
@@ -65,18 +80,9 @@ const baseMetadata: Metadata = {
     template: '%s | Happy Humans',
   },
   description: DEFAULT_DESCRIPTION,
-  keywords: [
-    'executive coach',
-    'coaching dirigeant',
-    'philosophical counselling',
-    'coaching leadership',
-    'Monica Schneider',
-    'Happy Humans',
-    'coaching de carrière',
-    'transformation équipes',
-  ],
-  authors: [{ name: 'Monica Schneider', url: SITE_URL }],
-  creator: 'Monica Schneider',
+  keywords: DEFAULT_SEO_KEYWORDS,
+  authors: [{ name: DEFAULT_PERSON_NAME, url: SITE_URL }],
+  creator: DEFAULT_PERSON_NAME,
   publisher: 'Happy Humans',
   icons: {
     icon: [
@@ -134,6 +140,7 @@ const baseMetadata: Metadata = {
 // Schemas JSON-LD — enrichis par les réglages Géo du CMS (Paramètres → Géo & Business)
 function buildSchemas(kv: Record<string, string>) {
   const businessName = kv.geo_business_name || 'Happy Humans - Monica Schneider';
+  const siteName = kv.site_name || 'Happy Humans';
   const locale = kv.geo_default_locale || 'fr-FR';
   const address = kv.geo_address || 'Paris, France';
   const [locality, country] = address.split(',').map(s => s.trim());
@@ -151,7 +158,7 @@ function buildSchemas(kv: Record<string, string>) {
   const schemaWebSite = {
     '@context': 'https://schema.org',
     '@type': 'WebSite',
-    name: 'Happy Humans',
+    name: siteName,
     alternateName: businessName,
     url: SITE_URL,
     description: 'Plateforme de coaching et de transformation portée par Monica Schneider.',
@@ -185,8 +192,8 @@ function buildSchemas(kv: Record<string, string>) {
   const schemaPerson = {
     '@context': 'https://schema.org',
     '@type': 'Person',
-    name: 'Monica Schneider',
-    jobTitle: 'Executive Coach',
+    name: kv.geo_person_name || DEFAULT_PERSON_NAME,
+    jobTitle: kv.geo_person_job_title || DEFAULT_PERSON_JOB_TITLE,
     url: SITE_URL,
     image: `${SITE_URL}/og-default.jpg`,
     ...(locality ? { workLocation: { '@type': 'Place', address: { '@type': 'PostalAddress', addressLocality: locality } } } : {}),
@@ -194,7 +201,7 @@ function buildSchemas(kv: Record<string, string>) {
     knowsLanguage: ['fr', 'en', 'ro'],
     worksFor: {
       '@type': 'Organization',
-      name: 'Happy Humans',
+      name: siteName,
     },
   };
 

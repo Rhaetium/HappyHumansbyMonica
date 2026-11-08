@@ -78,11 +78,16 @@ export async function generateQuestionnaire(req: GenerateRequest): Promise<Valid
   if (!apiKey) throw new QuestionnaireAiError('Génération IA non configurée : variable ANTHROPIC_API_KEY manquante.', 503)
 
   const client = new Anthropic({ apiKey })
-  const message = await client.messages.create({
+  // max_tokens couvre aussi la réflexion du modèle (toujours active sur ce modèle) : 4000 coupait
+  // les questionnaires longs. `fallbacks: 'default'` : si le modèle décline par erreur un sujet
+  // légitime (bien-être, émotions…), l'API relance la même demande sur un modèle de repli.
+  const message = await client.beta.messages.create({
     model: QUESTIONNAIRE_MODEL,
-    max_tokens: 4000,
+    max_tokens: 16000,
     system: SYSTEM_PROMPT,
     output_config: { effort: 'medium' },
+    betas: ['server-side-fallback-2026-07-01'],
+    fallbacks: 'default',
     messages: [{ role: 'user', content: buildGenerationPrompt(req) }],
   })
 
@@ -90,7 +95,7 @@ export async function generateQuestionnaire(req: GenerateRequest): Promise<Valid
   if (message.stop_reason === 'max_tokens') throw new QuestionnaireAiError('Réponse trop longue : demandez moins de questions.', 422)
 
   const text = message.content
-    .filter((b): b is Anthropic.TextBlock => b.type === 'text')
+    .filter((b): b is Anthropic.Beta.BetaTextBlock => b.type === 'text')
     .map(b => b.text)
     .join('\n')
 

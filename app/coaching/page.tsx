@@ -4,6 +4,9 @@ import Footer from '@/components/Footer'
 import Link from 'next/link'
 import { useCmsContent } from '@/hooks/useCmsContent'
 import { useCalendly } from '@/hooks/useCalendly'
+import CalendlyGate from '@/components/CalendlyGate'
+import { useSiteSettings } from '@/hooks/useSiteSettings'
+import { DEFAULT_CONTACT_EMAIL } from '@/lib/site-contact'
 import { COACHING_DEFAULTS } from '@/lib/cms-defaults/coaching'
 import { PAGE_SECTIONS, resolveSections } from '@/lib/cms-sections'
 import { customSectionDefs, customSectionId, isCustomSectionId, parseBlocks } from '@/lib/custom-sections'
@@ -16,6 +19,8 @@ export default function CoachingPage() {
   const c = useCmsContent('coaching', COACHING_DEFAULTS)
   // Lien du rendez-vous de découverte : réglage CMS (⚙️ Paramètres → 📅 Réservation)
   const { eventUrl: calendlyEventUrl } = useCalendly()
+  const settings = useSiteSettings()
+  const contactEmail = settings.contact_email || DEFAULT_CONTACT_EMAIL
 
   // Programmes et témoignages : listes modifiables dans le CMS (⚙️ Pages → Coaching).
   // Chaque carte peut être ajoutée, retirée ou déplacée ; les anciens champs numérotés restent lus.
@@ -148,9 +153,17 @@ export default function CoachingPage() {
                 <p className={`text-xs mb-4 ${highlight ? 'text-emerald-200' : 'text-stone-500'}`}>{unit}</p>
                 <p className={`text-sm leading-relaxed flex-1 mb-3 ${highlight ? 'text-emerald-100' : 'text-stone-600'}`}>{desc}</p>
                 {calendly ? (
-                  <a href={href} target="_blank" rel="noopener noreferrer" className="mt-auto rounded-full py-2.5 text-center text-sm font-semibold transition bg-[#2f6b61] text-white hover:bg-[#235249]">
-                    {cta}
-                  </a>
+                  <CalendlyGate
+                    url={href}
+                    contactEmail={contactEmail}
+                    blockedTitle={c.t_aucune_disponibilite_titre}
+                    className="mt-auto rounded-full bg-[#f0e6d8] px-4 py-2.5 text-center"
+                    compact
+                  >
+                    <a href={href} target="_blank" rel="noopener noreferrer" className="mt-auto rounded-full py-2.5 text-center text-sm font-semibold transition bg-[#2f6b61] text-white hover:bg-[#235249]">
+                      {cta}
+                    </a>
+                  </CalendlyGate>
                 ) : (
                   <Link href={href} className={`mt-auto rounded-full py-2.5 text-center text-sm font-semibold transition ${highlight ? 'bg-white text-[#2f6b61] hover:bg-stone-50' : 'bg-[#2f6b61] text-white hover:bg-[#235249]'}`}>
                     {cta}
