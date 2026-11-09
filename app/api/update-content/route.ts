@@ -1,5 +1,7 @@
 import { NextRequest, NextResponse } from 'next/server';
-import { supabase } from '@/lib/supabase';
+// Écriture réservée au CMS : la clé publique n'a plus aucun droit d'écriture
+// (migration 20261109000000_rls_verrouillage.sql).
+import { getSupabaseServer } from '@/lib/supabase-server';
 import { requireCmsAuth } from '@/lib/cms-auth';
 
 const CONTENT_UPDATES: { slug: string; content: string }[] = [
@@ -177,6 +179,7 @@ export async function GET(request: NextRequest) {
   const authError = requireCmsAuth(request);
   if (authError) return authError;
 
+  const supabase = getSupabaseServer();
   if (!supabase) {
     return NextResponse.json({ error: 'Supabase not configured' }, { status: 500 });
   }
