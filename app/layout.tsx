@@ -13,6 +13,8 @@ import {
   DEFAULT_PERSON_JOB_TITLE,
   DEFAULT_PERSON_NAME,
   DEFAULT_SEO_KEYWORDS,
+  DEFAULT_SITE_DESCRIPTION,
+  DEFAULT_SITE_TITLE,
   parseKeywords,
 } from '@/lib/site-seo';
 import { extractVerificationToken } from '@/lib/search-console';
@@ -25,9 +27,8 @@ export const viewport: Viewport = {
   themeColor: '#2d5f54',
 };
 
-const DEFAULT_TITLE = 'Happy Humans — Monica Schneider';
-const DEFAULT_DESCRIPTION =
-  "Philo-coaching avec Monica Schneider. Executive coaching, philosophical counselling et sparring partner pour particuliers et entreprises. Retrouvez clarté, alignement et relations épanouissantes.";
+const DEFAULT_TITLE = DEFAULT_SITE_TITLE;
+const DEFAULT_DESCRIPTION = DEFAULT_SITE_DESCRIPTION;
 
 // SEO global piloté par le CMS (Paramètres → SEO global), avec fallback
 export async function generateMetadata(): Promise<Metadata> {
