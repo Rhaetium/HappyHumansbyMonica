@@ -15,6 +15,7 @@ import {
 import { bookingHealthCheck, type HealthCheck } from '@/lib/cms-health';
 import { extractVerificationToken, searchConsoleChecks, sitemapUrl } from '@/lib/search-console';
 import { SITE_URL } from '@/lib/site-url';
+import { checkEnvironment, checkSupabase, toHealthChecks } from '@/lib/env-check';
 
 /**
  * GET /api/cms/health — état des fonctions du site, pour le tableau de bord.
@@ -54,6 +55,18 @@ async function readPublicPage(url: string, mustContain?: string): Promise<{ ok: 
   }
 }
 
+// Le tableau de bord interroge cette route toutes les 2 minutes : les tests de la base Supabase
+// (une dizaine de petites lectures) sont gardés 10 minutes en mémoire plutôt que refaits à chaque fois.
+const CONFIG_TTL_MS = 10 * 60 * 1000;
+let configCache: { at: number; checks: HealthCheck[] } | null = null;
+
+async function readConfigChecks(): Promise<HealthCheck[]> {
+  if (configCache && Date.now() - configCache.at < CONFIG_TTL_MS) return configCache.checks;
+  const checks = toHealthChecks([...checkEnvironment(process.env), ...(await checkSupabase(process.env))]);
+  configCache = { at: Date.now(), checks };
+  return checks;
+}
+
 export async function GET(req: NextRequest) {
   const authError = requireCmsAuth(req);
   if (authError) return authError;
@@ -62,13 +75,15 @@ export async function GET(req: NextRequest) {
   const profileUrl = calendlyBase(kv[CALENDLY_BASE_SETTING] || CALENDLY_BASE_DEFAULT);
   const slug = calendlyProfileSlug(profileUrl) || 'happyhumans-coaching';
 
-  const [availability, sitemap, robots] = await Promise.all([
+  const [availability, sitemap, robots, configChecks] = await Promise.all([
     readCalendlyAvailability(profileUrl),
     readPublicPage(sitemapUrl(SITE_URL)),
     readPublicPage(`${SITE_URL}/robots.txt`, 'sitemap'),
+    readConfigChecks(),
   ]);
 
   const checks: HealthCheck[] = [
+    ...configChecks,
     bookingHealthCheck({ availability, profileUrl, slug }),
     ...searchConsoleChecks({
       token: extractVerificationToken(kv.gsc_verification),
