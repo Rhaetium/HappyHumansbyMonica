@@ -281,3 +281,12 @@ Les valeurs qui ne sont propres à aucune page vivent dans la table `cms_setting
 - La navigation : éditeur dédié (onglet 🧭 Menu).
 - Les styles et la structure des blocs libres : seuls les textes, images et liens des blocs sont éditables.
 - Les anciennes adresses de l'ex-site Heldonica (`/travel-planning`, `/hotel-consulting`, `/destinations/*`…) : les pages ont été supprimées, `next.config.js` redirige les anciens liens.
+
+## Clés d'IA saisies dans l'admin (onglet 🤖 IA)
+Fournisseurs : `lib/ai-providers.ts` (catalogue, validation). Choix du fournisseur et appels : `lib/ai-text.ts`. Lecture et écriture des clés : `lib/ai-keys.ts`. Routes : `/api/cms/ai-keys` (état, enregistrement, retrait, fournisseur préféré) et `/api/cms/ai-keys/test`, toutes derrière `requireCmsAuth`.
+
+- **Stockage** : `cms_settings_kv`, clé `secret_ai_<variable>`. La valeur est chiffrée en AES-256-GCM (`lib/secret-box.ts`) avec un secret qui ne vit que dans Vercel : `CMS_SESSION_SECRET`, à défaut `CMS_PASSWORD`. Si ce secret change, les clés enregistrées deviennent illisibles ; l'admin le signale et il suffit de les ressaisir.
+- **Jamais renvoyées au navigateur** : `GET /api/cms/ai-keys` ne dit que « configurée / source » (tests : `__tests__/api/cms-ai-keys.test.ts`). La route générique `/api/cms/settings` refuse d'écrire une clé commençant par `secret_` et ne renvoie que les réglages déclarés.
+- **Priorité** : une variable Vercel l'emporte sur la valeur de l'admin. `AI_PROVIDER` (Vercel) ou le réglage « fournisseur préféré » désigne le fournisseur à utiliser en priorité ; s'il n'est pas configuré, on retombe sur l'ordre par défaut (Claude, Cloudflare, Groq, Gemini).
+- **Ajouter un fournisseur** : une entrée dans `PROVIDERS` (`lib/ai-providers.ts`), son test de disponibilité et son appel dans `lib/ai-text.ts`, puis un test. L'onglet admin se construit tout seul depuis le catalogue.
+

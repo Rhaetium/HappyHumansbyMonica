@@ -28,6 +28,7 @@ import CustomSectionsEditor from '@/components/cms/CustomSectionsEditor';
 import CustomPagesManager from '@/components/cms/CustomPagesManager';
 import ContentOverview from '@/components/cms/ContentOverview';
 import QuestionnairesAdmin from '@/components/cms/questionnaires/QuestionnairesAdmin';
+import AiKeysPanel from '@/components/cms/AiKeysPanel';
 import SearchConsoleStats from '@/components/cms/SearchConsoleStats';
 
 // Numéro du dernier message affiché : un message récent n'est pas effacé par le minuteur d'un message plus ancien
@@ -2452,6 +2453,7 @@ export default function CMSAdmin() {
     { id: 'fil-ariane',   label: '🔗 Fil d’Ariane', count: null },
     { id: 'custom-pages', label: '📄 Pages libres', count: null },
     { id: 'questionnaires', label: '📋 Questionnaires', count: null },
+    { id: 'ia', label: '🤖 IA', count: null },
     { id: 'media',    label: '🖼️ Médiathèque', count: null },
     { id: 'booking',  label: '📅 Réservations', count: null },
     { id: 'messages', label: '💬 Messages', count: unreadVisitorCount(messages) || null },
@@ -3140,6 +3142,8 @@ export default function CMSAdmin() {
 
         {/* ── PAGES LIBRES ── */}
         {tab === 'questionnaires' && <QuestionnairesAdmin />}
+
+        {tab === 'ia' && <AiKeysPanel />}
 
         {tab === 'custom-pages' && (
           <div style={{ maxWidth: 1100, margin: '0 auto' }}>

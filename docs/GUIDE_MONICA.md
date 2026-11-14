@@ -177,3 +177,19 @@ Terminez par **Enregistrer le brouillon**, relisez avec **👁 Voir le brouillon
 ## Avant la présentation
 - Faites vos changements **la veille**, puis ouvrez le site dans une fenêtre de navigation privée pour voir ce que verront les visiteurs.
 - Le **mode maintenance** (⚙️ Paramètres) permet de masquer le site pendant que vous travaillez : vous continuez à le voir, pas les visiteurs.
+
+## Ajouter une clé d'IA gratuite (questionnaires, articles, carrousels)
+Les outils « ✨ Générer avec l'IA » ont besoin d'une clé. Plusieurs fournisseurs sont **gratuits** (avec un quota par jour) : Google Gemini, Groq et Cloudflare.
+
+1. Ouvrez **🤖 IA** dans l'administration.
+2. Choisissez un fournisseur marqué **Gratuit** (Gemini est un bon premier choix) et cliquez sur le lien « Créer une clé ». Connectez-vous chez eux, créez la clé et copiez-la.
+3. Collez-la dans le champ, puis cliquez sur **Enregistrer** et sur **Tester**. Un « ✅ La clé fonctionne » confirme que tout est bon.
+4. Si vous en avez plusieurs, **Fournisseur à utiliser en priorité** permet de choisir. Si celui-ci tombe en panne ou atteint son quota, le site en prend automatiquement un autre.
+
+À savoir :
+- La clé est **chiffrée** et ne s'affiche plus jamais après l'enregistrement : un champ vide veut dire « inchangé ». Pour la remplacer, collez la nouvelle ; pour l'enlever, **Retirer**.
+- Une clé définie dans Vercel passe avant celle de l'administration (l'étiquette indique « Via Vercel »).
+- Chez Google, l'offre gratuite peut servir à améliorer leurs produits : n'envoyez pas de données de clients. Les textes générés ici (questionnaires, articles) n'en contiennent pas.
+- Les modèles gratuits écrivent un peu moins bien que Claude (payant), surtout pour le ton : relisez toujours le résultat.
+- Quota atteint ? Le message le dit. Réessayez plus tard, ou ajoutez un deuxième fournisseur gratuit.
+

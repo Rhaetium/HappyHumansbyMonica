@@ -137,6 +137,10 @@ export async function PUT(req: NextRequest) {
 
   for (const { key, value } of updates) {
     if (!key) continue;
+    // Les secrets (clés d'API chiffrées) ne s'écrivent que par leur route dédiée, qui valide et chiffre.
+    if (key.startsWith('secret_')) {
+      return NextResponse.json({ error: 'Ce réglage est protégé.' }, { status: 403 });
+    }
     const { error } = await supabase
       .from('cms_settings_kv')
       .upsert({ key, value: value ?? '', updated_at: new Date().toISOString() }, { onConflict: 'key' });
