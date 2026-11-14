@@ -33,6 +33,26 @@ Avant, le cookie `hh_cms_edit` valait simplement `1` et le serveur lui faisait c
 - En local, le mot de passe est dans `.env.local` (jamais commité) ; avec `npm run dev:mock` (faux Supabase), c'est `dev-local`. Ces deux mots de passe ne valent pas pour le site en ligne.
 - Message « CMS non configuré : variable CMS_PASSWORD manquante » : la variable est absente ou vide dans le déploiement. Message « Mot de passe incorrect » : ce n'est pas la valeur de `CMS_PASSWORD` du déploiement en cours (si elle vient d'être modifiée, il faut redéployer). `CMS_SESSION_SECRET` est facultatif : sans lui, les sessions sont signées avec le mot de passe.
 
+## Démarrage rapide (le minimum, en 3 étapes)
+
+**1. Coller les variables dans Vercel en une seule fois.**
+Vercel → projet → Settings → Environment Variables → **Import .env** (ou coller directement plusieurs lignes dans le premier champ « Key »). Collez ce bloc rempli, en cochant *Production* et *Preview* :
+
+```
+NEXT_PUBLIC_SUPABASE_URL=https://xxxxxxxxxxxxxxxxxxxx.supabase.co
+NEXT_PUBLIC_SUPABASE_ANON_KEY=sb_publishable_...
+SUPABASE_SERVICE_ROLE_KEY=sb_secret_...
+CMS_PASSWORD=un-mot-de-passe-long-d-au-moins-12-caracteres
+```
+
+Où trouver les trois clés Supabase : Supabase → projet → **Settings → API** (adresse, clé « publishable », clé « secret »).
+Ces 4 variables suffisent pour démarrer : tout le reste est facultatif et se règle plus tard (voir `.env.example`).
+Pour le lancement, ajoutez aussi `NEXT_PUBLIC_SITE_URL` (adresse définitive, sans slash final) et, si vous voulez le générateur de questionnaires, `ANTHROPIC_API_KEY`.
+
+**2. Créer les tables.** Supabase → **SQL Editor** → coller et exécuter les migrations de `supabase/migrations/` (celle des questionnaires : `20261102000000_questionnaires.sql`).
+
+**3. Redéployer, puis vérifier.** Vercel → Deployments → ⋮ → Redeploy. Ouvrez ensuite `/cms-admin` : le **tableau de bord** affiche en haut tout ce qui ne va pas (variable absente ou mal copiée, table manquante, données privées lisibles par un visiteur), avec *ce qu'il faut faire*. S'il n'affiche aucun problème, la configuration technique est bonne. Le contrôle est refait toutes les 10 minutes (code : `lib/env-check.ts`).
+
 ## 1. Avant de déployer la branche 2
 
 ### Variables d'environnement
