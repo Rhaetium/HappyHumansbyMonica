@@ -21,6 +21,10 @@ import { extractVerificationToken } from '@/lib/search-console';
 import { SITE_URL } from '@/lib/site-url';
 import { buildThemeCSS, resolveTheme, GOOGLE_FONTS_HREF } from '@/lib/themes';
 import DuotoneFilter from '@/components/DuotoneFilter';
+import CmsServerContent from '@/components/CmsServerContent';
+import { SITE_DEFAULTS } from '@/lib/cms-defaults/site';
+import { FOOTER_DEFAULTS } from '@/lib/cms-defaults/footer';
+import { FIL_ARIANE_DEFAULTS } from '@/lib/cms-defaults/fil-ariane';
 
 
 export const viewport: Viewport = {
@@ -252,8 +256,11 @@ export default async function RootLayout({
           <InlineEditProvider>
             <AuthProvider>
               <DynamicFavicon />
-              {children}
-              <CookieConsentBanner />
+              {/* Textes partagés (bandeau cookies, pied de page, fil d'Ariane) lus sur le serveur : présents dans le HTML */}
+              <CmsServerContent pages={{ site: SITE_DEFAULTS, footer: FOOTER_DEFAULTS, 'fil-ariane': FIL_ARIANE_DEFAULTS }}>
+                {children}
+                <CookieConsentBanner />
+              </CmsServerContent>
               <InlineEditor />
             </AuthProvider>
           </InlineEditProvider>

@@ -5,6 +5,7 @@ import Footer from '@/components/Footer'
 import BlogClientPage from '@/components/BlogClientPage'
 import { pageMetadata } from '@/lib/page-seo'
 import { BLOG_DEFAULTS } from '@/lib/cms-defaults/blog'
+import CmsServerContent from '@/components/CmsServerContent'
 
 export const revalidate = 60
 
@@ -22,10 +23,10 @@ export default async function BlogPage() {
   }))
 
   return (
-    <>
+    <CmsServerContent pages={{ 'blog': BLOG_DEFAULTS }}>
       <Header />
       <BlogClientPage posts={postsWithFormattedDate} />
       <Footer />
-    </>
+    </CmsServerContent>
   )
 }
