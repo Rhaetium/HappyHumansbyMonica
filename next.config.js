@@ -1,5 +1,13 @@
 ﻿/** @type {import('next').NextConfig} */
 
+// Adresses du site : celle configurée (NEXT_PUBLIC_SITE_URL, comme lib/site-url.ts), l'adresse Vercel et le domaine
+// officiel avec et sans « www ». Une image servie par l'une d'elles (ou après une redirection de l'une vers l'autre)
+// doit rester autorisée, sinon elle disparaît du site au moment de changer de domaine.
+const configuredHost = (() => {
+  try { return new URL(process.env.NEXT_PUBLIC_SITE_URL || '').hostname } catch { return null }
+})()
+const OWN_HOSTS = [...new Set(['happyhumans.vercel.app', 'happyhumans.fr', 'www.happyhumans.fr', configuredHost].filter(Boolean))]
+
 const securityHeaders = [
   {
     key: 'X-DNS-Prefetch-Control',
@@ -27,7 +35,7 @@ const securityHeaders = [
       "default-src 'self'",
       "script-src 'self' 'unsafe-inline' 'unsafe-eval' https://assets.calendly.com",
       "style-src 'self' 'unsafe-inline' https://api.fontshare.com https://fonts.googleapis.com https://assets.calendly.com",
-      "img-src 'self' data: blob: https://images.unsplash.com https://*.supabase.co https://happyhumans.vercel.app https://behold.pictures https://cdn2.behold.pictures https://*.calendly.com",
+      `img-src 'self' data: blob: https://images.unsplash.com https://*.supabase.co ${OWN_HOSTS.map(h => `https://${h}`).join(' ')} https://behold.pictures https://cdn2.behold.pictures https://*.calendly.com`,
       "font-src 'self' https://api.fontshare.com https://fonts.gstatic.com",
       "frame-src 'self' https://calendly.com https://*.calendly.com",
       "connect-src 'self' https://*.supabase.co https://api.perplexity.ai https://api.unsplash.com https://api.bufferapp.com https://calendly.com https://*.calendly.com",
@@ -73,10 +81,7 @@ const nextConfig = {
         protocol: 'https',
         hostname: 'www.heldonica.fr',
       },
-      {
-        protocol: 'https',
-        hostname: 'happyhumans.vercel.app',
-      },
+      ...OWN_HOSTS.map(hostname => ({ protocol: 'https', hostname })),
       {
         protocol: 'https',
         hostname: 'images.unsplash.com',

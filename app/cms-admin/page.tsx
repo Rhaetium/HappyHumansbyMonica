@@ -30,6 +30,7 @@ import ContentOverview from '@/components/cms/ContentOverview';
 import QuestionnairesAdmin from '@/components/cms/questionnaires/QuestionnairesAdmin';
 import AiKeysPanel from '@/components/cms/AiKeysPanel';
 import SearchConsoleStats from '@/components/cms/SearchConsoleStats';
+import { SEARCH_CONSOLE_PROPERTY_DEFAULT } from '@/lib/search-console';
 
 // Numéro du dernier message affiché : un message récent n'est pas effacé par le minuteur d'un message plus ancien
 let toastSeq = 0;
@@ -948,7 +949,7 @@ const PAGES_CONFIG: Record<string, { label: string; emoji: string; sections: { k
       { key: 't_email', label: 'Section 1 · Identité de l’éditeur — Texte « Email : »', type: 'text' },
       { key: 't_happyhumans_coaching_gmail_com', label: 'Section 1 · Identité de l’éditeur — Lien « happyhumans.coaching@gmail.com »', type: 'text' },
       { key: 't_site', label: 'Section 1 · Identité de l’éditeur — Texte « Site : »', type: 'text' },
-      { key: 't_happyhumans_vercel_app', label: 'Section 1 · Identité de l’éditeur — Lien « happyhumans.vercel.app »', type: 'text' },
+      { key: 't_happyhumans_vercel_app', label: 'Section 1 · Identité de l’éditeur — Adresse du site (lien)', type: 'text' },
       { key: 't_hebergeur', label: 'Section 2 · Hébergeur — Titre de section « Hébergeur »', type: 'text' },
       { key: 't_societe_vercel_inc', label: 'Section 2 · Hébergeur — Texte « **Société :** Vercel Inc. » — format : **gras** *italique* [lien](adresse)', type: 'textarea' },
       { key: 't_adresse_340_pine_street', label: 'Section 2 · Hébergeur — Texte « **Adresse :** 340 Pine Street Suite 701, San… » — format : **gras** *italique* [lien](adresse)', type: 'textarea' },
@@ -4015,7 +4016,7 @@ export default function CMSAdmin() {
                               🔎 Relier le site à Google Search Console
                             </p>
                             <ol style={{ margin: 0, paddingLeft: '1.2rem', fontSize: '.86rem', color: '#444', lineHeight: 1.7 }}>
-                              <li>Ouvrez <a href="https://search.google.com/search-console" target="_blank" rel="noopener noreferrer" style={{ color: '#2d5f54', fontWeight: 600 }}>search.google.com/search-console</a> et ajoutez une propriété « Préfixe d’URL » : <code style={{ background: '#ece8e2', padding: '.1rem .35rem', borderRadius: '.25rem' }}>{editedSettings['gsc_property'] || 'https://happyhumans.vercel.app/'}</code></li>
+                              <li>Ouvrez <a href="https://search.google.com/search-console" target="_blank" rel="noopener noreferrer" style={{ color: '#2d5f54', fontWeight: 600 }}>search.google.com/search-console</a> et ajoutez une propriété « Préfixe d’URL » : <code style={{ background: '#ece8e2', padding: '.1rem .35rem', borderRadius: '.25rem' }}>{editedSettings['gsc_property'] || SEARCH_CONSOLE_PROPERTY_DEFAULT}</code></li>
                               <li>Choisissez la méthode <strong>Balise HTML</strong>, puis <strong>copiez la balise entière</strong> et collez-la dans le champ ci-dessous.</li>
                               <li>Enregistrez, puis cliquez sur <strong>Vérifier</strong> dans Search Console.</li>
                               <li>Dans le menu « Sitemaps », soumettez <code style={{ background: '#ece8e2', padding: '.1rem .35rem', borderRadius: '.25rem' }}>sitemap.xml</code>.</li>

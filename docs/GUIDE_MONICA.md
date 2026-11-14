@@ -1,6 +1,6 @@
 # Guide express — modifier le site (logo, photos, textes)
 
-À garder sous la main. Tout se fait sur **https://happyhumans.vercel.app/cms-admin** (mot de passe de l'administration).
+À garder sous la main. Tout se fait sur **l'adresse de votre site suivie de `/cms-admin`** (mot de passe de l'administration).
 
 ## 1. Changer le logo
 **Le plus simple, directement sur le site** : bouton **✏️ Éditer** → en haut, **Modifier le menu et le logo** → **📷 Changer le logo**. Le logo change aussitôt. (**↩ Logo d'origine** pour revenir en arrière.)

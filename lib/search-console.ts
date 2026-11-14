@@ -11,9 +11,10 @@
  */
 
 import type { HealthCheck } from './cms-health'
+import { SITE_URL } from './site-url'
 
 /** Page que Google compare : la balise doit être présente sur l'accueil. */
-export const SEARCH_CONSOLE_PROPERTY_DEFAULT = 'https://happyhumans.vercel.app/'
+export const SEARCH_CONSOLE_PROPERTY_DEFAULT = `${SITE_URL}/`
 
 /**
  * Extrait le jeton de vérification de tout ce que Google peut demander de copier.
