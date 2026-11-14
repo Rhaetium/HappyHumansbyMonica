@@ -3,7 +3,6 @@ import {
   clearCmsSessionResponse,
   createCmsSessionResponse,
   getCmsAuthStatus,
-  getCurrentSessionToken,
   isValidCmsPassword,
 } from "@/lib/cms-auth"
 
@@ -24,8 +23,9 @@ export async function POST(req: Request) {
   return createCmsSessionResponse()
 }
 
-// GET /api/cms/auth — returns { ok, token } when authenticated
-// Token can be passed as ?cms_edit_token=... to activate inline edit on the site
+// GET /api/cms/auth — { ok: true } si la session est valide.
+// Le jeton de session n'est PAS renvoyé : il vit dans un cookie httpOnly, illisible par un script de la page.
+// (Le lien « Éditer le site » utilise un jeton distinct, de 5 min : /api/cms/generate-edit-token.)
 export async function GET(req: Request) {
   const status = getCmsAuthStatus(req)
 
@@ -35,19 +35,11 @@ export async function GET(req: Request) {
 
   if (status !== "ok") return NextResponse.json({ ok: false }, { status: 401 })
 
-  const token = getCurrentSessionToken(req)
-  return NextResponse.json({ ok: true, token })
+  return NextResponse.json({ ok: true })
 }
 
 export async function DELETE() {
   return clearCmsSessionResponse()
 }
 
-export async function PUT() {
-  const password = process.env.CMS_PASSWORD;
-  return NextResponse.json({
-    hasPassword: !!password,
-    passwordLength: password?.length || 0,
-    timestamp: new Date().toISOString()
-  });
-}
+// (Supprimé : PUT, public, qui révélait la longueur du mot de passe.)

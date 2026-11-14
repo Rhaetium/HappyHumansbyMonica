@@ -101,7 +101,7 @@ Généré avec Happy Humans CMS
           type="text"
           value={topic}
           onChange={(e) => setTopic(e.target.value)}
-          placeholder="Ex: 5 tips voyage Portugal"
+          placeholder="Ex : 5 signes qu'il est temps de ralentir"
           className="w-full px-3 py-2 border rounded-lg"
           disabled={isGenerating}
         />
@@ -176,7 +176,7 @@ Généré avec Happy Humans CMS
             </div>
           ) : (
             <div className="mb-3 p-3 bg-amber-50 border border-amber-200 rounded text-sm text-amber-700">
-              ⚠️ Pas d'images - vérifie la clé Unsplash dans Vercel (NEXT_PUBLIC_UNSPLASH_ACCESS_KEY)
+              Pas de photos proposées : ajoutez une clé Unsplash gratuite dans Vercel (NEXT_PUBLIC_UNSPLASH_ACCESS_KEY) pour en avoir. Le texte, lui, est prêt.
             </div>
           )}
           
