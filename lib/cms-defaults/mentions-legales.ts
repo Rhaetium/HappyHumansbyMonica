@@ -2,6 +2,7 @@
 // Lus par la page ET par l'admin du CMS (lib/cms-page-defaults.ts) : ne jamais les dupliquer ailleurs.
 // Chaque clé correspond à un champ de PAGES_CONFIG (app/cms-admin/page.tsx).
 import { DEFAULT_CONTACT_EMAIL } from '@/lib/site-contact'
+import { SITE_URL } from '@/lib/site-url'
 
 export const MENTIONS_LEGALES_DEFAULTS: Record<string, string> = {
   // ── Textes câblés automatiquement (étaient en dur dans la page) ──
@@ -15,7 +16,9 @@ export const MENTIONS_LEGALES_DEFAULTS: Record<string, string> = {
   t_email: "Email :",
   t_happyhumans_coaching_gmail_com: DEFAULT_CONTACT_EMAIL,
   t_site: "Site :",
-  t_happyhumans_vercel_app: "happyhumans.vercel.app",
+  // Adresse du site affichée dans les mentions légales : toujours celle de lib/site-url.ts (la clé garde son ancien nom
+  // pour ne pas perdre les textes déjà saisis dans le CMS).
+  t_happyhumans_vercel_app: new URL(SITE_URL).hostname,
   t_hebergeur: "Hébergeur",
   t_societe_vercel_inc: "**Société :** Vercel Inc.",
   t_adresse_340_pine_street: "**Adresse :** 340 Pine Street Suite 701, San Francisco, CA 94104, USA",

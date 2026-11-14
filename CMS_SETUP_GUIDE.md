@@ -39,7 +39,7 @@ node -e "console.log(require('crypto').randomBytes(32).toString('base64'))"
 
 ## Accéder au CMS
 
-1. Aller sur https://happyhumans.vercel.app/admin
+1. Aller sur l'adresse du site suivie de `/cms-admin`
 2. Entrer le mot de passe configuré
 3. Vous êtes connecté pour 8 heures
 
