@@ -47,7 +47,7 @@ CMS_PASSWORD=un-mot-de-passe-long-d-au-moins-12-caracteres
 
 Où trouver les trois clés Supabase : Supabase → projet → **Settings → API** (adresse, clé « publishable », clé « secret »).
 Ces 4 variables suffisent pour démarrer : tout le reste est facultatif et se règle plus tard (voir `.env.example`).
-Pour le lancement, ajoutez aussi `NEXT_PUBLIC_SITE_URL` (adresse définitive, sans slash final) et, si vous voulez le générateur de questionnaires, `ANTHROPIC_API_KEY`.
+Sans nom de domaine, `NEXT_PUBLIC_SITE_URL` est inutile : le site utilise `https://happyhumans.vercel.app` (adresse du projet Vercel). Le jour où un domaine est branché, renseignez-le (sans slash final). Pour le générateur de questionnaires, ajoutez `ANTHROPIC_API_KEY`.
 
 **2. Créer les tables.** Supabase → **SQL Editor** → coller et exécuter les migrations de `supabase/migrations/` (celle des questionnaires : `20261102000000_questionnaires.sql`).
 

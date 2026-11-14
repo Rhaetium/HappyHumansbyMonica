@@ -93,11 +93,11 @@ export function checkEnvironment(env: Env): Check[] {
   // ── Adresse publique (SEO) ──
   const site = env.NEXT_PUBLIC_SITE_URL?.trim()
   if (!site) {
-    add({ id: 'site-url', level: 'warn', title: 'Adresse publique du site (NEXT_PUBLIC_SITE_URL)', detail: 'Absente : l’adresse par défaut du code est utilisée pour le sitemap et les URL canoniques.', fix: 'Renseignez l’adresse définitive du site (sans slash final).' })
+    add({ id: 'site-url', level: 'info', title: 'Adresse publique du site (NEXT_PUBLIC_SITE_URL)', detail: 'Absente : l’adresse par défaut du code (lib/site-url.ts) est utilisée pour le sitemap et les URL canoniques.', fix: 'Sans nom de domaine, rien à faire. Le jour où un domaine est branché, renseignez-le ici (sans slash final).' })
   } else if (!/^https:\/\/[^/\s]+$/.test(site)) {
     add({ id: 'site-url', level: 'fail', title: 'Adresse publique du site (NEXT_PUBLIC_SITE_URL)', detail: 'Format inattendu.', fix: 'Elle doit commencer par https:// et ne pas finir par un slash.' })
   } else if (/\.vercel\.app$/.test(new URL(site).hostname)) {
-    add({ id: 'site-url', level: 'warn', title: 'Adresse publique du site (NEXT_PUBLIC_SITE_URL)', detail: `Adresse provisoire : ${new URL(site).hostname}.`, fix: 'Avant le lancement, branchez le vrai nom de domaine et mettez-le ici : le sitemap, Google et les e-mails s’en servent.' })
+    add({ id: 'site-url', level: 'info', title: 'Adresse publique du site (NEXT_PUBLIC_SITE_URL)', detail: `Adresse Vercel : ${new URL(site).hostname}.`, fix: 'Convient tant qu’il n’y a pas de nom de domaine. Le jour où un domaine est branché, mettez-le ici : le sitemap, Google et les e-mails s’en servent.' })
   } else add({ id: 'site-url', level: 'ok', title: 'Adresse publique du site (NEXT_PUBLIC_SITE_URL)', detail: `Définie (${new URL(site).hostname}).` })
 
   // ── Services optionnels ──

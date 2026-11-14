@@ -52,8 +52,9 @@ describe('checkEnvironment', () => {
     expect(level(checkEnvironment({ ...good, CMS_PASSWORD: 'p'.repeat(40), CMS_HMAC_SECRET: 'p'.repeat(40) }), 'CMS_HMAC_SECRET')).toBe('warn')
   })
 
-  it('rappelle que l’adresse vercel.app est provisoire, sans bloquer', () => {
-    expect(level(checkEnvironment({ ...good, NEXT_PUBLIC_SITE_URL: 'https://monsite.vercel.app' }), 'site-url')).toBe('warn')
+  it('accepte l’adresse vercel.app (ou l’absence de variable) tant qu’il n’y a pas de domaine, sans alerter', () => {
+    expect(level(checkEnvironment({ ...good, NEXT_PUBLIC_SITE_URL: 'https://monsite.vercel.app' }), 'site-url')).toBe('info')
+    expect(level(checkEnvironment({ ...good, NEXT_PUBLIC_SITE_URL: undefined }), 'site-url')).toBe('info')
     expect(level(checkEnvironment({ ...good, NEXT_PUBLIC_SITE_URL: 'https://monsite.fr/' }), 'site-url')).toBe('fail')
   })
 
