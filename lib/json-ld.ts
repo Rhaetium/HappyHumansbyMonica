@@ -46,3 +46,46 @@ export function faqPageSchema(items: FaqItem[]): Record<string, unknown> | null 
     })),
   }
 }
+
+export type CrumbItem = { label: string; href: string }
+
+/**
+ * Schéma BreadcrumbList : le fil d'Ariane vu par Google (il peut l'afficher dans le résultat de recherche).
+ * `null` s'il y a moins de deux étapes (l'accueil seul n'a pas de fil).
+ */
+export function breadcrumbListSchema(crumbs: CrumbItem[], baseUrl: string): Record<string, unknown> | null {
+  const items = crumbs.map(c => ({ name: plainText(c.label), href: c.href })).filter(c => c.name)
+  if (items.length < 2) return null
+  const base = baseUrl.replace(/\/+$/, '')
+  return {
+    '@context': 'https://schema.org',
+    '@type': 'BreadcrumbList',
+    itemListElement: items.map((c, i) => ({
+      '@type': 'ListItem',
+      position: i + 1,
+      name: c.name,
+      item: `${base}${c.href.startsWith('/') ? c.href : `/${c.href}`}`,
+    })),
+  }
+}
+
+/**
+ * Schéma Service : une prestation de Monica (coaching, accompagnement d'entreprises…), à partir du titre et de la
+ * description de la page. Uniquement des faits déjà publiés sur la page : ni prix ni zone inventés.
+ * `null` si la page n'a pas de titre.
+ */
+export function serviceSchema(input: { name?: string; description?: string; url: string; providerName?: string }): Record<string, unknown> | null {
+  const name = plainText(input.name ?? '')
+  if (!name) return null
+  const description = plainText(input.description ?? '')
+  const provider = plainText(input.providerName ?? '')
+  return {
+    '@context': 'https://schema.org',
+    '@type': 'Service',
+    name,
+    ...(description ? { description } : {}),
+    url: input.url,
+    ...(provider ? { provider: { '@type': 'Person', name: provider } } : {}),
+  }
+}
+

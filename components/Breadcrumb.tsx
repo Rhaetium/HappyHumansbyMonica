@@ -6,6 +6,8 @@ import { useCmsContent } from '@/hooks/useCmsContent';
 import { UI_LABELS } from '@/lib/ui-labels';
 import { FIL_ARIANE_DEFAULTS } from '@/lib/cms-defaults/fil-ariane';
 import { buildCrumbs, isBreadcrumbHidden } from '@/lib/breadcrumb';
+import { breadcrumbListSchema, safeJsonLd } from '@/lib/json-ld';
+import { SITE_URL } from '@/lib/site-url';
 
 /**
  * Fil d'Ariane de tout le site.
@@ -43,7 +45,12 @@ export default function Breadcrumb() {
   const crumbs = buildCrumbs(pathname, c.bc_home_label, labels);
   if (crumbs.length < 2) return null;
 
+  // Le même fil, pour Google : il peut l'afficher dans le résultat de recherche.
+  const schema = breadcrumbListSchema(crumbs, SITE_URL);
+
   return (
+    <>
+    {schema && <script type="application/ld+json" dangerouslySetInnerHTML={{ __html: safeJsonLd(schema) }} />}
     <nav aria-label={UI_LABELS.breadcrumb} className="hh-crumb mt-[72px] border-b border-stone-100 bg-stone-50/80 px-4 py-3 backdrop-blur-sm md:px-6">
       <div className="mx-auto max-w-7xl">
         <ol className="no-scrollbar flex items-center gap-1.5 overflow-x-auto text-xs md:text-sm">
@@ -69,5 +76,6 @@ export default function Breadcrumb() {
         </ol>
       </div>
     </nav>
+    </>
   );
 }
