@@ -20,7 +20,7 @@ const read = (f: string) => fs.readFileSync(path.join(root, f), 'utf8').replace(
 
 // page admin -> fichiers qui lisent son contenu
 const PAGES: Record<string, string[]> = {
-  home: ['app/page.tsx'],
+  home: ['app/HomeContent.tsx'], // app/page.tsx n'est plus que l'enveloppe serveur (lecture du contenu publié)
   'a-propos': ['app/a-propos/page.tsx'],
   coaching: ['app/coaching/page.tsx'],
   entreprises: ['app/entreprises/page.tsx'],

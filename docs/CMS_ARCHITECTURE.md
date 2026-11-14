@@ -43,7 +43,15 @@ Règle du projet : **toute phrase visible par un visiteur vient du CMS**. Le cod
 
 ### `c.ma_cle` ou `c.get('ma_cle')` ?
 
-`c.get()` rend un champ cliquable pour l'édition en ligne, mais il est chargé en `ssr: false` : son texte **n'est pas dans le HTML envoyé par le serveur** (donc invisible pour Google au premier chargement). Les nouveaux champs utilisent la lecture simple `c.ma_cle`. Les anciens `c.get()` sont conservés tels quels.
+Les deux sont présents dans le HTML envoyé par le serveur (donc lisibles par Google et par les robots des IA qui n'exécutent pas le JavaScript). `c.get()` rend un simple `<span>` pour les visiteurs, et ne charge le champ cliquable de l'édition en ligne (`EditableField`, uniquement dans le navigateur) que pendant l'édition, ou tant qu'une modification non enregistrée existe pour ce champ. `c.ma_cle` reste la lecture à préférer pour un nouveau champ (plus simple, aucun composant en plus).
+
+### Le HTML serveur contient le contenu publié
+Une page « client » est d'abord rendue sur le serveur, mais elle n'y connaît que les textes par défaut : le contenu publié dans le CMS n'arrivait qu'après un appel réseau dans le navigateur. Les robots qui n'exécutent pas le JavaScript ne voyaient donc que les textes par défaut, jamais ceux de Monica.
+Maintenant `components/CmsServerContent.tsx` (serveur) lit le contenu publié (`lib/cms-content-server.ts`) et le transmet à `useCmsContent` par `contexts/CmsInitialContent.tsx` : le premier rendu, sur le serveur comme dans le navigateur, part déjà du contenu publié (aucune différence à l'hydratation).
+- Une page l'obtient en s'enveloppant : `<CmsServerContent pages={{ '<page>': <PAGE>_DEFAULTS }}>…</CmsServerContent>`, dans son `layout.tsx` (ou dans `page.tsx` pour l'accueil, les pages légales et le blog). Les textes partagés (`site`, `footer`, `fil-ariane`) le sont dans `app/layout.tsx`.
+- **Une nouvelle page doit être enveloppée**, sinon son HTML ne contient que les textes par défaut. Un test l'impose (`__tests__/cms/ssr-content.test.tsx`).
+- Fraîcheur : la page est régénérée au plus toutes les 5 minutes et immédiatement à chaque publication ; le navigateur recharge de toute façon le contenu à l'ouverture de la page.
+- Ce que Google voit réellement se vérifie dans le HTML brut (`curl https://…/ | grep '<h1'`), pas dans le navigateur.
 
 ## Textes avec gras, italique, liens
 
