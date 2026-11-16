@@ -1,4 +1,5 @@
-import { NextRequest, NextResponse } from 'next/server'
+import { NextRequest, NextResponse, type NextFetchEvent } from 'next/server'
+import { isAiCrawler, sendCrawlerLog } from '@/lib/ai-crawler-log'
 
 function getSecret(): string {
   return (
@@ -48,8 +49,11 @@ async function isValidEditSession(token: string | undefined, secret: string): Pr
   } catch { return false }
 }
 
-export async function proxy(req: NextRequest) {
+export async function proxy(req: NextRequest, event: NextFetchEvent) {
   const res = NextResponse.next()
+
+  // Suivi des robots IA (GPTBot, ClaudeBot…) : n'agit que pour eux, après la réponse, et seulement si le jeton est configuré
+  if (isAiCrawler(req.headers.get('user-agent'))) event.waitUntil(sendCrawlerLog(req))
 
   // Check ?cms_edit_token=... param (passed from CMS admin via generate-edit-token)
   const tokenFromParam = req.nextUrl.searchParams.get('cms_edit_token')
