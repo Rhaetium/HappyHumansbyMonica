@@ -54,9 +54,6 @@ const nextConfig = {
     .split(',')
     .map(h => h.trim())
     .filter(Boolean),
-  typescript: {
-    ignoreBuildErrors: true,
-  },
   images: {
     formats: ['image/avif', 'image/webp'],
     minimumCacheTTL: 2678400,
