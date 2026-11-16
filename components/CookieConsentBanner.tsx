@@ -25,16 +25,16 @@ export default function CookieConsentBanner() {
   if (!visible) return null;
 
   return (
-    <div className="fixed inset-x-0 bottom-0 z-[100] px-4 pb-4">
+    <div className="fixed inset-x-0 bottom-0 z-[100] px-3 pb-3 sm:px-4 sm:pb-4" role="dialog" aria-label={c.cookie_title}>
       <div className="mx-auto max-w-5xl rounded-2xl border border-stone-200 bg-white shadow-2xl">
-        <div className="p-5 md:p-6">
-          <p className="text-xs uppercase tracking-[0.16em] text-eucalyptus font-semibold mb-2">
+        <div className="p-4 md:p-6">
+          <p className="text-xs uppercase tracking-[0.16em] text-eucalyptus font-semibold mb-1.5 sm:mb-2">
             {c.cookie_title}
           </p>
-          <p className="text-sm md:text-base text-charcoal/85 leading-relaxed">
+          <p className="text-[13px] sm:text-sm md:text-base text-charcoal/85 leading-snug sm:leading-relaxed">
             {c.cookie_text}
           </p>
-          <p className="text-sm mt-3 text-charcoal/75">
+          <p className="text-xs sm:text-sm mt-2 sm:mt-3 text-charcoal/75">
             {c.cookie_details}{' '}
             <Link
               href="/politique-confidentialite"
@@ -51,18 +51,18 @@ export default function CookieConsentBanner() {
             </Link>
             .
           </p>
-          <div className="mt-5 flex flex-col sm:flex-row gap-3">
+          <div className="mt-3 sm:mt-5 flex flex-row gap-2 sm:gap-3">
             <button
               type="button"
               onClick={() => setConsent('rejected')}
-              className="px-5 py-2.5 rounded-lg border border-stone-300 text-charcoal hover:border-stone-400 transition"
+              className="flex-1 sm:flex-none px-5 py-2.5 rounded-lg border border-stone-300 text-sm sm:text-base text-charcoal hover:border-stone-400 transition focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-eucalyptus"
             >
               {c.cookie_refuse}
             </button>
             <button
               type="button"
               onClick={() => setConsent('accepted')}
-              className="px-5 py-2.5 rounded-lg bg-eucalyptus text-white font-medium hover:bg-eucalyptus/90 transition"
+              className="flex-1 sm:flex-none px-5 py-2.5 rounded-lg bg-eucalyptus text-sm sm:text-base text-white font-medium hover:bg-eucalyptus/90 transition focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-eucalyptus"
             >
               {c.cookie_accept}
             </button>

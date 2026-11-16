@@ -126,6 +126,8 @@ const nextConfig = {
         permanent: true,
       },
       { source: '/admin', destination: '/cms-admin', permanent: true },
+      // La page Témoignages n'existe plus : les témoignages sont sur la page Coaching
+      { source: '/temoignages', destination: '/coaching', permanent: true },
       { source: '/admin/:path*', destination: '/cms-admin/:path*', permanent: true },
       { source: '/planifier', destination: '/coaching', permanent: true },
       { source: '/travel-planning', destination: '/coaching', permanent: true },
@@ -137,7 +139,6 @@ const nextConfig = {
       { source: '/destinations', destination: '/', permanent: true },
       { source: '/destinations/:path*', destination: '/', permanent: true },
       { source: '/slow-travel', destination: '/', permanent: true },
-      // /temoignages est une vraie page — pas de redirect
       { source: '/travel-planner', destination: '/coaching', permanent: true },
       { source: '/travel-planner/', destination: '/coaching', permanent: true },
       { source: '/nos-services', destination: '/coaching', permanent: true },

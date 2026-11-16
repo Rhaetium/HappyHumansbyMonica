@@ -45,11 +45,11 @@ export default function SparringPartnerPage() {
             <p className="mb-2 text-xs font-bold uppercase tracking-[0.22em] text-amber-800">{c.get('section_badge')}</p>
             <h2 className="text-2xl font-serif font-light text-stone-900 md:text-3xl">{c.get('section_title')}</h2>
           </div>
-          <div className="grid gap-5 md:grid-cols-2 lg:grid-cols-3">
+          <div className="flex flex-wrap justify-center gap-5">
             {useCases.map(({ title, desc }, i) => (
-              <div key={`${title}-${i}`} className="bg-white rounded-2xl p-6 shadow-sm">
-                <h3 className="text-sm font-semibold text-stone-900 mb-2">{title}</h3>
-                <p className="text-xs text-stone-500 leading-relaxed">{desc}</p>
+              <div key={`${title}-${i}`} className="w-full md:w-[calc(50%-0.625rem)] lg:w-[calc(33.333%-0.84rem)] bg-white rounded-2xl p-6 shadow-sm">
+                <h3 className="text-base font-semibold text-stone-900 mb-2">{title}</h3>
+                <p className="text-sm text-stone-500 leading-relaxed">{desc}</p>
               </div>
             ))}
           </div>

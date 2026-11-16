@@ -1,4 +1,4 @@
-﻿'use client'
+'use client'
 import { useState, Fragment, type ReactNode } from 'react'
 import Link from 'next/link'
 import Header from '@/components/Header'
@@ -158,13 +158,13 @@ export default function LandingPage() {
           </div>
           <div className="grid gap-5 sm:grid-cols-2 lg:grid-cols-4">
             {orderedCards.map((card) => (
-              <Link key={card.href} href={card.href} className="group rounded-2xl bg-[#f5f0e8] p-7 hover:bg-[#eef5f3] transition">
+              <Link key={card.href} href={card.href} className="group flex h-full flex-col rounded-2xl bg-[#f5f0e8] p-7 transition duration-200 hover:-translate-y-0.5 hover:bg-[#eef5f3] hover:shadow-md focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-[#2d5f54]">
                 <div className="mb-5 w-10 h-10 rounded-full bg-white flex items-center justify-center shadow-sm">
                   {card.icon}
                 </div>
                 <h3 className="mb-2 text-lg font-serif font-semibold text-stone-900 group-hover:text-[#2d5f54] transition">{card.title}</h3>
                 <p className="text-sm text-stone-500 leading-relaxed mb-4">{card.desc}</p>
-                <span className="text-sm font-semibold text-[#2d5f54]">{c.get('cards_link_label')}</span>
+                <span className="mt-auto text-sm font-semibold text-[#2d5f54]">{c.get('cards_link_label')}</span>
               </Link>
             ))}
           </div>
