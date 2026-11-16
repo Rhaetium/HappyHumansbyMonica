@@ -26,7 +26,7 @@ export type FontChoice = { id: string; label: string; stack: string; google?: st
 
 export const FONT_CHOICES: FontChoice[] = [
   { id: 'cormorant', label: 'Cormorant Garamond (serif élégant)', stack: "'Cormorant Garamond', 'Playfair Display', serif", google: 'Cormorant+Garamond:ital,wght@0,300;0,400;0,500;0,600;0,700;1,300;1,400;1,500' },
-  { id: 'playfair', label: 'Playfair Display (serif affirmé)', stack: "'Playfair Display', Georgia, serif" },
+  { id: 'playfair', label: 'Playfair Display (serif affirmé)', stack: "'Playfair Display', Georgia, serif", google: 'Playfair+Display:ital,wght@0,400;0,500;0,600;0,700;1,400;1,500' },
   { id: 'inter', label: 'Inter (sans-serif lisible)', stack: "'Inter', system-ui, sans-serif", google: 'Inter:wght@300;400;500;600;700' },
   { id: 'georgia', label: 'Georgia (serif système)', stack: "Georgia, 'Times New Roman', serif" },
   { id: 'system', label: 'Système (sans-serif natif)', stack: "system-ui, -apple-system, sans-serif" },
@@ -41,9 +41,26 @@ export const FONT_CHOICES: FontChoice[] = [
   { id: 'lora', label: 'Lora (serif chaleureux)', stack: "'Lora', Georgia, serif", google: 'Lora:ital,wght@0,400;0,500;0,600;0,700;1,400' },
 ];
 
-/** Feuille de style Google Fonts de toutes les polices proposées (chargées à l'affichage seulement si le texte les utilise). */
-export const GOOGLE_FONTS_HREF =
-  'https://fonts.googleapis.com/css2?' + FONT_CHOICES.filter(f => f.google).map(f => 'family=' + f.google).join('&') + '&display=swap';
+/**
+ * Polices toujours chargées : Cormorant et Inter (titres et texte de base, voir globals.css) et Playfair Display
+ * (classe Tailwind `font-serif` : prix, guillemets, initiales). Les autres ne sont chargées que si le thème les choisit.
+ */
+const BASE_FONT_IDS = ['cormorant', 'inter', 'playfair'];
+
+const firstFamily = (stack: string) => stack.split(',')[0].replace(/['"]/g, '').trim().toLowerCase();
+
+/**
+ * Adresse de la feuille Google Fonts de CETTE page : les polices de base + celles du thème (titres, texte).
+ * Avant, les 9 polices proposées dans le CMS étaient chargées sur chaque page (93 Ko de CSS qui bloquent l'affichage)
+ * alors que le thème n'en utilise que deux. Un thème qui change de police voit la sienne ajoutée automatiquement.
+ */
+export function googleFontsHref(tokens: Pick<ThemeTokens, 'font' | 'fontHeading' | 'fontBody'>): string {
+  const used = new Set([tokens.font, tokens.fontHeading, tokens.fontBody].filter(Boolean).map(firstFamily));
+  const families = FONT_CHOICES
+    .filter(f => f.google && (BASE_FONT_IDS.includes(f.id) || used.has(firstFamily(f.stack))))
+    .map(f => 'family=' + f.google);
+  return 'https://fonts.googleapis.com/css2?' + families.join('&') + '&display=swap';
+}
 
 export function fontStack(id: string | undefined, fallback: string): string {
   const found = FONT_CHOICES.find(f => f.id === id);
