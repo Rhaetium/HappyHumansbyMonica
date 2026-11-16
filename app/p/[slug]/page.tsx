@@ -13,7 +13,7 @@ interface Props {
   params: Promise<{ slug: string }>
 }
 
-const DEFAULT_OG = `${SITE_URL}/og-images/og-default.svg`
+const DEFAULT_OG = `${SITE_URL}/og-default.jpg`
 
 /**
  * Page créée entièrement dans le CMS (admin → « 📄 Pages libres »).

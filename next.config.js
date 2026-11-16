@@ -1,4 +1,4 @@
-﻿/** @type {import('next').NextConfig} */
+/** @type {import('next').NextConfig} */
 
 // Adresses du site : celle configurée (NEXT_PUBLIC_SITE_URL, comme lib/site-url.ts), l'adresse Vercel et le domaine
 // officiel avec et sans « www ». Une image servie par l'une d'elles (ou après une redirection de l'une vers l'autre)
@@ -33,12 +33,12 @@ const securityHeaders = [
     key: 'Content-Security-Policy',
     value: [
       "default-src 'self'",
-      "script-src 'self' 'unsafe-inline' 'unsafe-eval' https://assets.calendly.com",
+      "script-src 'self' 'unsafe-inline' 'unsafe-eval' https://assets.calendly.com https://www.googletagmanager.com https://*.google-analytics.com",
       "style-src 'self' 'unsafe-inline' https://api.fontshare.com https://fonts.googleapis.com https://assets.calendly.com",
-      `img-src 'self' data: blob: https://images.unsplash.com https://*.supabase.co ${OWN_HOSTS.map(h => `https://${h}`).join(' ')} https://behold.pictures https://cdn2.behold.pictures https://*.calendly.com`,
+      `img-src 'self' data: blob: https://images.unsplash.com https://*.supabase.co ${OWN_HOSTS.map(h => `https://${h}`).join(' ')} https://behold.pictures https://cdn2.behold.pictures https://*.calendly.com https://www.googletagmanager.com https://*.google-analytics.com`,
       "font-src 'self' https://api.fontshare.com https://fonts.gstatic.com",
       "frame-src 'self' https://calendly.com https://*.calendly.com",
-      "connect-src 'self' https://*.supabase.co https://api.perplexity.ai https://api.unsplash.com https://api.bufferapp.com https://calendly.com https://*.calendly.com",
+      "connect-src 'self' https://*.supabase.co https://api.perplexity.ai https://api.unsplash.com https://api.bufferapp.com https://calendly.com https://*.calendly.com https://www.googletagmanager.com https://*.google-analytics.com https://*.analytics.google.com https://*.googletagmanager.com",
       // 'self' (au lieu de 'none') : permet l'aperçu iframe du site dans /cms-admin
       "frame-ancestors 'self'",
       "base-uri 'self'",
@@ -110,6 +110,21 @@ const nextConfig = {
 
   async redirects() {
     return [
+      // Un seul domaine indexé : www.happyhumans.fr et l'ancienne adresse *.vercel.app → https://happyhumans.fr
+      // (301 : Google transfère le référencement vers le nouveau domaine, pas de contenu dupliqué)
+      {
+        source: '/:path*',
+        has: [{ type: 'host', value: 'www.happyhumans.fr' }],
+        destination: 'https://happyhumans.fr/:path*',
+        permanent: true,
+      },
+      {
+        // /api exclu : le cron keep-alive et les webhooks peuvent encore viser l'ancienne adresse
+        source: '/:path((?!api/).*)',
+        has: [{ type: 'host', value: 'happyhumans.vercel.app' }],
+        destination: 'https://happyhumans.fr/:path',
+        permanent: true,
+      },
       { source: '/admin', destination: '/cms-admin', permanent: true },
       { source: '/admin/:path*', destination: '/cms-admin/:path*', permanent: true },
       { source: '/planifier', destination: '/coaching', permanent: true },

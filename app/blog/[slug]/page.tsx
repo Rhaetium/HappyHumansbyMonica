@@ -96,7 +96,7 @@ function buildJsonLds(post: BlogPost, readTime: number) {
       url: SITE_URL,
       logo: {
         '@type': 'ImageObject',
-        url: `${SITE_URL}/logo.png`,
+        url: `${SITE_URL}/logo-happy-humans.png`,
       },
     },
     url: `${SITE_URL}/blog/${post.slug}`,
