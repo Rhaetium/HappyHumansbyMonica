@@ -1,6 +1,6 @@
 // Textes par défaut de l'espace client — SOURCE UNIQUE.
 // Lus par /auth/login, /auth/register et /dashboard ET par l'admin du CMS (lib/cms-page-defaults.ts).
-// Chaque clé correspond à un champ de PAGES_CONFIG (app/cms-admin/page.tsx).
+// Chaque clé correspond à un champ de PAGES_CONFIG (components/cms/admin/config.ts).
 //
 // Ces pages sont volontairement tutoyées (« ton espace ») : c'est le ton d'origine, à conserver
 // si vous réécrivez les textes.

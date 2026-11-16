@@ -12,7 +12,7 @@ import { LIST_DEFS } from '@/lib/cms-lists'
  *   3. chaque champ de l'admin est réellement lu par la page (sinon l'admin affiche un champ sans effet).
  *
  * Si ce test échoue après l'ajout d'un texte : ajoutez la clé dans lib/cms-defaults/<page>.ts
- * ET un champ dans PAGES_CONFIG (app/cms-admin/page.tsx). Voir docs/CMS_ARCHITECTURE.md.
+ * ET un champ dans PAGES_CONFIG (components/cms/admin/config.ts). Voir docs/CMS_ARCHITECTURE.md.
  */
 
 const root = path.resolve(__dirname, '../..')
@@ -61,8 +61,8 @@ const PAGES: Record<string, string[]> = {
 for (const p of ['a-propos','coaching','entreprises','happiness-design','relations','sparring-partner','booking','contact','faq','blog','mentions-legales','politique-confidentialite','test-attachement']) PAGES[p].push('lib/page-seo.ts')
 
 function adminKeys(page: string): Set<string> {
-  const lines = read('app/cms-admin/page.tsx').split('\n')
-  const start = lines.findIndex(l => l.startsWith('const PAGES_CONFIG'))
+  const lines = read('components/cms/admin/config.ts').split('\n')
+  const start = lines.findIndex(l => l.startsWith('export const PAGES_CONFIG'))
   const block = lines.findIndex((l, i) => i > start && new RegExp(`^  '?${page}'?: \\{\\s*$`).test(l))
   if (block < 0) throw new Error(`Page « ${page} » absente de PAGES_CONFIG`)
   const end = lines.findIndex((l, i) => i > block && /^ {2}\},\s*$/.test(l))
@@ -115,7 +115,7 @@ describe.each(Object.entries(PAGES))('CMS — page « %s »', (page, files) => {
 
 describe('CMS — listes répétables', () => {
   it('chaque champ « list » de l’admin a une définition dans lib/cms-lists.ts', () => {
-    const admin = read('app/cms-admin/page.tsx')
+    const admin = read('components/cms/admin/config.ts')
     const keys = [...admin.matchAll(/\{ key: '([^']+)',[^}]*type: 'list'/g)].map(m => m[1])
     expect(keys.length).toBeGreaterThanOrEqual(6)
     expect(keys.filter(k => !LIST_DEFS[k])).toEqual([])

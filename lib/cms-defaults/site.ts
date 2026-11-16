@@ -1,7 +1,7 @@
 // Textes par défaut des éléments communs à tout le site (page « site » du CMS) — SOURCE UNIQUE.
 // Bandeau cookies, formulaire newsletter, boutons de partage, page 404, page de maintenance.
 // Lus par les composants ET par l'admin du CMS (lib/cms-page-defaults.ts) : ne jamais les dupliquer ailleurs.
-// Chaque clé correspond à un champ de PAGES_CONFIG (app/cms-admin/page.tsx).
+// Chaque clé correspond à un champ de PAGES_CONFIG (components/cms/admin/config.ts).
 import { DEFAULT_CONTACT_EMAIL } from '@/lib/site-contact'
 
 export const SITE_DEFAULTS: Record<string, string> = {

@@ -1,6 +1,6 @@
 // Textes par défaut de la page « Entreprises » — SOURCE UNIQUE.
 // Lus par la page ET par l'admin du CMS (lib/cms-page-defaults.ts) : ne jamais les dupliquer ailleurs.
-// Chaque clé correspond à un champ de PAGES_CONFIG (app/cms-admin/page.tsx).
+// Chaque clé correspond à un champ de PAGES_CONFIG (components/cms/admin/config.ts).
 // Les champs « liste » (…_features, …_items) : un élément par ligne.
 
 export const ENTREPRISES_DEFAULTS: Record<string, string> = {
