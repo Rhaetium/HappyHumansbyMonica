@@ -3,6 +3,7 @@ import { useRef, useState } from 'react';
 import { useOptionalInlineEdit } from '@/contexts/InlineEditContext';
 import { uploadImage } from '@/lib/upload-client';
 import { useSiteSettings } from '@/hooks/useSiteSettings';
+import { unsplashSrcSet } from '@/lib/image-srcset';
 
 type EditableImageProps = React.ImgHTMLAttributes<HTMLImageElement> & {
   /** Page du CMS et champ « image » qui contiennent l'adresse de la photo */
@@ -71,10 +72,25 @@ export default function EditableImage({ page, fieldKey, src, variant = 'block', 
     </>
   );
 
+  // Tailles adaptées à l'écran pour les photos Unsplash (sinon un téléphone télécharge la version 1600 px).
+  // Les attributs passés par la page (`loading`, `sizes`, `srcSet`…) restent prioritaires : ils sont placés après.
+  const srcSet = unsplashSrcSet(shown);
+
   if (variant === 'cover') {
+    // Photo de bandeau en haut de page = image principale : chargée en priorité, jamais différée
     return (
       <>
-        <img src={shown} alt={alt} className={`${className} ${tinted ? 'hh-duotone' : ''}`.trim()} {...rest} />
+        <img
+          src={shown}
+          srcSet={srcSet}
+          sizes={srcSet ? '100vw' : undefined}
+          alt={alt}
+          loading="eager"
+          fetchPriority="high"
+          decoding="async"
+          className={`${className} ${tinted ? 'hh-duotone' : ''}`.trim()}
+          {...rest}
+        />
         {controls}
       </>
     );
@@ -85,7 +101,17 @@ export default function EditableImage({ page, fieldKey, src, variant = 'block', 
   const imgClasses = tokens.filter(t => !LAYOUT_CLASS.test(t)).join(' ');
   return (
     <div className={`relative ${wrapperClasses}`.trim()}>
-      <img src={shown} alt={alt} className={`block ${imgClasses} ${tinted ? 'hh-duotone' : ''}`.trim()} {...rest} />
+      {/* Photo dans la page : chargée seulement quand on s'en approche (économise le chargement initial) */}
+      <img
+        src={shown}
+        srcSet={srcSet}
+        sizes={srcSet ? '(min-width: 1024px) 800px, 100vw' : undefined}
+        alt={alt}
+        loading="lazy"
+        decoding="async"
+        className={`block ${imgClasses} ${tinted ? 'hh-duotone' : ''}`.trim()}
+        {...rest}
+      />
       {controls}
     </div>
   );

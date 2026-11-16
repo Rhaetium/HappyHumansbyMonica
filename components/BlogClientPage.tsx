@@ -101,7 +101,9 @@ export default function BlogClientPage({ posts }: Props) {
                   width={1200}
                   height={500}
                   className="absolute inset-0 h-full w-full object-cover opacity-60 transition-all duration-500 group-hover:scale-105 group-hover:opacity-70"
-                  loading="lazy"
+                  loading="eager"
+                  fetchPriority="high"
+                  decoding="async"
                 />
               ) : (
                 <div className="absolute inset-0 bg-gradient-to-br from-amber-900 to-stone-900" />
