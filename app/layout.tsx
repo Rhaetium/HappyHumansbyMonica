@@ -1,4 +1,4 @@
-﻿import type { Metadata, Viewport } from 'next';
+import type { Metadata, Viewport } from 'next';
 import './globals.css';
 import { AuthProvider } from '@/components/AuthProvider';
 import CookieConsentBanner from '@/components/CookieConsentBanner';
@@ -21,6 +21,7 @@ import { extractVerificationToken } from '@/lib/search-console';
 import { SITE_URL } from '@/lib/site-url';
 import { buildThemeCSS, resolveTheme, GOOGLE_FONTS_HREF } from '@/lib/themes';
 import DuotoneFilter from '@/components/DuotoneFilter';
+import GoogleTagManager from '@/components/GoogleTagManager';
 import CmsServerContent from '@/components/CmsServerContent';
 import { SITE_DEFAULTS } from '@/lib/cms-defaults/site';
 import { FOOTER_DEFAULTS } from '@/lib/cms-defaults/footer';
@@ -265,6 +266,7 @@ export default async function RootLayout({
                 <CookieConsentBanner />
               </CmsServerContent>
               <InlineEditor />
+              <GoogleTagManager />
             </AuthProvider>
           </InlineEditProvider>
         </MaintenanceGate>
