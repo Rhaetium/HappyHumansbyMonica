@@ -88,8 +88,8 @@ export const ENTREPRISES_DEFAULTS: Record<string, string> = {
   t_tarif: "Tarif",
   t_prenom_modifie: "* Prénom modifié",
   // ── Référencement (Google, réseaux sociaux) — lu par generateMetadata via lib/page-seo.ts ──
-  seo_title: "Coaching entreprises & leadership — Happy Humans",
-  seo_description: "Coaching de dirigeants, prise de poste, ateliers de cohésion et séminaires sur mesure. Monica Schneider accompagne les équipes et entreprises pour remettre de l'alignement.",
+  seo_title: "Coaching entreprises & leadership",
+  seo_description: "Coaching de dirigeants, prise de poste, ateliers de cohésion et séminaires sur mesure pour remettre de l'alignement dans vos équipes.",
   seo_image: '',
   // ── Disposition des sections (admin → Structure) : JSON {"order":[…],"hidden":[…]} ; vide = ordre d'origine ──
   sections_layout: '',

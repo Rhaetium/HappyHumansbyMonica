@@ -1,10 +1,10 @@
-import { NextRequest, NextResponse, after } from 'next/server'
+import { NextRequest, NextResponse } from 'next/server'
 import { createClient } from '@supabase/supabase-js'
 import { revalidatePath } from 'next/cache'
 import { requireCmsAuth } from '@/lib/cms-auth'
 import { pagePath } from '@/lib/page-seo'
 import { draftPage, isDraftPage } from '@/lib/cms-drafts'
-import { submitToIndexNow } from '@/lib/indexnow'
+import { scheduleIndexNow } from '@/lib/indexnow'
 
 export const dynamic = 'force-dynamic'
 
@@ -71,7 +71,7 @@ export async function POST(req: NextRequest) {
     try { revalidatePath(pagePath(page)) } catch { /* sans incidence : la page se régénère au plus tard dans 5 min */ }
   }
   // Page mise en ligne : on prévient Bing & co. après la réponse (la publication a réussi : sinon on est déjà sorti plus haut)
-  if (action === 'publish' && INDEXABLE_PAGES.has(page)) after(() => submitToIndexNow([pagePath(page)]))
+  if (action === 'publish' && INDEXABLE_PAGES.has(page)) scheduleIndexNow([pagePath(page)])
 
   return NextResponse.json({
     success: true,

@@ -2,6 +2,7 @@ import { cache } from 'react'
 import { createClient } from '@supabase/supabase-js'
 import type { Metadata } from 'next'
 import { getKvSettings } from '@/lib/cms-settings-server'
+import { BRAND_NAME, stripBrandSuffix } from '@/lib/site-seo'
 
 /**
  * SEO par page, modifiable dans le CMS (page → section « Référencement Google ») :
@@ -49,11 +50,12 @@ export async function pageMetadata(
   extra: Metadata = {},
 ): Promise<Metadata> {
   const [rows, kv] = await Promise.all([getSeoRows(page), getKvSettings()])
-  const title = rows.seo_title || defaults.seo_title
+  // Le gabarit du site ajoute « | Happy Humans » : on retire une marque déjà présente en fin de titre (pas de doublon)
+  const title = stripBrandSuffix(rows.seo_title || defaults.seo_title)
   const description = rows.seo_description || defaults.seo_description
   const image = rows.seo_image || defaults.seo_image || kv.og_image || '/og-default.jpg'
   const path = pagePath(page)
-  const socialTitle = `${title} | Happy Humans`
+  const socialTitle = `${title} | ${BRAND_NAME}`
 
   return {
     title,

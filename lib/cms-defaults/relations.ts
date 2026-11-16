@@ -147,8 +147,8 @@ export const RELATIONS_DEFAULTS: Record<string, string> = {
   t_desorganise: "Désorganisé",
   t_conflit_interne_entre_le: "Conflit interne entre le besoin désespéré de proximité et la peur panique de l'autre. Souvent lié à des expériences d'enfance complexes ou traumatiques.",
   // ── Référencement (Google, réseaux sociaux) — lu par generateMetadata via lib/page-seo.ts ──
-  seo_title: "Relations & Attachement — Comprendre vos liens",
-  seo_description: "Découvrez votre style d'attachement (sécure, anxieux, évitant) et transformez durablement vos relations. Quiz gratuit · Ressources · Séance offerte avec Monica Schneider.",
+  seo_title: "Style d'attachement & relations",
+  seo_description: "Découvrez votre style d'attachement (sécure, anxieux, évitant) et transformez vos relations. Quiz gratuit, ressources, séance offerte avec Monica Schneider.",
   seo_image: '',
   // ── Disposition des sections (admin → Structure) : JSON {"order":[…],"hidden":[…]} ; vide = ordre d'origine ──
   sections_layout: '',
