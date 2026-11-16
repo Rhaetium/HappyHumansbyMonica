@@ -11,7 +11,7 @@
 import { basePage, isDraftPage } from './cms-drafts'
 import { LIST_DEFS, listItemName, readList, serializeList, type ListDef, type ListItem } from './cms-lists'
 
-/** Un champ tel que déclaré dans `PAGES_CONFIG` (app/cms-admin/page.tsx). */
+/** Un champ tel que déclaré dans `PAGES_CONFIG` (components/cms/admin/config.ts). */
 export type ContentFieldDef = {
   page: string
   pageLabel: string

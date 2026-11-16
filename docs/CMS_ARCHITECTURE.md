@@ -25,7 +25,7 @@ Les valeurs saisies dans l'admin sont stockées dans la table Supabase `site_con
 
 1. Ajouter la clé et son texte dans `lib/cms-defaults/<page>.ts`.
 2. Dans la page : `{c.ma_cle}` (lecture simple, rendue côté serveur → indexable par Google).
-3. Ajouter un champ dans `PAGES_CONFIG.<page>` (`app/cms-admin/page.tsx`) :
+3. Ajouter un champ dans `PAGES_CONFIG.<page>` (`components/cms/admin/config.ts`) :
    `{ key: 'ma_cle', label: 'Groupe — Libellé', type: 'text' | 'textarea' | 'richtext' | 'image' | 'select' | 'sections' | 'custom-sections' | 'list' }`.
    La partie avant « — » dans le libellé sert de titre de groupe dans l'admin.
 

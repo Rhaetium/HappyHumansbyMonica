@@ -1,6 +1,6 @@
 // Textes par défaut de la page « Happiness Design » — SOURCE UNIQUE.
 // Lus par la page ET par l'admin du CMS (lib/cms-page-defaults.ts) : ne jamais les dupliquer ailleurs.
-// Chaque clé correspond à un champ de PAGES_CONFIG (app/cms-admin/page.tsx).
+// Chaque clé correspond à un champ de PAGES_CONFIG (components/cms/admin/config.ts).
 
 export const HAPPINESS_DESIGN_DEFAULTS: Record<string, string> = {
   hero_image: 'https://images.unsplash.com/photo-1499209974431-9dddcece7f88?w=1600&q=80&auto=format&fit=crop',

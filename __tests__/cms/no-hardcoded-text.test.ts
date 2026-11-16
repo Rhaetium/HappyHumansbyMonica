@@ -10,7 +10,7 @@ import path from 'node:path'
  * Ce test échoue dès qu'une phrase française réapparaît en dur dans une page publique.
  *
  * Si ce test échoue : déplacez le texte dans lib/cms-defaults/<page>.ts, ajoutez la clé à
- * PAGES_CONFIG (app/cms-admin/page.tsx) et lisez-la avec c.get('…'). Voir docs/CMS_ARCHITECTURE.md.
+ * PAGES_CONFIG (components/cms/admin/config.ts) et lisez-la avec c.get('…'). Voir docs/CMS_ARCHITECTURE.md.
  *
  * Fichiers volontairement ignorés (voir ALLOWED) : l'interface d'administration (jamais vue d'un
  * visiteur) et les métadonnées globales de app/layout.tsx, qui sont des valeurs de secours du CMS.
@@ -99,7 +99,7 @@ describe('CMS — aucun texte en dur sur le site public', () => {
     expect(
       findings,
       `Texte(s) en dur détecté(s) :\n${report}\n\n` +
-        'Déplacez chaque texte dans lib/cms-defaults/<page>.ts + PAGES_CONFIG (app/cms-admin/page.tsx), ' +
+        'Déplacez chaque texte dans lib/cms-defaults/<page>.ts + PAGES_CONFIG (components/cms/admin/config.ts), ' +
         'puis lisez-le avec c.get(\'…\').',
     ).toEqual([])
   })
@@ -110,7 +110,7 @@ describe('CMS — aucun texte en dur sur le site public', () => {
     const offenders: string[] = []
     for (const file of [...walk(path.join(root, 'app')), ...walk(path.join(root, 'components'))]) {
       const rel = path.relative(root, file).split(path.sep).join('/')
-      if (allowed.includes(rel) || rel.startsWith('app/cms-admin/') || rel.startsWith('app/api/')) continue
+      if (allowed.includes(rel) || rel.startsWith('app/cms-admin/') || rel.startsWith('components/cms/admin/') || rel.startsWith('app/api/')) continue
       if (/CalendlyWidget|booking\/layout/.test(rel)) continue // le widget est configuré par les réglages
       fs.readFileSync(file, 'utf8')
         .split('\n')

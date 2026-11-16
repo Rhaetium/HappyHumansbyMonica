@@ -1,6 +1,6 @@
 // Textes par défaut du test de style d'attachement (page « test-attachement ») — SOURCE UNIQUE.
 // Lus par le test ET par l'admin du CMS (lib/cms-page-defaults.ts) : ne jamais les dupliquer ailleurs.
-// Chaque clé correspond à un champ de PAGES_CONFIG (app/cms-admin/page.tsx). Les listes (forces, vigilance,
+// Chaque clé correspond à un champ de PAGES_CONFIG (components/cms/admin/config.ts). Les listes (forces, vigilance,
 // croissance) sont saisies une par ligne.
 
 export const TEST_ATTACHEMENT_DEFAULTS: Record<string, string> = {
