@@ -71,14 +71,18 @@ export function breadcrumbListSchema(crumbs: CrumbItem[], baseUrl: string): Reco
 
 /**
  * Schéma Service : une prestation de Monica (coaching, accompagnement d'entreprises…), à partir du titre et de la
- * description de la page. Uniquement des faits déjà publiés sur la page : ni prix ni zone inventés.
+ * description de la page, plus les formules de la page (`offers`) avec leur prix quand c'est un vrai prix.
+ * Uniquement des faits déjà publiés sur la page : ni prix ni zone inventés.
  * `null` si la page n'a pas de titre.
  */
-export function serviceSchema(input: { name?: string; description?: string; url: string; providerName?: string }): Record<string, unknown> | null {
+export function serviceSchema(input: { name?: string; description?: string; url: string; providerName?: string; offers?: OfferInput[] }): Record<string, unknown> | null {
   const name = plainText(input.name ?? '')
   if (!name) return null
   const description = plainText(input.description ?? '')
   const provider = plainText(input.providerName ?? '')
+  const offers = (input.offers ?? [])
+    .map(o => offerSchema(o, input.url))
+    .filter((o): o is Record<string, unknown> => o !== null)
   return {
     '@context': 'https://schema.org',
     '@type': 'Service',
@@ -86,6 +90,49 @@ export function serviceSchema(input: { name?: string; description?: string; url:
     ...(description ? { description } : {}),
     url: input.url,
     ...(provider ? { provider: { '@type': 'Person', name: provider } } : {}),
+    ...(offers.length ? { hasOfferCatalog: { '@type': 'OfferCatalog', name, itemListElement: offers } } : {}),
+  }
+}
+
+/** Une formule saisie dans le CMS (programme, tarif…) : nom, texte et prix tels qu'ils sont affichés sur la page. */
+export type OfferInput = { name?: string; description?: string; price?: string }
+
+/**
+ * Prix saisi dans le CMS → prix lisible par Google. Seuls les prix réels sont repris :
+ *   « Gratuit », « Offert »   → 0
+ *   « 120 € », « 1 200 € »    → 120, 1200
+ *   « À partir de 90 € »      → prix minimum (`from: true`)
+ *   « Sur devis », vide…      → `null` (aucun prix publié, rien n'est inventé)
+ */
+export function parsePrice(text: string | undefined): { price: number; from: boolean } | null {
+  const t = plainText(text ?? '').toLowerCase()
+  if (!t) return null
+  if (/^(gratuit|gratuite|offert|offerte|free)\b/.test(t)) return { price: 0, from: false }
+  const m = t.match(/(\d[\d\s.,]*)\s*(?:€|eur\b|euros?\b)/)
+  if (!m) return null
+  let digits = m[1].replace(/\s/g, '').replace(/[.,]+$/, '')
+  // « 1.200 » = mille deux cents (séparateur de milliers français), pas 1,2
+  digits = /^\d{1,3}(\.\d{3})+$/.test(digits) ? digits.replace(/\./g, '') : digits.replace(',', '.')
+  const price = Number(digits)
+  if (!Number.isFinite(price) || price < 0) return null
+  return { price, from: /à partir|dès|from/.test(t) }
+}
+
+function offerSchema(o: OfferInput, pageUrl: string): Record<string, unknown> | null {
+  const name = plainText(o.name ?? '')
+  if (!name) return null
+  const description = plainText(o.description ?? '')
+  const p = parsePrice(o.price)
+  return {
+    '@type': 'Offer',
+    name,
+    ...(description ? { description } : {}),
+    url: pageUrl,
+    ...(p
+      ? p.from
+        ? { priceSpecification: { '@type': 'PriceSpecification', minPrice: p.price, priceCurrency: 'EUR' } }
+        : { price: p.price, priceCurrency: 'EUR' }
+      : {}),
   }
 }
 
