@@ -1,4 +1,4 @@
-﻿'use client';
+'use client';
 import React from 'react';
 
 import { useState, useEffect, useCallback } from 'react';
@@ -36,84 +36,16 @@ import SeoHealth from '@/components/cms/SeoHealth';
 import { actionableCount, auditSeo, type SeoIssue } from '@/lib/seo-audit';
 import { serpTitle } from '@/lib/seo-preview';
 import { SITE_URL } from '@/lib/site-url';
+import type { Article, Setting, SiteContent, BookingSlot, BookingRequest, ContactMessage } from '@/components/cms/admin/types';
+import { fmt, slug, pageContentOf, normalizeArticleDraft, getArticleDraftSignature, getWordCount, getReadTimeMinutes } from '@/components/cms/admin/helpers';
+import { lbl, inp, metaChip, previewPanel, previewFrame, previewImageFallback, previewBody } from '@/components/cms/admin/styles';
 
 // Numéro du dernier message affiché : un message récent n'est pas effacé par le minuteur d'un message plus ancien
 let toastSeq = 0;
 
 const RichEditor = dynamic(() => import('@/components/RichEditor'), { ssr: false });
 
-// ─── Types ───────────────────────────────────────────────────
-type Article = {
-  id: number; title: string; slug: string; category: string;
-  published: boolean; published_at: string; created_at: string;
-  excerpt: string; featured_image: string; content?: string; voice_notes?: string;
-  seo_title?: string; seo_description?: string; og_image?: string;
-};
 
-type Setting = { id: number; key: string; value: string; label: string; group_name: string; type?: string; };
-type SiteContent = { id: number; page: string; block_key: string; value: string; label: string; type: string; };
-
-type BookingSlot = {
-  id: string; slot_date: string; slot_time: string;
-  slot_type: 'coaching' | 'discovery' | 'enterprise';
-  duration_minutes: number; status: 'available' | 'booked' | 'cancelled';
-  notes: string | null; created_at: string;
-};
-
-type BookingRequest = {
-  id: string; slot_id: string; client_name: string; client_email: string;
-  client_phone: string | null; message: string | null;
-  status: 'pending' | 'confirmed' | 'cancelled';
-  created_at: string; booking_slots?: BookingSlot;
-};
-
-type ContactMessage = {
-  id: string; name: string; email: string; message: string;
-  type: string; status: 'unread' | 'read' | 'replied';
-  created_at: string;
-};
-
-// ─── Helpers ─────────────────────────────────────────────────
-const fmt = (d: string) => d ? new Date(d).toLocaleDateString('fr-FR') : '—';
-const slug = (t: string) => t.toLowerCase().normalize('NFD').replace(/[\u0300-\u036f]/g, '')
-  .replace(/[^a-z0-9]+/g, '-').replace(/^-|-$/g, '');
-
-/** Contenu d'une page tel qu'il est édité dans l'admin : « page__clé » → « clé ». */
-const pageContentOf = (edited: Record<string, string>, page: string): Record<string, string> =>
-  Object.fromEntries(Object.entries(edited)
-    .filter(([k]) => k.startsWith(`${page}__`))
-    .map(([k, v]) => [k.slice(page.length + 2), v]));
-
-function normalizeArticleDraft(article: Partial<Article> | null | undefined) {
-  return {
-    id: article?.id ?? null,
-    title: article?.title ?? '',
-    slug: article?.slug ?? '',
-    category: article?.category ?? '',
-    excerpt: article?.excerpt ?? '',
-    featured_image: article?.featured_image ?? '',
-    content: article?.content ?? '',
-    voice_notes: article?.voice_notes ?? '',
-    seo_title: article?.seo_title ?? '',
-    seo_description: article?.seo_description ?? '',
-    og_image: article?.og_image ?? '',
-    published: Boolean(article?.published),
-  };
-}
-
-function getArticleDraftSignature(article: Partial<Article> | null | undefined) {
-  return JSON.stringify(normalizeArticleDraft(article));
-}
-
-function getWordCount(content?: string) {
-  if (!content) return 0;
-  return content.replace(/<[^>]+>/g, ' ').split(/\s+/).filter(Boolean).length;
-}
-
-function getReadTimeMinutes(content?: string) {
-  const words = getWordCount(content);
-  return words === 0 ? 0 : Math.max(1, Math.ceil(words / 200));
-}
 
 // ─── Config pages CMS ─────────────────────────────────────────
 // ── Éditeur de structure : ordre et affichage des sections d'une page ─────────────
@@ -4177,52 +4109,5 @@ export default function CMSAdmin() {
   );
 }
 
-const lbl: React.CSSProperties = {
-  display: 'block', fontWeight: 600, fontSize: '.85rem', color: '#555', marginBottom: '.35rem',
-};
-const inp: React.CSSProperties = {
-  width: '100%', padding: '.65rem .9rem',
-  border: '1.5px solid #e0dbd5', borderRadius: '.5rem',
-  fontSize: '.9rem', outline: 'none', background: '#faf9f7', color: '#1a1a1a',
-};
-const metaChip: React.CSSProperties = {
-  padding: '.35rem .65rem',
-  borderRadius: '9999px',
-  background: '#f0e8e4',
-  color: '#2d5f54',
-  fontSize: '.76rem',
-  fontWeight: 600,
-};
-const previewPanel: React.CSSProperties = {
-  marginTop: '1.75rem',
-  padding: '1.25rem',
-  borderRadius: '1rem',
-  background: '#f8f4ef',
-  border: '1px solid #ece3d8',
-};
-const previewFrame: React.CSSProperties = {
-  background: 'white',
-  borderRadius: '1rem',
-  padding: '1.5rem',
-  boxShadow: '0 1px 4px rgba(0,0,0,.05)',
-};
-const previewImageFallback: React.CSSProperties = {
-  minHeight: 220,
-  marginBottom: '1.5rem',
-  borderRadius: '.9rem',
-  background: 'linear-gradient(135deg, #f2e8dc 0%, #d9ebe6 100%)',
-  color: '#6d625a',
-  display: 'flex',
-  alignItems: 'center',
-  justifyContent: 'center',
-  textAlign: 'center',
-  padding: '1.5rem',
-  fontWeight: 600,
-};
-const previewBody: React.CSSProperties = {
-  color: '#302925',
-  lineHeight: 1.8,
-  fontSize: '1rem',
-};
 
 
