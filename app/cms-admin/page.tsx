@@ -32,6 +32,8 @@ import AiKeysPanel from '@/components/cms/AiKeysPanel';
 import SearchConsoleStats from '@/components/cms/SearchConsoleStats';
 import { SEARCH_CONSOLE_PROPERTY_DEFAULT } from '@/lib/search-console';
 import SeoPreview from '@/components/cms/SeoPreview';
+import SeoHealth from '@/components/cms/SeoHealth';
+import { actionableCount, auditSeo, type SeoIssue } from '@/lib/seo-audit';
 import { serpTitle } from '@/lib/seo-preview';
 import { SITE_URL } from '@/lib/site-url';
 
@@ -1576,6 +1578,33 @@ export default function CMSAdmin() {
     return buildContentIndex(defs, rows, PAGE_DEFAULTS);
   }, [siteContent, drafts]);
 
+  // Contrôle du référencement (onglet « 🩺 Référencement ») : ce que Google voit = valeurs PUBLIÉES, page par page.
+  // Logique pure et testée dans lib/seo-audit.ts.
+  const seoAudit = React.useMemo(() => {
+    const byPage = new Map<string, { label: string; values: Record<string, string> }>();
+    for (const f of contentIndex) {
+      if (f.key !== 'seo_title' && f.key !== 'seo_description' && f.key !== 'seo_image') continue;
+      const entry = byPage.get(f.page) ?? { label: f.pageLabel, values: {} };
+      entry.values[f.key] = f.publishedValue;
+      byPage.set(f.page, entry);
+    }
+    const pages = [...byPage].map(([page, v]) => ({
+      page,
+      label: v.label,
+      title: v.values.seo_title ?? '',
+      description: v.values.seo_description ?? '',
+      image: v.values.seo_image ?? '',
+      indexable: editedSettings[`page_${page}_indexable`] !== 'false',
+    }));
+    return { issues: auditSeo(pages), pageCount: pages.length };
+  }, [contentIndex, editedSettings]);
+
+  const openSeoIssue = (issue: SeoIssue) => {
+    if (issue.field === 'visibility') { handleTabChange('settings'); return; }
+    const field = contentIndex.find(f => f.page === issue.page && f.key === issue.field);
+    if (field) openContentField(field); else openContentPage(issue.page);
+  };
+
   const isArticleDirty = getArticleDraftSignature(editingArticle) !== articleBaseline;
   const articleWordCount = getWordCount(editingArticle?.content);
   const articleReadTime = getReadTimeMinutes(editingArticle?.content);
@@ -1907,7 +1936,7 @@ export default function CMSAdmin() {
   // eslint-disable-next-line react-hooks/set-state-in-effect -- chargements cursor/onglet depuis l'API
   useEffect(() => { if (authed && tab === 'booking') { loadBookingSlots(); loadBookingRequests(); } }, [authed, tab, loadBookingSlots, loadBookingRequests]);
   // eslint-disable-next-line react-hooks/set-state-in-effect -- chargements cursor/onglet depuis l'API
-  useEffect(() => { if (authed && (tab === 'settings' || tab === 'pages' || tab === 'fil-ariane' || tab === 'contenu')) loadSettings(); }, [authed, tab, loadSettings]);
+  useEffect(() => { if (authed && (tab === 'settings' || tab === 'pages' || tab === 'fil-ariane' || tab === 'contenu' || tab === 'seo')) loadSettings(); }, [authed, tab, loadSettings]);
   // eslint-disable-next-line react-hooks/set-state-in-effect -- chargements cursor/onglet depuis l'API
   useEffect(() => { if (authed && (tab === 'messages' || tab === 'dashboard')) loadMessages(); }, [authed, tab, loadMessages]);
 
@@ -2452,6 +2481,7 @@ export default function CMSAdmin() {
     { id: 'new',      label: '✏️ Nouvel article', count: null },
     { id: 'pages',    label: '🗂️ Pages', count: null },
     { id: 'contenu',  label: '🔎 Contenu', count: contentIndex.filter(f => f.isPending).length || null },
+    { id: 'seo',      label: '🩺 Référencement', count: actionableCount(seoAudit.issues) || null },
     { id: 'stats-google', label: '📊 Statistiques Google', count: null },
     { id: 'menu',         label: '🧭 Menu', count: null },
     { id: 'fil-ariane',   label: '🔗 Fil d’Ariane', count: null },
@@ -3169,6 +3199,14 @@ export default function CMSAdmin() {
               onReplace={replaceInContent}
               busy={savingSettings || publishing}
             />
+          )
+        )}
+
+        {tab === 'seo' && (
+          loadingSettings ? (
+            <p style={{ textAlign: 'center', color: '#888', padding: '3rem' }}>Contrôle du référencement…</p>
+          ) : (
+            <SeoHealth issues={seoAudit.issues} pageCount={seoAudit.pageCount} onOpen={openSeoIssue} />
           )
         )}
 
