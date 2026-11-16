@@ -19,7 +19,7 @@ import {
 } from '@/lib/site-seo';
 import { extractVerificationToken } from '@/lib/search-console';
 import { SITE_URL } from '@/lib/site-url';
-import { buildThemeCSS, resolveTheme, GOOGLE_FONTS_HREF } from '@/lib/themes';
+import { buildThemeCSS, resolveTheme, googleFontsHref } from '@/lib/themes';
 import DuotoneFilter from '@/components/DuotoneFilter';
 import GoogleTagManager from '@/components/GoogleTagManager';
 import CmsServerContent from '@/components/CmsServerContent';
@@ -240,7 +240,7 @@ export default async function RootLayout({
         <link rel="preconnect" href="https://images.unsplash.com" />
         <link rel="preconnect" href="https://fonts.googleapis.com" />
         <link rel="preconnect" href="https://fonts.gstatic.com" crossOrigin="anonymous" />
-        <link href={GOOGLE_FONTS_HREF} rel="stylesheet" />
+        <link href={googleFontsHref(themeTokens)} rel="stylesheet" />
         <script
           type="application/ld+json"
           dangerouslySetInnerHTML={{ __html: JSON.stringify(schemaWebSite) }}
