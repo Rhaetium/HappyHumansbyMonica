@@ -34,7 +34,8 @@ export async function generateMetadata(): Promise<Metadata> {
   const kv = await getKvSettings();
   const seoTitle = kv.seo_title || DEFAULT_TITLE;
   const seoDescription = kv.seo_description || DEFAULT_DESCRIPTION;
-  const ogImage = kv.og_image || '/og-images/og-default.svg';
+  // JPG : Facebook, LinkedIn, WhatsApp et X n'affichent pas les images SVG
+  const ogImage = kv.og_image || '/og-default.jpg';
   const personName = kv.geo_person_name || DEFAULT_PERSON_NAME;
   const keywords = parseKeywords(kv.seo_keywords);
   // Google Search Console : Monica colle la balise fournie par Google, on n'en garde que le jeton.
@@ -121,7 +122,7 @@ const baseMetadata: Metadata = {
       "Accompagnement individuel et collectif pour managers, dirigeants et entreprises en quête d'alignement, de clarté et de transformation durable.",
     images: [
       {
-        url: '/og-images/og-default.svg',
+        url: '/og-default.jpg',
         width: 1200,
         height: 630,
         alt: 'Happy Humans - coaching et transformation avec Monica Schneider',
@@ -133,7 +134,7 @@ const baseMetadata: Metadata = {
     title: 'Happy Humans | Coaching & transformation avec Monica Schneider',
     description:
       'Executive coaching, philosophical counselling et accompagnement des entreprises avec Monica Schneider.',
-    images: ['/og-images/og-default.svg'],
+    images: ['/og-default.jpg'],
   },
 };
 
@@ -170,7 +171,9 @@ function buildSchemas(kv: Record<string, string>) {
     '@type': 'ProfessionalService',
     name: businessName,
     url: SITE_URL,
-    logo: `${SITE_URL}/og-images/og-default.svg`,
+    // PNG : Google n'accepte pas le SVG comme logo d'organisation
+    logo: `${SITE_URL}/logo-happy-humans.png`,
+    image: `${SITE_URL}/og-default.jpg`,
     address: {
       '@type': 'PostalAddress',
       addressLocality: locality || 'Paris',

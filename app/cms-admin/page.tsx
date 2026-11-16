@@ -1,4 +1,4 @@
-﻿'use client';
+'use client';
 import React from 'react';
 
 import { useState, useEffect, useCallback } from 'react';
@@ -4011,7 +4011,7 @@ export default function CMSAdmin() {
                               🔎 Relier le site à Google Search Console
                             </p>
                             <ol style={{ margin: 0, paddingLeft: '1.2rem', fontSize: '.86rem', color: '#444', lineHeight: 1.7 }}>
-                              <li>Ouvrez <a href="https://search.google.com/search-console" target="_blank" rel="noopener noreferrer" style={{ color: '#2d5f54', fontWeight: 600 }}>search.google.com/search-console</a> et ajoutez une propriété « Préfixe d’URL » : <code style={{ background: '#ece8e2', padding: '.1rem .35rem', borderRadius: '.25rem' }}>{editedSettings['gsc_property'] || 'https://happyhumans.vercel.app/'}</code></li>
+                              <li>Ouvrez <a href="https://search.google.com/search-console" target="_blank" rel="noopener noreferrer" style={{ color: '#2d5f54', fontWeight: 600 }}>search.google.com/search-console</a> et ajoutez une propriété « Préfixe d’URL » : <code style={{ background: '#ece8e2', padding: '.1rem .35rem', borderRadius: '.25rem' }}>{editedSettings['gsc_property'] || 'https://happyhumans.fr/'}</code></li>
                               <li>Choisissez la méthode <strong>Balise HTML</strong>, puis <strong>copiez la balise entière</strong> et collez-la dans le champ ci-dessous.</li>
                               <li>Enregistrez, puis cliquez sur <strong>Vérifier</strong> dans Search Console.</li>
                               <li>Dans le menu « Sitemaps », soumettez <code style={{ background: '#ece8e2', padding: '.1rem .35rem', borderRadius: '.25rem' }}>sitemap.xml</code>.</li>

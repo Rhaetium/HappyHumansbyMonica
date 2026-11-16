@@ -15,7 +15,7 @@ export const MENTIONS_LEGALES_DEFAULTS: Record<string, string> = {
   t_email: "Email :",
   t_happyhumans_coaching_gmail_com: DEFAULT_CONTACT_EMAIL,
   t_site: "Site :",
-  t_happyhumans_vercel_app: "happyhumans.vercel.app",
+  t_happyhumans_vercel_app: "happyhumans.fr",
   t_hebergeur: "Hébergeur",
   t_societe_vercel_inc: "**Société :** Vercel Inc.",
   t_adresse_340_pine_street: "**Adresse :** 340 Pine Street Suite 701, San Francisco, CA 94104, USA",

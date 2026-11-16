@@ -198,7 +198,7 @@ export default function SearchConsoleStats() {
 
       {loading && <p style={{ fontSize: '.9rem', color: '#888' }}>Chargement des statistiques…</p>}
 
-      {!loading && configured === false && <SetupGuide siteUrl={siteUrl || 'https://happyhumans.vercel.app/'} />}
+      {!loading && configured === false && <SetupGuide siteUrl={siteUrl || 'https://happyhumans.fr/'} />}
 
       {!loading && error && (
         <div style={{ padding: '1.25rem 1.5rem', background: '#fff5f5', border: '1.5px solid #fecaca', borderRadius: '1rem' }}>

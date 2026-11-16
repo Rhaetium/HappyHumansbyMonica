@@ -51,7 +51,7 @@ export async function pageMetadata(
   const [rows, kv] = await Promise.all([getSeoRows(page), getKvSettings()])
   const title = rows.seo_title || defaults.seo_title
   const description = rows.seo_description || defaults.seo_description
-  const image = rows.seo_image || defaults.seo_image || kv.og_image || '/og-images/og-default.svg'
+  const image = rows.seo_image || defaults.seo_image || kv.og_image || '/og-default.jpg'
   const path = pagePath(page)
   const socialTitle = `${title} | Happy Humans`
 

@@ -1,4 +1,4 @@
-﻿/** @type {import('next').NextConfig} */
+/** @type {import('next').NextConfig} */
 
 const securityHeaders = [
   {
@@ -27,7 +27,7 @@ const securityHeaders = [
       "default-src 'self'",
       "script-src 'self' 'unsafe-inline' 'unsafe-eval' https://assets.calendly.com",
       "style-src 'self' 'unsafe-inline' https://api.fontshare.com https://fonts.googleapis.com https://assets.calendly.com",
-      "img-src 'self' data: blob: https://images.unsplash.com https://*.supabase.co https://happyhumans.vercel.app https://behold.pictures https://cdn2.behold.pictures https://*.calendly.com",
+      "img-src 'self' data: blob: https://images.unsplash.com https://*.supabase.co https://happyhumans.fr https://www.happyhumans.fr https://happyhumans.vercel.app https://behold.pictures https://cdn2.behold.pictures https://*.calendly.com",
       "font-src 'self' https://api.fontshare.com https://fonts.gstatic.com",
       "frame-src 'self' https://calendly.com https://*.calendly.com",
       "connect-src 'self' https://*.supabase.co https://api.perplexity.ai https://api.unsplash.com https://api.bufferapp.com https://calendly.com https://*.calendly.com",
@@ -75,6 +75,10 @@ const nextConfig = {
       },
       {
         protocol: 'https',
+        hostname: 'happyhumans.fr',
+      },
+      {
+        protocol: 'https',
         hostname: 'happyhumans.vercel.app',
       },
       {
@@ -105,6 +109,21 @@ const nextConfig = {
 
   async redirects() {
     return [
+      // Un seul domaine indexé : www.happyhumans.fr et l'ancienne adresse *.vercel.app → https://happyhumans.fr
+      // (301 : Google transfère le référencement vers le nouveau domaine, pas de contenu dupliqué)
+      {
+        source: '/:path*',
+        has: [{ type: 'host', value: 'www.happyhumans.fr' }],
+        destination: 'https://happyhumans.fr/:path*',
+        permanent: true,
+      },
+      {
+        // /api exclu : le cron keep-alive et les webhooks peuvent encore viser l'ancienne adresse
+        source: '/:path((?!api/).*)',
+        has: [{ type: 'host', value: 'happyhumans.vercel.app' }],
+        destination: 'https://happyhumans.fr/:path',
+        permanent: true,
+      },
       { source: '/admin', destination: '/cms-admin', permanent: true },
       { source: '/admin/:path*', destination: '/cms-admin/:path*', permanent: true },
       { source: '/planifier', destination: '/coaching', permanent: true },

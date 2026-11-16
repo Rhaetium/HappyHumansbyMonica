@@ -69,10 +69,10 @@ const DEFAULT_SETTINGS = [
   { key: 'seo_keywords',     label: 'Mots-clés (séparés par des virgules)', group_name: 'seo', type: 'textarea', value: DEFAULT_SEO_KEYWORDS.join(', ') },
   { key: 'og_image',         label: 'Image Open Graph (réseaux)', group_name: 'seo',        type: 'image',    value: '' },
   { key: 'seo_robots',       label: 'Robots global',              group_name: 'seo',        type: 'text',     value: 'index, follow' },
-  { key: 'seo_canonical_domain', label: 'Domaine canonique',      group_name: 'seo',        type: 'text',     value: 'https://happyhumans.vercel.app' },
+  { key: 'seo_canonical_domain', label: 'Domaine canonique',      group_name: 'seo',        type: 'text',     value: 'https://happyhumans.fr' },
   // Google Search Console : un seul champ à coller, la balise est extraite automatiquement
   { key: 'gsc_verification', label: 'Balise de vérification Google Search Console', group_name: 'search-console', type: 'textarea', value: '', placeholder: '<meta name="google-site-verification" content="…" />' },
-  { key: 'gsc_property',     label: 'Adresse de la propriété (à valider dans Search Console)', group_name: 'search-console', type: 'text', value: 'https://happyhumans.vercel.app/' },
+  { key: 'gsc_property',     label: 'Adresse de la propriété (à valider dans Search Console)', group_name: 'search-console', type: 'text', value: 'https://happyhumans.fr/' },
   // Geo / business
   { key: 'geo_business_name',    label: 'Nom entreprise (schema.org)',  group_name: 'geo', type: 'text',     value: 'Happy Humans — Monica Schneider' },
   { key: 'geo_person_name',      label: 'Nom de la personne (schema.org)', group_name: 'geo', type: 'text',  value: DEFAULT_PERSON_NAME },

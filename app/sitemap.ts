@@ -33,7 +33,7 @@ export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
     .filter(p => isPageIndexable(kv, p.page))
     .map(p => ({
       url: `${BASE_URL}${p.path}`,
-      lastModified: new Date(),
+      // pas de lastModified : « maintenant » à chaque requête fait ignorer ce champ par Google
       changeFrequency: p.freq,
       priority: p.priority,
     }));
@@ -61,7 +61,6 @@ export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
       if (!page.published) continue;
       entries.push({
         url: `${BASE_URL}${pageHref(page.slug)}`,
-        lastModified: new Date(),
         changeFrequency: 'monthly',
         priority: 0.6,
       });
