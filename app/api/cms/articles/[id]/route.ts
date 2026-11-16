@@ -1,6 +1,7 @@
-import { NextResponse } from 'next/server'
+import { NextResponse, after } from 'next/server'
 import { createClient } from '@supabase/supabase-js'
 import { requireCmsAuth } from '@/lib/cms-auth'
+import { submitToIndexNow } from '@/lib/indexnow'
 
 function supabase() {
   return createClient(
@@ -57,6 +58,8 @@ export async function PUT(req: Request, props: { params: Promise<{ id: string }>
   }
 
   if (error) return NextResponse.json({ error: error.message }, { status: 500 })
+  // Article en ligne (publié ou modifié) : on prévient Bing & co. après la réponse
+  if (data?.published && data?.slug) after(() => submitToIndexNow([`/blog/${data.slug}`, '/blog']))
   return NextResponse.json({ article: data })
 }
 
@@ -66,7 +69,10 @@ export async function DELETE(req: Request, props: { params: Promise<{ id: string
   if (authError) return authError
 
   const sb = supabase()
+  const { data: before } = await sb.from('cms_blog_posts').select('slug, published').eq('id', params.id).single()
   const { error } = await sb.from('cms_blog_posts').delete().eq('id', params.id)
   if (error) return NextResponse.json({ error: error.message }, { status: 500 })
+  // Article supprimé : on le signale aussi (les moteurs retirent la page plus vite)
+  if (before?.published && before?.slug) after(() => submitToIndexNow([`/blog/${before.slug}`, '/blog']))
   return NextResponse.json({ ok: true })
 }

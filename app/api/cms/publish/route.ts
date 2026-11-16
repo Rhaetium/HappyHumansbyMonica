@@ -1,11 +1,18 @@
-import { NextRequest, NextResponse } from 'next/server'
+import { NextRequest, NextResponse, after } from 'next/server'
 import { createClient } from '@supabase/supabase-js'
 import { revalidatePath } from 'next/cache'
 import { requireCmsAuth } from '@/lib/cms-auth'
 import { pagePath } from '@/lib/page-seo'
 import { draftPage, isDraftPage } from '@/lib/cms-drafts'
+import { submitToIndexNow } from '@/lib/indexnow'
 
 export const dynamic = 'force-dynamic'
+
+// Pages du site qui ont une adresse publique (les textes communs « site », « footer »… n'en ont pas)
+const INDEXABLE_PAGES = new Set([
+  'home', 'a-propos', 'coaching', 'entreprises', 'happiness-design', 'sparring-partner',
+  'relations', 'blog', 'faq', 'contact', 'booking', 'mentions-legales', 'politique-confidentialite',
+])
 
 function getSupabaseClient() {
   const url = process.env.NEXT_PUBLIC_SUPABASE_URL
@@ -63,6 +70,8 @@ export async function POST(req: NextRequest) {
   if (action === 'publish' && doomed.some(k => k.startsWith('seo_'))) {
     try { revalidatePath(pagePath(page)) } catch { /* sans incidence : la page se régénère au plus tard dans 5 min */ }
   }
+  // Page mise en ligne : on prévient Bing & co. après la réponse (la publication a réussi : sinon on est déjà sorti plus haut)
+  if (action === 'publish' && INDEXABLE_PAGES.has(page)) after(() => submitToIndexNow([pagePath(page)]))
 
   return NextResponse.json({
     success: true,

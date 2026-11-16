@@ -1,6 +1,7 @@
-import { NextRequest, NextResponse } from 'next/server';
+import { NextRequest, NextResponse, after } from 'next/server';
 import { createClient } from '@supabase/supabase-js';
 import { requireCmsAuth } from '@/lib/cms-auth';
+import { submitToIndexNow } from '@/lib/indexnow';
 
 export const dynamic = 'force-dynamic';
 
@@ -82,5 +83,7 @@ export async function POST(req: NextRequest) {
   }
 
   if (error) return NextResponse.json({ error: error.message }, { status: 500 });
+  // Article publié : on prévient Bing & co. (après la réponse, sans ralentir l'enregistrement)
+  if (data?.published && data?.slug) after(() => submitToIndexNow([`/blog/${data.slug}`, '/blog']));
   return NextResponse.json({ article: data }, { status: 201 });
 }
