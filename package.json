@@ -15,30 +15,24 @@
     "dev:mock": "node scripts/dev-mock.cjs"
   },
   "dependencies": {
-    "@anthropic-ai/sdk": "^1.4.0",
-    "@netlify/plugin-nextjs": "^5.15.9",
+    "@anthropic-ai/sdk": "^1.8.0",
     "@phosphor-icons/react": "^2.1.10",
-    "@supabase/supabase-js": "^2.39.0",
-    "ai": "^7.0.161",
-    "bcryptjs": "^3.0.3",
-    "clsx": "^2.0.0",
+    "@supabase/supabase-js": "^2.119.0",
+    "ai": "^7.0.173",
     "file-saver": "^2.0.5",
     "isomorphic-dompurify": "^3.8.0",
-    "jsonwebtoken": "^9.0.3",
     "jszip": "^3.10.1",
-    "mongoose": "^9.3.3",
-    "next": "^16.3.8",
+    "mongoose": "^9.12.1",
+    "next": "^16.4.6",
     "qrcode": "^1.5.4",
-    "react": "^19.3.0",
-    "react-dom": "^19.3.0",
-    "react-hook-form": "^7.48.0",
-    "resend": "^6.10.0"
+    "react": "^19.3.1",
+    "react-dom": "^19.3.1",
+    "resend": "^6.38.1"
   },
   "devDependencies": {
     "@testing-library/jest-dom": "^6.9.1",
     "@types/dompurify": "^3.0.5",
     "@types/file-saver": "^2.0.7",
-    "@types/jsonwebtoken": "^9.0.10",
     "@types/node": "^20.10.0",
     "@types/qrcode": "^1.5.6",
     "@types/react": "^19.3.0",
@@ -52,5 +46,10 @@
     "tailwindcss": "^3.4.0",
     "typescript": "^5.3.0",
     "vitest": "^4.1.4"
+  },
+  "overrides": {
+    "dompurify": "^3.4.17",
+    "undici": "^7.30.2",
+    "zod": "^4.6.7"
   }
 }

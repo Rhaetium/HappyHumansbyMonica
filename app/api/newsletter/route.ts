@@ -1,4 +1,8 @@
 import { NextRequest, NextResponse } from 'next/server'
+import { SITE_URL } from '@/lib/site-url'
+
+// Liens et nom du site des e-mails : toujours l'adresse officielle (lib/site-url.ts), jamais écrite en dur.
+const SITE_HOST = new URL(SITE_URL).hostname
 
 // Newsletter Happy Humans — Brevo (contacts) + Resend (email de bienvenue)
 // Variables requises : BREVO_API_KEY (obligatoire), RESEND_API_KEY (optionnel)
@@ -67,12 +71,12 @@ export async function POST(request: NextRequest) {
               <p style="color:#57534e;line-height:1.7;margin:0 0 32px">
                 En attendant notre prochain carnet, explore les destinations qu'on a v\u00e9cues :
               </p>
-              <a href="https://happyhumans.fr/blog" style="display:inline-block;background:#78350f;color:#fff;text-decoration:none;padding:14px 28px;border-radius:50px;font-size:14px;font-family:sans-serif">Voir le blog \u2192</a>
+              <a href="${SITE_URL}/blog" style="display:inline-block;background:#78350f;color:#fff;text-decoration:none;padding:14px 28px;border-radius:50px;font-size:14px;font-family:sans-serif">Voir le blog \u2192</a>
             </div>
             <div style="padding:24px 40px;background:#f5f0eb;text-align:center">
               <p style="font-size:12px;color:#a8a29e;margin:0">
-                Tu re\u00e7ois cet email car tu t'es inscrit(e) sur happyhumans.fr · Conformément au RGPD, tes données ne sont utilisées que pour l'envoi de cette newsletter.<br/>
-                <a href="https://happyhumans.fr/mentions-legales" style="color:#78350f">Se désabonner</a> · <a href="https://happyhumans.fr" style="color:#78350f">happyhumans.fr</a>
+                Tu re\u00e7ois cet email car tu t'es inscrit(e) sur ${SITE_HOST} · Conformément au RGPD, tes données ne sont utilisées que pour l'envoi de cette newsletter.<br/>
+                <a href="${SITE_URL}/mentions-legales" style="color:#78350f">Se désabonner</a> · <a href="${SITE_URL}" style="color:#78350f">${SITE_HOST}</a>
               </p>
             </div>
           </div>

@@ -33,6 +33,26 @@ Avant, le cookie `hh_cms_edit` valait simplement `1` et le serveur lui faisait c
 - En local, le mot de passe est dans `.env.local` (jamais commité) ; avec `npm run dev:mock` (faux Supabase), c'est `dev-local`. Ces deux mots de passe ne valent pas pour le site en ligne.
 - Message « CMS non configuré : variable CMS_PASSWORD manquante » : la variable est absente ou vide dans le déploiement. Message « Mot de passe incorrect » : ce n'est pas la valeur de `CMS_PASSWORD` du déploiement en cours (si elle vient d'être modifiée, il faut redéployer). `CMS_SESSION_SECRET` est facultatif : sans lui, les sessions sont signées avec le mot de passe.
 
+## Démarrage rapide (le minimum, en 3 étapes)
+
+**1. Coller les variables dans Vercel en une seule fois.**
+Vercel → projet → Settings → Environment Variables → **Import .env** (ou coller directement plusieurs lignes dans le premier champ « Key »). Collez ce bloc rempli, en cochant *Production* et *Preview* :
+
+```
+NEXT_PUBLIC_SUPABASE_URL=https://xxxxxxxxxxxxxxxxxxxx.supabase.co
+NEXT_PUBLIC_SUPABASE_ANON_KEY=sb_publishable_...
+SUPABASE_SERVICE_ROLE_KEY=sb_secret_...
+CMS_PASSWORD=un-mot-de-passe-long-d-au-moins-12-caracteres
+```
+
+Où trouver les trois clés Supabase : Supabase → projet → **Settings → API** (adresse, clé « publishable », clé « secret »).
+Ces 4 variables suffisent pour démarrer : tout le reste est facultatif et se règle plus tard (voir `.env.example`).
+Sans nom de domaine, `NEXT_PUBLIC_SITE_URL` est inutile : le site utilise `https://happyhumans.vercel.app` (adresse du projet Vercel). Le jour où un domaine est branché, renseignez-le (sans slash final). Pour le générateur de questionnaires, ajoutez `ANTHROPIC_API_KEY`.
+
+**2. Créer les tables.** Supabase → **SQL Editor** → coller et exécuter les migrations de `supabase/migrations/` (celle des questionnaires : `20261102000000_questionnaires.sql`).
+
+**3. Redéployer, puis vérifier.** Vercel → Deployments → ⋮ → Redeploy. Ouvrez ensuite `/cms-admin` : le **tableau de bord** affiche en haut tout ce qui ne va pas (variable absente ou mal copiée, table manquante, données privées lisibles par un visiteur), avec *ce qu'il faut faire*. S'il n'affiche aucun problème, la configuration technique est bonne. Le contrôle est refait toutes les 10 minutes (code : `lib/env-check.ts`).
+
 ## 1. Avant de déployer la branche 2
 
 ### Variables d'environnement
@@ -41,12 +61,25 @@ Voir `.env.example` (à jour, avec obligatoire / recommandé / optionnel). À v�
 - [ ] `NEXT_PUBLIC_SUPABASE_URL`, `NEXT_PUBLIC_SUPABASE_ANON_KEY`, `SUPABASE_SERVICE_ROLE_KEY`
 - [ ] `CMS_PASSWORD`, `CMS_SESSION_SECRET`, `CMS_HMAC_SECRET` (valeurs longues, aléatoires, distinctes)
 - [ ] `BREVO_API_KEY`, `SENDER_EMAIL`, `ADMIN_EMAIL` : sans eux les e-mails de confirmation ne partent pas (silencieusement)
-- [ ] `NEXT_PUBLIC_SITE_URL` : facultative (voir « Nom de domaine » ci-dessous)
+- [ ] `NEXT_PUBLIC_SITE_URL` : à renseigner une fois le domaine branché (voir « Nom de domaine » ci-dessous)
 
-### Nom de domaine — décidé : `https://happyhumans.vercel.app`
-C'est l'adresse par défaut de tout le site : accueil, `robots.txt`, sitemap, **articles de blog** (qui déclaraient avant `happyhumans.fr`) et liens des e-mails. Aucune variable n'est nécessaire.
-Si un nom de domaine personnalisé est branché un jour, renseigner `NEXT_PUBLIC_SITE_URL` aligne tout le site d'un coup (`lib/site-url.ts`).
-⚠️ Plusieurs images sont encore servies depuis l'ancien site WordPress (`https://happyhumans.fr/wp-content/uploads/…`, dans `lib/wordpress-data.ts` et `lib/instagram-static.ts`) : elles disparaîtront si ce domaine cesse de les héberger.
+### Nom de domaine : brancher `happyhumans.fr`
+Adresse actuelle : `https://happyhumans.vercel.app` (par défaut dans `lib/site-url.ts`). Domaine acheté : `happyhumans.fr` (DNS chez Amen).
+**Une seule variable pilote tout** : `NEXT_PUBLIC_SITE_URL` aligne le sitemap, `robots.txt`, les adresses canoniques, `/llms.txt`, les e-mails de la newsletter, les mentions légales et l'adresse Search Console par défaut. Aucune adresse n'est écrite en dur dans le code (un test l'impose : `__tests__/lib/site-url.test.ts`).
+
+À faire, dans cet ordre :
+1. **Vercel** → projet → Settings → **Domains** → *Add* `happyhumans.fr`. Acceptez aussi `www.happyhumans.fr` avec la redirection vers `happyhumans.fr`. Vercel affiche alors les enregistrements DNS exacts : **ces valeurs font foi**.
+2. **Amen** (controlpanel.amen.fr → Domaines → Gestion DNS) : créez seulement ces deux enregistrements, avec les valeurs affichées par Vercel (habituellement : `@` type **A** → `76.76.21.21`, et `www` type **CNAME** → `cname.vercel-dns.com`). Supprimez les anciens enregistrements `A`, `AAAA` ou `CNAME` de `@` et de `www` qui pointent vers l'ancien hébergement, sinon une partie des visiteurs arrive sur l'ancien site.
+   ⚠️ **Ne touchez pas aux enregistrements `MX` et `TXT`** : ils font fonctionner les e-mails (SPF, DKIM) et les vérifications Google.
+3. **Attendre la propagation** (de quelques minutes à quelques heures). Vercel passe le domaine en « Valid Configuration » et fournit le certificat HTTPS tout seul.
+4. Quand `https://happyhumans.fr` affiche le site : Vercel → Environment Variables → `NEXT_PUBLIC_SITE_URL` = `https://happyhumans.fr` (Production et Preview), puis redéployer.
+5. **Redirection permanente de l'ancienne adresse** : Vercel → Domains → `happyhumans.vercel.app` → *Edit* → redirection (308) vers `happyhumans.fr`. Évite que Google voie deux sites identiques.
+6. **Search Console** : ajoutez la propriété `https://happyhumans.fr/` (admin → Statistiques Google) et envoyez `https://happyhumans.fr/sitemap.xml`.
+7. Vérifiez `/robots.txt`, `/sitemap.xml` et `/llms.txt` : ils doivent afficher `happyhumans.fr`.
+
+**E-mails** : le message de bienvenue part de `onboarding@resend.dev` (adresse de test de Resend). Une fois le domaine branché, ajoutez `happyhumans.fr` dans Resend (Domains) et créez les enregistrements DKIM/SPF qu'il indique chez Amen : l'envoi depuis une adresse `@happyhumans.fr` arrivera bien mieux en boîte de réception. Ne le faites qu'après l'étape 3.
+
+Vérifié le 14/11/2026 : plus aucune image ni lien de l'ancien site WordPress (`happyhumans.fr/wp-content/…`) n'est utilisé, ni dans le code ni dans la base. Basculer le domaine ne casse donc aucune image.
 
 ### Supabase
 - [ ] La table `site_content` existe (elle n'est **pas** dans `supabase/migrations`, elle a été créée à la main) avec la contrainte unique `(page, block_key)`.

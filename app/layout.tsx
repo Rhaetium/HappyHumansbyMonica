@@ -13,21 +13,26 @@ import {
   DEFAULT_PERSON_JOB_TITLE,
   DEFAULT_PERSON_NAME,
   DEFAULT_SEO_KEYWORDS,
+  DEFAULT_SITE_DESCRIPTION,
+  DEFAULT_SITE_TITLE,
   parseKeywords,
 } from '@/lib/site-seo';
 import { extractVerificationToken } from '@/lib/search-console';
 import { SITE_URL } from '@/lib/site-url';
 import { buildThemeCSS, resolveTheme, GOOGLE_FONTS_HREF } from '@/lib/themes';
 import DuotoneFilter from '@/components/DuotoneFilter';
+import CmsServerContent from '@/components/CmsServerContent';
+import { SITE_DEFAULTS } from '@/lib/cms-defaults/site';
+import { FOOTER_DEFAULTS } from '@/lib/cms-defaults/footer';
+import { FIL_ARIANE_DEFAULTS } from '@/lib/cms-defaults/fil-ariane';
 
 
 export const viewport: Viewport = {
   themeColor: '#2d5f54',
 };
 
-const DEFAULT_TITLE = 'Happy Humans — Monica Schneider';
-const DEFAULT_DESCRIPTION =
-  "Philo-coaching avec Monica Schneider. Executive coaching, philosophical counselling et sparring partner pour particuliers et entreprises. Retrouvez clarté, alignement et relations épanouissantes.";
+const DEFAULT_TITLE = DEFAULT_SITE_TITLE;
+const DEFAULT_DESCRIPTION = DEFAULT_SITE_DESCRIPTION;
 
 // SEO global piloté par le CMS (Paramètres → SEO global), avec fallback
 export async function generateMetadata(): Promise<Metadata> {
@@ -254,8 +259,11 @@ export default async function RootLayout({
           <InlineEditProvider>
             <AuthProvider>
               <DynamicFavicon />
-              {children}
-              <CookieConsentBanner />
+              {/* Textes partagés (bandeau cookies, pied de page, fil d'Ariane) lus sur le serveur : présents dans le HTML */}
+              <CmsServerContent pages={{ site: SITE_DEFAULTS, footer: FOOTER_DEFAULTS, 'fil-ariane': FIL_ARIANE_DEFAULTS }}>
+                {children}
+                <CookieConsentBanner />
+              </CmsServerContent>
               <InlineEditor />
             </AuthProvider>
           </InlineEditProvider>

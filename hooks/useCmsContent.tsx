@@ -2,6 +2,7 @@
 import { useState, useEffect, useRef, useCallback, type ReactNode } from 'react';
 import dynamic from 'next/dynamic';
 import { useOptionalInlineEdit } from '@/contexts/InlineEditContext';
+import { useInitialCmsContent } from '@/contexts/CmsInitialContent';
 
 const EditableField = dynamic(() => import('@/components/EditableField'), { ssr: false });
 
@@ -82,7 +83,10 @@ export function useCmsContent(page: string, defaults: CmsContent = {}): CmsResul
     defaultsRef.current = defaults;
   });
 
-  const [content, setContent] = useState<CmsContent>(() => getInitial(page, defaults));
+  // Contenu publié lu par le serveur (voir contexts/CmsInitialContent) : s'il existe, il sert de départ, à la place
+  // des caches du navigateur, pour que le premier rendu soit identique sur le serveur et dans le navigateur.
+  const seeded = useInitialCmsContent(page);
+  const [content, setContent] = useState<CmsContent>(() => (seeded ? { ...defaults, ...seeded } : getInitial(page, defaults)));
   const fetchedRef = useRef(false);
 
   // Aperçu des brouillons : par ?cms_preview=1 (aperçu de l'admin) ou pendant l'édition en ligne.
@@ -154,8 +158,15 @@ export function useCmsContent(page: string, defaults: CmsContent = {}): CmsResul
     };
   }, [page, loadContent]);
 
+  const isEditing = !!edit?.isEditing;
+  const pendingChanges = edit?.pendingChanges;
   const get = useCallback((key: string, defaultValue?: string, opts?: { multiline?: boolean }): ReactNode => {
     const val = content[key] ?? defaultValue ?? defaultsRef.current[key] ?? '';
+    // Hors édition en ligne, un simple texte : rendu aussi sur le serveur, donc présent dans le HTML que lisent
+    // Google et les robots des IA. (EditableField, chargé uniquement dans le navigateur, ne l'était pas : le
+    // titre de l'accueil était vide dans le HTML brut.) Il ne reste nécessaire que pendant l'édition, ou tant
+    // qu'une modification non enregistrée existe pour ce champ.
+    if (!isEditing && pendingChanges?.[page]?.[key] === undefined) return <span>{val}</span>;
     return (
       <EditableField
         page={page}
@@ -164,7 +175,7 @@ export function useCmsContent(page: string, defaults: CmsContent = {}): CmsResul
         multiline={opts?.multiline}
       />
     );
-  }, [content, page]);
+  }, [content, page, isEditing, pendingChanges]);
 
   // Build the result object without mutating a potentially-frozen object.
   // Objet à prototype null : les clés CMS arbitraires (ex. "__proto__") ne doivent pas toucher Object.prototype.

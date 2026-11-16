@@ -35,3 +35,11 @@ export function parseKeywords(value: string | null | undefined): string[] {
     .filter(Boolean)
   return list.length > 0 ? list : DEFAULT_SEO_KEYWORDS
 }
+
+/**
+ * Titre et description du site par défaut (balises <title> et description, /llms.txt).
+ * Le CMS (⚙️ Paramètres → 🔍 SEO global) les remplace ; ces valeurs ne servent que de secours.
+ */
+export const DEFAULT_SITE_TITLE = 'Happy Humans — Monica Schneider'
+export const DEFAULT_SITE_DESCRIPTION =
+  "Philo-coaching avec Monica Schneider. Executive coaching, philosophical counselling et sparring partner pour particuliers et entreprises. Retrouvez clarté, alignement et relations épanouissantes."

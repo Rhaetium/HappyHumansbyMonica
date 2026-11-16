@@ -43,7 +43,15 @@ Règle du projet : **toute phrase visible par un visiteur vient du CMS**. Le cod
 
 ### `c.ma_cle` ou `c.get('ma_cle')` ?
 
-`c.get()` rend un champ cliquable pour l'édition en ligne, mais il est chargé en `ssr: false` : son texte **n'est pas dans le HTML envoyé par le serveur** (donc invisible pour Google au premier chargement). Les nouveaux champs utilisent la lecture simple `c.ma_cle`. Les anciens `c.get()` sont conservés tels quels.
+Les deux sont présents dans le HTML envoyé par le serveur (donc lisibles par Google et par les robots des IA qui n'exécutent pas le JavaScript). `c.get()` rend un simple `<span>` pour les visiteurs, et ne charge le champ cliquable de l'édition en ligne (`EditableField`, uniquement dans le navigateur) que pendant l'édition, ou tant qu'une modification non enregistrée existe pour ce champ. `c.ma_cle` reste la lecture à préférer pour un nouveau champ (plus simple, aucun composant en plus).
+
+### Le HTML serveur contient le contenu publié
+Une page « client » est d'abord rendue sur le serveur, mais elle n'y connaît que les textes par défaut : le contenu publié dans le CMS n'arrivait qu'après un appel réseau dans le navigateur. Les robots qui n'exécutent pas le JavaScript ne voyaient donc que les textes par défaut, jamais ceux de Monica.
+Maintenant `components/CmsServerContent.tsx` (serveur) lit le contenu publié (`lib/cms-content-server.ts`) et le transmet à `useCmsContent` par `contexts/CmsInitialContent.tsx` : le premier rendu, sur le serveur comme dans le navigateur, part déjà du contenu publié (aucune différence à l'hydratation).
+- Une page l'obtient en s'enveloppant : `<CmsServerContent pages={{ '<page>': <PAGE>_DEFAULTS }}>…</CmsServerContent>`, dans son `layout.tsx` (ou dans `page.tsx` pour l'accueil, les pages légales et le blog). Les textes partagés (`site`, `footer`, `fil-ariane`) le sont dans `app/layout.tsx`.
+- **Une nouvelle page doit être enveloppée**, sinon son HTML ne contient que les textes par défaut. Un test l'impose (`__tests__/cms/ssr-content.test.tsx`).
+- Fraîcheur : la page est régénérée au plus toutes les 5 minutes et immédiatement à chaque publication ; le navigateur recharge de toute façon le contenu à l'ouverture de la page.
+- Ce que Google voit réellement se vérifie dans le HTML brut (`curl https://…/ | grep '<h1'`), pas dans le navigateur.
 
 ## Textes avec gras, italique, liens
 
@@ -281,3 +289,12 @@ Les valeurs qui ne sont propres à aucune page vivent dans la table `cms_setting
 - La navigation : éditeur dédié (onglet 🧭 Menu).
 - Les styles et la structure des blocs libres : seuls les textes, images et liens des blocs sont éditables.
 - Les anciennes adresses de l'ex-site Heldonica (`/travel-planning`, `/hotel-consulting`, `/destinations/*`…) : les pages ont été supprimées, `next.config.js` redirige les anciens liens.
+
+## Clés d'IA saisies dans l'admin (onglet 🤖 IA)
+Fournisseurs : `lib/ai-providers.ts` (catalogue, validation). Choix du fournisseur et appels : `lib/ai-text.ts`. Lecture et écriture des clés : `lib/ai-keys.ts`. Routes : `/api/cms/ai-keys` (état, enregistrement, retrait, fournisseur préféré) et `/api/cms/ai-keys/test`, toutes derrière `requireCmsAuth`.
+
+- **Stockage** : `cms_settings_kv`, clé `secret_ai_<variable>`. La valeur est chiffrée en AES-256-GCM (`lib/secret-box.ts`) avec un secret qui ne vit que dans Vercel : `CMS_SESSION_SECRET`, à défaut `CMS_PASSWORD`. Si ce secret change, les clés enregistrées deviennent illisibles ; l'admin le signale et il suffit de les ressaisir.
+- **Jamais renvoyées au navigateur** : `GET /api/cms/ai-keys` ne dit que « configurée / source » (tests : `__tests__/api/cms-ai-keys.test.ts`). La route générique `/api/cms/settings` refuse d'écrire une clé commençant par `secret_` et ne renvoie que les réglages déclarés.
+- **Priorité** : une variable Vercel l'emporte sur la valeur de l'admin. `AI_PROVIDER` (Vercel) ou le réglage « fournisseur préféré » désigne le fournisseur à utiliser en priorité ; s'il n'est pas configuré, on retombe sur l'ordre par défaut (Claude, Cloudflare, Groq, Gemini).
+- **Ajouter un fournisseur** : une entrée dans `PROVIDERS` (`lib/ai-providers.ts`), son test de disponibilité et son appel dans `lib/ai-text.ts`, puis un test. L'onglet admin se construit tout seul depuis le catalogue.
+
