@@ -11,6 +11,7 @@ import ShareButtons from '@/components/ShareButtons'
 import EnhancedRichContent from '@/components/EnhancedRichContent'
 import { sanitizeHtml } from '@/lib/sanitize-html'
 import { SITE_URL } from '@/lib/site-url'
+import { unsplashSrcSet } from '@/lib/image-srcset'
 import { getPageContent } from '@/lib/cms-content-server'
 import { BLOG_DEFAULTS } from '@/lib/cms-defaults/blog'
 
@@ -192,7 +193,12 @@ export default async function BlogPostPage(props: Props) {
           {heroImage && (
             <img
               src={heroImage}
+              srcSet={unsplashSrcSet(heroImage)}
+              sizes={unsplashSrcSet(heroImage) ? '100vw' : undefined}
               alt={post.title}
+              loading="eager"
+              fetchPriority="high"
+              decoding="async"
               width={1920}
               height={1080}
               className="absolute inset-0 h-full w-full object-cover opacity-75"
