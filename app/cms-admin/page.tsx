@@ -31,6 +31,9 @@ import QuestionnairesAdmin from '@/components/cms/questionnaires/QuestionnairesA
 import AiKeysPanel from '@/components/cms/AiKeysPanel';
 import SearchConsoleStats from '@/components/cms/SearchConsoleStats';
 import { SEARCH_CONSOLE_PROPERTY_DEFAULT } from '@/lib/search-console';
+import SeoPreview from '@/components/cms/SeoPreview';
+import { serpTitle } from '@/lib/seo-preview';
+import { SITE_URL } from '@/lib/site-url';
 
 // Numéro du dernier message affiché : un message récent n'est pas effacé par le minuteur d'un message plus ancien
 let toastSeq = 0;
@@ -1235,12 +1238,12 @@ const SETTINGS_GROUPS: Record<string, { label: string; emoji: string }> = {
 const SEO_TITLE_IDEAL = 60;
 const SEO_DESCRIPTION_IDEAL = 160;
 
-function SeoLengthHint({ value, ideal }: { value: string; ideal: number }) {
+function SeoLengthHint({ value, ideal, note }: { value: string; ideal: number; note?: string }) {
   const length = value.length;
   const over = length > ideal;
   return (
     <p style={{ margin: '.35rem 0 0', fontSize: '.78rem', color: over ? '#c2410c' : length === 0 ? '#aaa' : '#16a34a', fontWeight: 600 }}>
-      {length} caractère{length > 1 ? 's' : ''} · conseillé : jusqu’à {ideal}
+      {length} caractère{length > 1 ? 's' : ''}{note ? ` (${note})` : ''} · conseillé : jusqu’à {ideal}
       {over ? ` — Google coupera probablement la fin` : ''}
     </p>
   );
@@ -3456,10 +3459,19 @@ export default function CMSAdmin() {
                                           />
                                         )}
                                         {section.key === 'seo_title' && (
-                                          <SeoLengthHint value={editedContent[key] ?? ''} ideal={SEO_TITLE_IDEAL} />
+                                          // Le site ajoute « | Happy Humans » au titre : on compte ce que Google affiche vraiment
+                                          <SeoLengthHint value={serpTitle(editedContent[key] ?? '')} ideal={SEO_TITLE_IDEAL} note="avec « | Happy Humans »" />
                                         )}
                                         {section.key === 'seo_description' && (
-                                          <SeoLengthHint value={editedContent[key] ?? ''} ideal={SEO_DESCRIPTION_IDEAL} />
+                                          <>
+                                            <SeoLengthHint value={editedContent[key] ?? ''} ideal={SEO_DESCRIPTION_IDEAL} />
+                                            <SeoPreview
+                                              title={editedContent[`${activePage}__seo_title`] ?? ''}
+                                              description={editedContent[key] ?? ''}
+                                              siteUrl={SITE_URL}
+                                              path={activePage === 'home' ? '/' : `/${activePage}`}
+                                            />
+                                          </>
                                         )}
                                       </div>
                                     );
