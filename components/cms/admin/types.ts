@@ -29,3 +29,5 @@ export type ContactMessage = {
   type: string; status: 'unread' | 'read' | 'replied';
   created_at: string;
 };
+
+export type NewSlot = { date: string; time: string; type: string; notes: string };
