@@ -8,5 +8,5 @@ export async function generateMetadata(): Promise<Metadata> {
   return pageMetadata('coaching', COACHING_DEFAULTS)
 }
 export default function Layout({ children }: { children: React.ReactNode }) {
-  return <CmsServerContent pages={{ 'coaching': COACHING_DEFAULTS }}><ServiceJsonLd page="coaching" defaults={COACHING_DEFAULTS} />{children}</CmsServerContent>
+  return <CmsServerContent pages={{ 'coaching': COACHING_DEFAULTS }}><ServiceJsonLd page="coaching" defaults={COACHING_DEFAULTS} offersList="coaching_programs" />{children}</CmsServerContent>
 }

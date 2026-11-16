@@ -8,5 +8,5 @@ export async function generateMetadata(): Promise<Metadata> {
   return pageMetadata('entreprises', ENTREPRISES_DEFAULTS)
 }
 export default function Layout({ children }: { children: React.ReactNode }) {
-  return <CmsServerContent pages={{ 'entreprises': ENTREPRISES_DEFAULTS }}><ServiceJsonLd page="entreprises" defaults={ENTREPRISES_DEFAULTS} />{children}</CmsServerContent>
+  return <CmsServerContent pages={{ 'entreprises': ENTREPRISES_DEFAULTS }}><ServiceJsonLd page="entreprises" defaults={ENTREPRISES_DEFAULTS} offersList="entreprises_pricing" />{children}</CmsServerContent>
 }
