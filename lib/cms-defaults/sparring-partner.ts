@@ -31,8 +31,8 @@ export const SPARRING_PARTNER_DEFAULTS: Record<string, string> = {
   // ── Textes câblés automatiquement (étaient en dur dans la page) ──
   t_discussion_strategique: "Discussion stratégique",
   // ── Référencement (Google, réseaux sociaux) — lu par generateMetadata via lib/page-seo.ts ──
-  seo_title: "Sparring Partner — Monica Schneider · Happy Humans",
-  seo_description: "Monica Schneider comme sparring partner stratégique pour marketers et dirigeants. Ex-L'Oréal, ex-LVMH. Challenger vos idées, préparer vos pitchs, naviguer vos transitions.",
+  seo_title: "Sparring Partner pour dirigeants",
+  seo_description: "Monica Schneider, sparring partner stratégique pour dirigeants et marketers. Challenger vos idées, préparer vos pitchs, traverser vos transitions.",
   seo_image: '',
   // ── Disposition des sections (admin → Structure) : JSON {"order":[…],"hidden":[…]} ; vide = ordre d'origine ──
   sections_layout: '',

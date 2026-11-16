@@ -85,7 +85,7 @@ export const COACHING_DEFAULTS: Record<string, string> = { ...DEFAULTS, ...DEFAU
   t_aucune_disponibilite_titre: "Aucune disponibilité pour le moment",
   // ── Référencement (Google, réseaux sociaux) — lu par generateMetadata via lib/page-seo.ts ──
   seo_title: "Coaching individuel & philo-coaching",
-  seo_description: "Monica Schneider, Executive Coach certifiée AoEC, accompagne managers, marketers et dirigeants en transition de poste. Méthode Happiness Design. Séance découverte gratuite.",
+  seo_description: "Monica Schneider, Executive Coach certifiée AoEC, accompagne managers et dirigeants en transition. Méthode Happiness Design. Séance découverte gratuite.",
   seo_image: '',
   // ── Disposition des sections (admin → Structure) : JSON {"order":[…],"hidden":[…]} ; vide = ordre d'origine ──
   sections_layout: '',

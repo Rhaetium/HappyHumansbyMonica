@@ -8,6 +8,7 @@
  *
  * Ne lève jamais d'erreur et ne fait rien hors production : un échec ne doit pas bloquer une publication.
  */
+import { after } from 'next/server'
 import { SITE_URL } from '@/lib/site-url'
 
 const DEFAULT_KEY = '75fe2bff15434d86986a740d15255f65'
@@ -20,6 +21,18 @@ export function toAbsoluteUrls(paths: string[], base = SITE_URL): string[] {
     .filter(Boolean)
     .map(p => (/^https?:\/\//i.test(p) ? p : `${base}${p.startsWith('/') ? '' : '/'}${p === '/' ? '' : p}`))
   return [...new Set(urls)]
+}
+
+/**
+ * À appeler depuis une route d'API : l'envoi se fait APRÈS la réponse (sans ralentir l'enregistrement).
+ * Hors requête (tests, scripts), `after` refuse de s'exécuter : on ignore alors simplement l'envoi.
+ */
+export function scheduleIndexNow(paths: string[]): void {
+  try {
+    after(() => submitToIndexNow(paths))
+  } catch {
+    /* hors requête : pas d'envoi */
+  }
 }
 
 export async function submitToIndexNow(paths: string[]): Promise<void> {

@@ -40,6 +40,20 @@ export function parseKeywords(value: string | null | undefined): string[] {
  * Titre et description du site par défaut (balises <title> et description, /llms.txt).
  * Le CMS (⚙️ Paramètres → 🔍 SEO global) les remplace ; ces valeurs ne servent que de secours.
  */
-export const DEFAULT_SITE_TITLE = 'Happy Humans — Monica Schneider'
+export const DEFAULT_SITE_TITLE = 'Happy Humans — Coaching & philo-coaching, Monica Schneider'
 export const DEFAULT_SITE_DESCRIPTION =
-  "Philo-coaching avec Monica Schneider. Executive coaching, philosophical counselling et sparring partner pour particuliers et entreprises. Retrouvez clarté, alignement et relations épanouissantes."
+  "Executive coaching, philo-coaching et sparring partner avec Monica Schneider, pour particuliers et entreprises. Retrouvez clarté, alignement et relations."
+
+/** Nom de la marque, ajouté à la fin de chaque titre de page (« Contact | Happy Humans »). */
+export const BRAND_NAME = 'Happy Humans'
+
+/**
+ * Titre de page sans la marque en fin de titre. Le gabarit du site ajoute déjà « | Happy Humans » :
+ * un titre saisi « Contact — Monica Schneider · Happy Humans » donnerait « … · Happy Humans | Happy Humans ».
+ * Retire donc un « Happy Humans » final précédé d'un séparateur (— – - · | :).
+ */
+export function stripBrandSuffix(title: string | null | undefined): string {
+  const t = (title ?? '').trim()
+  const stripped = t.replace(new RegExp(`\\s*[—–\\-·|:]\\s*${BRAND_NAME}\\s*$`, 'i'), '').trim()
+  return stripped || t
+}

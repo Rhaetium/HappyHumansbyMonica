@@ -45,8 +45,8 @@ export const A_PROPOS_DEFAULTS: Record<string, string> = {
   t_ms: "MS",
   t_monica_schneider_2: "Monica Schneider",
   // ── Référencement (Google, réseaux sociaux) — lu par generateMetadata via lib/page-seo.ts ──
-  seo_title: "Monica Schneider — Executive Coach & Philosophical Counselling",
-  seo_description: "Ex-L'Oréal, ex-LVMH. Executive Coach certifiée AoEC · EMCC Practitioner · Philosophical Counselling. Créatrice de la méthode Happiness Design. 5 langues, 12 villes.",
+  seo_title: "Monica Schneider — Executive Coach",
+  seo_description: "Ex-L'Oréal, ex-LVMH. Executive Coach certifiée AoEC, EMCC Practitioner, philosophical counselling. Créatrice de la méthode Happiness Design.",
   seo_image: '',
   // ── Disposition des sections (admin → Structure) : JSON {"order":[…],"hidden":[…]} ; vide = ordre d'origine ──
   sections_layout: '',

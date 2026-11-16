@@ -12,6 +12,7 @@ import EnhancedRichContent from '@/components/EnhancedRichContent'
 import { sanitizeHtml } from '@/lib/sanitize-html'
 import { SITE_URL } from '@/lib/site-url'
 import { unsplashSrcSet } from '@/lib/image-srcset'
+import { stripBrandSuffix } from '@/lib/site-seo'
 import { getPageContent } from '@/lib/cms-content-server'
 import { BLOG_DEFAULTS } from '@/lib/cms-defaults/blog'
 
@@ -31,12 +32,13 @@ export async function generateStaticParams() {
 export async function generateMetadata(props: Props): Promise<Metadata> {
   const params = await props.params;
   const post = await getPostBySlug(params.slug)
-  if (!post) return { title: 'Article introuvable | Happy Humans' }
+  if (!post) return { title: 'Article introuvable' }
 
   const ogImage = post.og_image ?? post.featured_image ?? DEFAULT_OG
   const canonical = `${SITE_URL}/blog/${post.slug}`
   const description = post.seo_description ?? post.excerpt ?? BLOG_DEFAULTS.article_default_description
-  const seoTitle = post.seo_title ?? `${post.title} | Happy Humans`
+  // Le gabarit du site ajoute déjà « | Happy Humans » : on ne le répète pas
+  const seoTitle = stripBrandSuffix(post.seo_title || post.title)
 
   return {
     title: seoTitle,

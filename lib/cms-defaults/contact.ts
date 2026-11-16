@@ -35,7 +35,7 @@ export const CONTACT_DEFAULTS: Record<string, string> = {
   t_francais_anglais_et_roumain: "Français, anglais et roumain",
   t_reponse_sous_48h: "Réponse sous 48h",
   // ── Référencement (Google, réseaux sociaux) — lu par generateMetadata via lib/page-seo.ts ──
-  seo_title: "Contact — Monica Schneider · Happy Humans",
-  seo_description: "Écrivez à Monica Schneider, Executive Coach et philo-coaching. Réponse personnelle sous 48h. Coaching individuel, entreprises, Happiness Design, Sparring Partner.",
+  seo_title: "Contact — Monica Schneider",
+  seo_description: "Écrivez à Monica Schneider, executive coach et philo-coach. Réponse personnelle sous 48h : coaching, entreprises, Happiness Design, sparring partner.",
   seo_image: '',
 }

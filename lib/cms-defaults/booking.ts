@@ -22,7 +22,7 @@ export const BOOKING_DEFAULTS: Record<string, string> = {
   t_aucune_disponibilite_titre: "Aucune disponibilité pour le moment",
   t_aucune_disponibilite_texte: "L'agenda n'est pas ouvert pour l'instant. Écrivez-moi : je vous proposerai une séance dès que possible.",
   // ── Référencement (Google, réseaux sociaux) — lu par generateMetadata via lib/page-seo.ts ──
-  seo_title: "Réserver une séance — Monica Schneider",
+  seo_title: "Réserver une séance découverte",
   seo_description: "Réservez une séance découverte gratuite (1h) avec Monica Schneider. Executive coaching, philosophical counselling et Happiness Design.",
   seo_image: '',
   // ── Textes ajoutés pour le CMS (étaient en dur dans le code) ──

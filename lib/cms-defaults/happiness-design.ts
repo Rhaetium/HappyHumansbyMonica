@@ -84,8 +84,8 @@ export const HAPPINESS_DESIGN_DEFAULTS: Record<string, string> = {
   t_lumiere_doree_symbolisant_la: "Lumière dorée symbolisant la transformation et le bonheur",
   t_par_happy_humans: "— par Happy Humans",
   // ── Référencement (Google, réseaux sociaux) — lu par generateMetadata via lib/page-seo.ts ──
-  seo_title: "Happiness Design (V1/V2) — Programme 12 séances",
-  seo_description: "Programme Happiness Design créé par Monica Schneider : 12 séances combinant neurosciences, philosophie pratique, psychologie positive et design thinking pour reprendre les rênes de votre vie.",
+  seo_title: "Happiness Design — Programme 12 séances",
+  seo_description: "Happiness Design : 12 séances alliant neurosciences, philosophie pratique, psychologie positive et design thinking pour reprendre les rênes de votre vie.",
   seo_image: '',
   // ── Disposition des sections (admin → Structure) : JSON {"order":[…],"hidden":[…]} ; vide = ordre d'origine ──
   sections_layout: '',
