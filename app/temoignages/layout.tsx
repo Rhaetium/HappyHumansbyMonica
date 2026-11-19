@@ -1,6 +1,8 @@
-﻿import type { Metadata } from 'next'
+import type { Metadata } from 'next'
+import { TEMOIGNAGES_TITLE, TEMOIGNAGES_DESCRIPTION } from '@/lib/temoignages-seo'
 export const metadata: Metadata = {
-  title: 'Témoignages — Happy Humans · Monica Schneider',
-  description: "Ils ont travaillé avec Monica Schneider. Des parcours différents, une même expérience : retrouver de la clarté et avancer avec confiance.",
+  title: TEMOIGNAGES_TITLE,
+  description: TEMOIGNAGES_DESCRIPTION,
+  alternates: { canonical: '/temoignages' },
 }
 export default function Layout({ children }: { children: React.ReactNode }) { return <>{children}</> }
