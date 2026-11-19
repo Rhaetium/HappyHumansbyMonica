@@ -48,11 +48,14 @@ export default function FaqPage() {
                   <span className="text-base font-medium text-stone-900 leading-snug pr-4">{faq.q}</span>
                   <span className={`flex-shrink-0 mt-0.5 text-[#2d5f54] transition-transform duration-200 ${open === i ? 'rotate-45' : ''}`} style={{ fontSize: '1.4rem', lineHeight: 1 }}>+</span>
                 </button>
-                {open === i && (
-                  <p className="mt-4 text-sm text-stone-500 leading-relaxed border-l-2 border-[#2d5f54] pl-4">
-                    {faq.a}
-                  </p>
-                )}
+                {/* Réponse toujours présente dans le HTML (masquée tant que la question est fermée) :
+                    les robots des moteurs de réponse IA lisent le texte sans cliquer. */}
+                <p
+                  hidden={open !== i}
+                  className="mt-4 text-sm text-stone-500 leading-relaxed border-l-2 border-[#2d5f54] pl-4"
+                >
+                  {faq.a}
+                </p>
               </div>
             ))}
           </div>
