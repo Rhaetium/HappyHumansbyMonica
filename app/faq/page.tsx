@@ -1,4 +1,4 @@
-﻿'use client'
+'use client'
 import { useState } from 'react'
 import Header from '@/components/Header'
 import Footer from '@/components/Footer'
@@ -41,13 +41,17 @@ export default function FaqPage() {
           <div className="mx-auto max-w-3xl divide-y divide-stone-100">
             {faqs.map((faq, i) => (
               <div key={i} className="py-5">
-                <button
-                  onClick={() => setOpen(open === i ? null : i)}
-                  className="flex w-full items-start justify-between gap-4 text-left"
-                >
-                  <span className="text-base font-medium text-stone-900 leading-snug pr-4">{faq.q}</span>
-                  <span className={`flex-shrink-0 mt-0.5 text-[#2d5f54] transition-transform duration-200 ${open === i ? 'rotate-45' : ''}`} style={{ fontSize: '1.4rem', lineHeight: 1 }}>+</span>
-                </button>
+                {/* La question est un vrai titre (h2) : les moteurs de recherche et de réponse IA repèrent ainsi chaque question. */}
+                <h2 className="m-0">
+                  <button
+                    onClick={() => setOpen(open === i ? null : i)}
+                    aria-expanded={open === i}
+                    className="flex w-full items-start justify-between gap-4 text-left"
+                  >
+                    <span className="text-base font-medium text-stone-900 leading-snug pr-4">{faq.q}</span>
+                    <span className={`flex-shrink-0 mt-0.5 text-[#2d5f54] transition-transform duration-200 ${open === i ? 'rotate-45' : ''}`} style={{ fontSize: '1.4rem', lineHeight: 1 }}>+</span>
+                  </button>
+                </h2>
                 {/* Réponse toujours présente dans le HTML (masquée tant que la question est fermée) :
                     les robots des moteurs de réponse IA lisent le texte sans cliquer. */}
                 <p
