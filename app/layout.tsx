@@ -247,7 +247,18 @@ export default async function RootLayout({
         <link rel="preconnect" href="https://images.unsplash.com" />
         <link rel="preconnect" href="https://fonts.googleapis.com" />
         <link rel="preconnect" href="https://fonts.gstatic.com" crossOrigin="anonymous" />
-        <link href={googleFontsHref(themeTokens)} rel="stylesheet" />
+        {/* Polices Google : feuille chargée sans bloquer l'affichage (media="print" puis "all" une fois reçue).
+            Le texte s'affiche tout de suite avec la police de secours (display=swap), puis bascule. Sans JavaScript, <noscript> la charge normalement. */}
+        <link href={googleFontsHref(themeTokens)} rel="stylesheet" media="print" data-hh-fonts="" suppressHydrationWarning />
+        <script
+          dangerouslySetInnerHTML={{
+            __html:
+              "(function(){var l=document.querySelector('link[data-hh-fonts]');if(!l)return;function a(){l.media='all'}if(l.sheet){a()}else{l.addEventListener('load',a);setTimeout(a,3000)}})()",
+          }}
+        />
+        <noscript>
+          <link href={googleFontsHref(themeTokens)} rel="stylesheet" />
+        </noscript>
         <script
           type="application/ld+json"
           dangerouslySetInnerHTML={{ __html: JSON.stringify(schemaWebSite) }}
