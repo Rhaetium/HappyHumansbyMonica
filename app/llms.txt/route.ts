@@ -10,6 +10,7 @@ import { pageHref } from '@/lib/custom-pages'
 import { pagePath } from '@/lib/page-seo'
 import { SITE_URL } from '@/lib/site-url'
 import { DEFAULT_SITE_TITLE, DEFAULT_SITE_DESCRIPTION } from '@/lib/site-seo'
+import { TEMOIGNAGES_TITLE, TEMOIGNAGES_DESCRIPTION } from '@/lib/temoignages-seo'
 import { buildLlmsTxt, type LlmsLink } from '@/lib/llms-txt'
 import type { FaqItem } from '@/lib/json-ld'
 
@@ -23,7 +24,7 @@ export const revalidate = 3600
 // Pages publiques à présenter (les pages légales n'apportent rien à une IA).
 const PAGES = [
   'home', 'a-propos', 'coaching', 'entreprises', 'happiness-design',
-  'sparring-partner', 'relations', 'blog', 'faq', 'booking', 'contact',
+  'sparring-partner', 'relations', 'temoignages', 'blog', 'faq', 'booking', 'contact',
 ]
 
 export async function GET() {
@@ -35,6 +36,11 @@ export async function GET() {
     const url = `${SITE_URL}${pagePath(page) === '/' ? '' : pagePath(page)}`
     if (page === 'home') {
       pages.push({ title: kv.seo_title || DEFAULT_SITE_TITLE, url: `${SITE_URL}/`, description: kv.seo_description || DEFAULT_SITE_DESCRIPTION })
+      continue
+    }
+    if (page === 'temoignages') {
+      // page sans textes SEO dans le CMS : titre et description fixes, partagés avec la page
+      pages.push({ title: TEMOIGNAGES_TITLE, url, description: TEMOIGNAGES_DESCRIPTION })
       continue
     }
     const defaults = PAGE_DEFAULTS[page]

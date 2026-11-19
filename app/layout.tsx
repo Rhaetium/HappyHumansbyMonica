@@ -162,9 +162,16 @@ function buildSchemas(kv: Record<string, string>) {
     (url): url is string => Boolean(url && url.trim()),
   );
 
+  // Identifiants stables : relient entre eux le site, l'entreprise et la personne (les IA comprennent
+  // que « Monica Schneider » et « Happy Humans » désignent la même activité).
+  const orgId = `${SITE_URL}/#organization`;
+  const personId = `${SITE_URL}/#person`;
+
   const schemaWebSite = {
     '@context': 'https://schema.org',
     '@type': 'WebSite',
+    '@id': `${SITE_URL}/#website`,
+    publisher: { '@id': orgId },
     name: siteName,
     alternateName: businessName,
     url: SITE_URL,
@@ -175,6 +182,8 @@ function buildSchemas(kv: Record<string, string>) {
   const schemaOrganization = {
     '@context': 'https://schema.org',
     '@type': 'ProfessionalService',
+    '@id': orgId,
+    founder: { '@id': personId },
     name: businessName,
     url: SITE_URL,
     // PNG : Google n'accepte pas le SVG comme logo d'organisation
@@ -201,6 +210,7 @@ function buildSchemas(kv: Record<string, string>) {
   const schemaPerson = {
     '@context': 'https://schema.org',
     '@type': 'Person',
+    '@id': personId,
     name: kv.geo_person_name || DEFAULT_PERSON_NAME,
     jobTitle: kv.geo_person_job_title || DEFAULT_PERSON_JOB_TITLE,
     url: SITE_URL,
@@ -208,10 +218,7 @@ function buildSchemas(kv: Record<string, string>) {
     ...(locality ? { workLocation: { '@type': 'Place', address: { '@type': 'PostalAddress', addressLocality: locality } } } : {}),
     sameAs: profiles.length ? profiles : DEFAULT_PROFILES,
     knowsLanguage: ['fr', 'en', 'ro'],
-    worksFor: {
-      '@type': 'Organization',
-      name: siteName,
-    },
+    worksFor: { '@id': orgId },
   };
 
   return { schemaWebSite, schemaOrganization, schemaPerson };
