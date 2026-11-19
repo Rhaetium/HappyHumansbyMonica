@@ -23,6 +23,10 @@ export const HOME_DEFAULTS: Record<string, string> = {
   cards_section_badge:  'Aller plus loin',
   cards_section_title: 'Explorez les thématiques',
   cards_link_label:    'Découvrir →',
+  // FAQ (extrait de la page FAQ : mêmes questions, modifiables dans admin → FAQ)
+  faq_badge:            'Questions fréquentes',
+  faq_title:            'Vos questions sur le coaching',
+  faq_more_label:       'Voir toutes les questions →',
   // Booking
   booking_badge:        'Agenda',
   booking_widget_title: 'Choisissez votre créneau',

@@ -33,7 +33,9 @@ const CARD_DEFS = {
   },
 }
 
-export default function LandingPage() {
+export type HomeFaqItem = { q: string; a: string }
+
+export default function LandingPage({ faq = [] }: { faq?: HomeFaqItem[] }) {
   const c = useCmsContent('home', HOME_DEFAULTS)
   // Email de contact : réglage global du CMS (⚙️ Paramètres → Général), pas un texte de page
   const settings = useSiteSettings()
@@ -168,6 +170,31 @@ export default function LandingPage() {
               </Link>
             ))}
           </div>
+        </div>
+      </section>
+    ),
+    faq: faq.length === 0 ? null : (
+      <section className="bg-[#f5f0e8] px-6 py-20 md:px-10 md:py-24" id="faq">
+        <div className="mx-auto max-w-3xl">
+          <div className="mb-10 text-center">
+            <p className="mb-2 text-xs font-bold uppercase tracking-[0.22em] text-amber-800">{c.get('faq_badge')}</p>
+            <h2 className="text-2xl font-serif font-light text-stone-900 md:text-3xl">{c.get('faq_title')}</h2>
+          </div>
+          {/* <details> : les réponses restent dans le HTML (lisibles par les robots) tout en étant repliées pour les visiteurs */}
+          <div className="divide-y divide-stone-200">
+            {faq.map((item, i) => (
+              <details key={i} className="group py-4">
+                <summary className="flex cursor-pointer list-none items-start justify-between gap-4 text-left text-base font-medium text-stone-900">
+                  <span>{item.q}</span>
+                  <span aria-hidden className="mt-0.5 text-xl leading-none text-[#2d5f54] transition-transform group-open:rotate-45">+</span>
+                </summary>
+                <p className="mt-3 border-l-2 border-[#2d5f54] pl-4 text-sm leading-relaxed text-stone-600">{item.a}</p>
+              </details>
+            ))}
+          </div>
+          <p className="mt-8 text-center">
+            <Link href="/faq" className="text-sm font-semibold text-[#2d5f54] hover:underline">{c.get('faq_more_label')}</Link>
+          </p>
         </div>
       </section>
     ),

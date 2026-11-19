@@ -25,6 +25,7 @@ export const PAGE_SECTIONS: Record<string, SectionDef[]> = {
     { id: 'hero', label: 'Bandeau d’accueil', pin: 'start' },
     { id: 'services', label: 'Accompagnement : particuliers et entreprises' },
     { id: 'explorer', label: 'Explorez les thématiques' },
+    { id: 'faq', label: 'Questions fréquentes' },
     { id: 'booking', label: 'Réservation d’une séance' },
     { id: 'contact', label: 'Contact' },
   ],
