@@ -74,6 +74,9 @@ const DEFAULT_SETTINGS = [
   // Google Search Console : un seul champ à coller, la balise est extraite automatiquement
   { key: 'gsc_verification', label: 'Balise de vérification Google Search Console', group_name: 'search-console', type: 'textarea', value: '', placeholder: '<meta name="google-site-verification" content="…" />' },
   { key: 'gsc_property',     label: 'Adresse de la propriété (à valider dans Search Console)', group_name: 'search-console', type: 'text', value: `${SITE_URL}/` },
+  // Mesure d'audience : identifiants modifiables ici ; vide = valeur actuelle (Vercel, sinon identifiants d'origine du code)
+  { key: 'gtm_id', label: 'Google Tag Manager — identifiant du conteneur (GTM-XXXXXXX)', group_name: 'analytics', type: 'text', value: '', placeholder: 'GTM-XXXXXXX' },
+  { key: 'ga_id',  label: 'Google Analytics 4 — identifiant de mesure (G-XXXXXXXXXX)',   group_name: 'analytics', type: 'text', value: '', placeholder: 'G-XXXXXXXXXX' },
   // Geo / business
   { key: 'geo_business_name',    label: 'Nom entreprise (schema.org)',  group_name: 'geo', type: 'text',     value: 'Happy Humans — Monica Schneider' },
   { key: 'geo_person_name',      label: 'Nom de la personne (schema.org)', group_name: 'geo', type: 'text',  value: DEFAULT_PERSON_NAME },

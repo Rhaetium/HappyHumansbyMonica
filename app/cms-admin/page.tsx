@@ -28,6 +28,7 @@ import AiKeysPanel from '@/components/cms/AiKeysPanel';
 import SearchConsoleStats from '@/components/cms/SearchConsoleStats';
 import SeoPreview from '@/components/cms/SeoPreview';
 import SeoHealth from '@/components/cms/SeoHealth';
+import VisibilityTab from '@/components/cms/admin/VisibilityTab';
 import { actionableCount, auditSeo, type SeoIssue } from '@/lib/seo-audit';
 import { serpTitle } from '@/lib/seo-preview';
 import { SITE_URL } from '@/lib/site-url';
@@ -1043,6 +1044,7 @@ export default function CMSAdmin() {
     { id: 'new',      label: '✏️ Nouvel article', count: null },
     { id: 'pages',    label: '🗂️ Pages', count: null },
     { id: 'contenu',  label: '🔎 Contenu', count: contentIndex.filter(f => f.isPending).length || null },
+    { id: 'visibilite', label: '🔍 Visibilité SEO & IA', count: null },
     { id: 'seo',      label: '🩺 Référencement', count: actionableCount(seoAudit.issues) || null },
     { id: 'stats-google', label: '📊 Statistiques Google', count: null },
     { id: 'menu',         label: '🧭 Menu', count: null },
@@ -1581,6 +1583,7 @@ export default function CMSAdmin() {
           )
         )}
 
+        {tab === 'visibilite' && <VisibilityTab onGoto={setTab} />}
         {tab === 'stats-google' && <SearchConsoleStats />}
 
         {tab === 'pages' && (

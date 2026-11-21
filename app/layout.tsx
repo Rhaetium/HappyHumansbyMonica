@@ -19,6 +19,7 @@ import {
 } from '@/lib/site-seo';
 import { extractVerificationToken } from '@/lib/search-console';
 import { SITE_URL } from '@/lib/site-url';
+import { resolveFromEnvironment } from '@/lib/analytics-ids';
 import { buildThemeCSS, resolveTheme, googleFontsHref } from '@/lib/themes';
 import DuotoneFilter from '@/components/DuotoneFilter';
 import GoogleTagManager from '@/components/GoogleTagManager';
@@ -231,6 +232,8 @@ export default async function RootLayout({
 }) {
   const kv = await getKvSettings();
   const { schemaWebSite, schemaOrganization, schemaPerson } = buildSchemas(kv);
+  // Mesure d'audience : identifiants réglés dans l'admin, sinon Vercel, sinon ceux d'origine
+  const analyticsIds = resolveFromEnvironment(kv, process.env);
   // Thème SSR : preset + surcharges publiés, injectés dans <head> (zéro flash).
   // Sans Supabase : repli sur le preset par défaut (forest).
   const { id: themeId, tokens: themeTokens } = resolveTheme(kv.theme_preset, {
@@ -284,7 +287,7 @@ export default async function RootLayout({
                 <CookieConsentBanner />
               </CmsServerContent>
               <InlineEditor />
-              <GoogleTagManager />
+              <GoogleTagManager gtmId={analyticsIds.gtm} gaId={analyticsIds.ga} />
             </AuthProvider>
           </InlineEditProvider>
         </MaintenanceGate>
