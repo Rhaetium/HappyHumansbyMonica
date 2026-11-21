@@ -16,6 +16,8 @@ import {
   DEFAULT_SITE_DESCRIPTION,
   DEFAULT_SITE_TITLE,
   parseKeywords,
+  languageNames,
+  parseLanguages,
 } from '@/lib/site-seo';
 import { extractVerificationToken } from '@/lib/search-console';
 import { SITE_URL } from '@/lib/site-url';
@@ -155,6 +157,7 @@ function buildSchemas(kv: Record<string, string>) {
   const geo = kv.geo_lat && kv.geo_lng
     ? { '@type': 'GeoCoordinates', latitude: kv.geo_lat, longitude: kv.geo_lng }
     : undefined;
+  const languages = parseLanguages(kv.geo_languages);
   const areaServed = (kv.geo_service_area || 'Paris, France, Europe')
     .split(',').map(s => s.trim()).filter(Boolean);
 
@@ -176,7 +179,7 @@ function buildSchemas(kv: Record<string, string>) {
     name: siteName,
     alternateName: businessName,
     url: SITE_URL,
-    description: 'Plateforme de coaching et de transformation portée par Monica Schneider.',
+    description: kv.seo_description || 'Plateforme de coaching et de transformation portée par Monica Schneider.',
     inLanguage: locale,
   };
 
@@ -204,7 +207,7 @@ function buildSchemas(kv: Record<string, string>) {
       contactType: 'customer service',
       // adresse réglée dans ⚙️ Paramètres → Général, repli si elle n'est pas encore enregistrée
       email: kv.contact_email || DEFAULT_CONTACT_EMAIL,
-      availableLanguage: ['French', 'English', 'Romanian'],
+      availableLanguage: languageNames(languages),
     },
   };
 
@@ -218,7 +221,7 @@ function buildSchemas(kv: Record<string, string>) {
     image: `${SITE_URL}/og-default.jpg`,
     ...(locality ? { workLocation: { '@type': 'Place', address: { '@type': 'PostalAddress', addressLocality: locality } } } : {}),
     sameAs: profiles.length ? profiles : DEFAULT_PROFILES,
-    knowsLanguage: ['fr', 'en', 'ro'],
+    knowsLanguage: languages,
     worksFor: { '@id': orgId },
   };
 
