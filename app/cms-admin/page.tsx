@@ -29,6 +29,7 @@ import SearchConsoleStats from '@/components/cms/SearchConsoleStats';
 import SeoPreview from '@/components/cms/SeoPreview';
 import SeoHealth from '@/components/cms/SeoHealth';
 import VisibilityTab from '@/components/cms/admin/VisibilityTab';
+import { TAB_GROUPS, groupCount, groupForTab, tabsOfGroup } from '@/lib/admin-tab-groups';
 import { actionableCount, auditSeo, type SeoIssue } from '@/lib/seo-audit';
 import { serpTitle } from '@/lib/seo-preview';
 import { SITE_URL } from '@/lib/site-url';
@@ -1176,26 +1177,57 @@ export default function CMSAdmin() {
         />
       )}
 
-      {/* Tabs */}
-      <div style={{ background: 'white', borderBottom: '1.5px solid #e8e3dc', padding: '0 2rem', display: 'flex', gap: '.25rem', flexWrap: 'wrap' }}>
-        {TABS.map(t => (
-          <button key={t.id}
-            onClick={() => handleTabChange(t.id)}
-            style={{
-              padding: '.85rem 1.2rem', border: 'none', background: 'none', cursor: 'pointer',
-              fontWeight: tab === t.id ? 700 : 400,
-              color: tab === t.id ? '#2d5f54' : '#666',
-              borderBottom: tab === t.id ? '2.5px solid #2d5f54' : '2.5px solid transparent',
-              fontSize: '.9rem', display: 'flex', alignItems: 'center', gap: '.4rem', whiteSpace: 'nowrap',
-            }}
-          >
-            {t.label}
-            {t.count !== null && t.count > 0 && (
-              <span style={{ background: '#f0e8e4', color: '#2d5f54', borderRadius: '9999px', padding: '.1rem .55rem', fontSize: '.75rem', fontWeight: 700 }}>{t.count}</span>
+      {/* Onglets : une ligne de thèmes, puis les onglets du thème ouvert */}
+      {(() => {
+        const activeGroup = groupForTab(tab);
+        const groupTabs = tabsOfGroup(activeGroup, TABS);
+        const badge = (n: number) => (
+          <span style={{ background: '#f0e8e4', color: '#2d5f54', borderRadius: '9999px', padding: '.1rem .55rem', fontSize: '.75rem', fontWeight: 700 }}>{n}</span>
+        );
+        return (
+          <div style={{ background: 'white', borderBottom: '1.5px solid #e8e3dc' }}>
+            <div role="tablist" aria-label="Thèmes de l’administration" style={{ padding: '0 2rem', display: 'flex', gap: '.25rem', flexWrap: 'wrap', borderBottom: groupTabs.length > 1 ? '1px solid #f0ece6' : 'none' }}>
+              {TAB_GROUPS.map(g => {
+                const active = g.id === activeGroup.id;
+                const n = groupCount(g, TABS);
+                return (
+                  <button key={g.id} role="tab" aria-selected={active}
+                    onClick={() => { if (!active) handleTabChange(g.tabs[0]); }}
+                    style={{
+                      padding: '.85rem 1.2rem', border: 'none', background: 'none', cursor: 'pointer',
+                      fontWeight: active ? 700 : 500, color: active ? '#2d5f54' : '#666',
+                      borderBottom: active ? '2.5px solid #2d5f54' : '2.5px solid transparent',
+                      fontSize: '.95rem', display: 'flex', alignItems: 'center', gap: '.4rem', whiteSpace: 'nowrap',
+                    }}
+                  >
+                    {g.label}
+                    {n > 0 && badge(n)}
+                  </button>
+                );
+              })}
+            </div>
+            {groupTabs.length > 1 && (
+              <div role="tablist" aria-label={`Onglets : ${activeGroup.label}`} style={{ padding: '.35rem 2rem', display: 'flex', gap: '.25rem', flexWrap: 'wrap', background: '#faf8f5' }}>
+                {groupTabs.map(t => (
+                  <button key={t.id} role="tab" aria-selected={tab === t.id}
+                    onClick={() => handleTabChange(t.id)}
+                    style={{
+                      padding: '.4rem .9rem', border: 'none', cursor: 'pointer', borderRadius: '9999px',
+                      background: tab === t.id ? '#2d5f54' : 'transparent', color: tab === t.id ? 'white' : '#555',
+                      fontWeight: tab === t.id ? 700 : 500, fontSize: '.85rem', display: 'flex', alignItems: 'center', gap: '.4rem', whiteSpace: 'nowrap',
+                    }}
+                  >
+                    {t.label}
+                    {t.count !== null && t.count > 0 && (
+                      <span style={{ background: tab === t.id ? 'rgba(255,255,255,.25)' : '#f0e8e4', color: tab === t.id ? 'white' : '#2d5f54', borderRadius: '9999px', padding: '.05rem .5rem', fontSize: '.72rem', fontWeight: 700 }}>{t.count}</span>
+                    )}
+                  </button>
+                ))}
+              </div>
             )}
-          </button>
-        ))}
-      </div>
+          </div>
+        );
+      })()}
 
       <div style={{ maxWidth: 1100, margin: '2rem auto', padding: '0 1.5rem' }}>
 
