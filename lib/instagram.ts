@@ -27,23 +27,27 @@ export interface InstagramMediaContainer {
   status: 'OK' | 'ERROR' | 'PENDING';
 }
 
+import { loadConnectionEnv } from '@/lib/connections';
+
 const INSTAGRAM_GRAPH_API_BASE = 'https://graph.facebook.com';
 
 /**
  * Get the Instagram Graph API configuration
  */
-function getInstagramConfig() {
+async function getInstagramConfig() {
+  // Vercel d'abord, sinon réglé dans l'admin (onglet Connexions)
+  const cfg = await loadConnectionEnv();
   return {
-    accessToken: process.env.INSTAGRAM_ACCESS_TOKEN,
-    businessAccountId: process.env.INSTAGRAM_BUSINESS_ACCOUNT_ID,
+    accessToken: cfg.INSTAGRAM_ACCESS_TOKEN,
+    businessAccountId: cfg.INSTAGRAM_BUSINESS_ACCOUNT_ID,
   };
 }
 
 /**
  * Check if Instagram integration is configured
  */
-export function isInstagramConfigured(): boolean {
-  const config = getInstagramConfig();
+export async function isInstagramConfigured(): Promise<boolean> {
+  const config = await getInstagramConfig();
   return !!(config.accessToken && config.businessAccountId);
 }
 
@@ -55,7 +59,7 @@ export async function createMediaContainer(
   imageUrl: string,
   caption: string
 ): Promise<InstagramMediaContainer | null> {
-  const config = getInstagramConfig();
+  const config = await getInstagramConfig();
   
   if (!config.accessToken || !config.businessAccountId) {
     console.warn('Instagram not configured');
@@ -102,7 +106,7 @@ export async function createMediaContainer(
 export async function publishMediaContainer(
   containerId: string
 ): Promise<InstagramPost | null> {
-  const config = getInstagramConfig();
+  const config = await getInstagramConfig();
   
   if (!config.accessToken || !config.businessAccountId) {
     return null;
@@ -181,7 +185,7 @@ export async function postToInstagram(
  * Get Instagram account profile information
  */
 export async function getInstagramProfile() {
-  const config = getInstagramConfig();
+  const config = await getInstagramConfig();
   
   if (!config.accessToken || !config.businessAccountId) {
     return null;
@@ -204,7 +208,7 @@ export async function getInstagramProfile() {
  * Get recent media posts from Instagram
  */
 export async function getRecentMedia(limit = 10) {
-  const config = getInstagramConfig();
+  const config = await getInstagramConfig();
   
   if (!config.accessToken) {
     return null;

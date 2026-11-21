@@ -2,6 +2,7 @@ import { NextRequest, NextResponse } from 'next/server'
 import { requireCmsAuth } from '@/lib/cms-auth'
 import { generateText, AiError } from '@/lib/ai-text'
 import { CAROUSEL_SYSTEM, buildCarouselPrompt, parseCarouselResponse } from '@/lib/content-ai'
+import { loadConnectionEnv } from '@/lib/connections'
 
 export const dynamic = 'force-dynamic'
 export const maxDuration = 120
@@ -34,7 +35,7 @@ export async function POST(request: NextRequest) {
 }
 
 async function searchUnsplash(query: string): Promise<string[]> {
-  const key = process.env.NEXT_PUBLIC_UNSPLASH_ACCESS_KEY?.trim()
+  const key = (await loadConnectionEnv()).NEXT_PUBLIC_UNSPLASH_ACCESS_KEY?.trim()
   if (!key) return []
   try {
     const res = await fetch(

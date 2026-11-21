@@ -4,6 +4,7 @@ import { sendEmail, bookingConfirmationHtml, adminNotifHtml } from '@/lib/send-e
 import { getKvSettings } from '@/lib/cms-settings-server';
 import { emailSubject } from '@/lib/email-subjects';
 import { DEFAULT_CONTACT_EMAIL } from '@/lib/site-contact';
+import { loadConnectionEnv } from '@/lib/connections';
 
 function getSupabase() {
   const url = process.env.NEXT_PUBLIC_SUPABASE_URL;
@@ -68,7 +69,7 @@ export async function POST(req: NextRequest) {
 
   // Emails asynchrones (ne bloque pas la réponse)
   const emailData = { name: client_name, email: client_email, phone: client_phone, date: slot?.slot_date, time: slot?.slot_time, slot_type: slot?.slot_type, message };
-  const adminEmail = process.env.ADMIN_EMAIL || DEFAULT_CONTACT_EMAIL;
+  const adminEmail = (await loadConnectionEnv()).ADMIN_EMAIL || DEFAULT_CONTACT_EMAIL;
   // Objets réglables dans ⚙️ Paramètres → 📧 Emails automatiques
   const kv = await getKvSettings();
   Promise.all([

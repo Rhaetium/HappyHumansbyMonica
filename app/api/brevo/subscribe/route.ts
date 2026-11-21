@@ -1,4 +1,5 @@
 import { NextRequest, NextResponse } from 'next/server'
+import { loadConnectionEnv } from '@/lib/connections'
 
 export async function POST(request: NextRequest) {
   try {
@@ -12,7 +13,7 @@ export async function POST(request: NextRequest) {
     }
 
     // Intégration Brevo
-    const brevoApiKey = process.env.BREVO_API_KEY
+    const brevoApiKey = (await loadConnectionEnv()).BREVO_API_KEY
     
     if (!brevoApiKey) {
       console.warn('BREVO_API_KEY non configurée')

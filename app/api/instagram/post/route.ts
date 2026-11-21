@@ -19,7 +19,7 @@ export async function POST(request: NextRequest) {
   if (authError) return authError;
 
   // Check if Instagram is configured
-  if (!isInstagramConfigured()) {
+  if (!(await isInstagramConfigured())) {
     return NextResponse.json(
       { error: 'Instagram not configured. Please set environment variables.' },
       { status: 500 }
@@ -76,7 +76,7 @@ export async function GET(req: Request) {
   const authError = requireCmsAuth(req);
   if (authError) return authError;
 
-  const configured = isInstagramConfigured();
+  const configured = await isInstagramConfigured();
   
   return NextResponse.json({
     configured,
