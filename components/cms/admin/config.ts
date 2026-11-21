@@ -997,6 +997,7 @@ export const SETTINGS_GROUPS: Record<string, { label: string; emoji: string }> =
   emails:     { label: 'Emails automatiques', emoji: '📧' },
   seo:        { label: 'SEO global',        emoji: '🔍' },
   'search-console': { label: 'Search Console', emoji: '🔎' },
+  analytics:  { label: 'Tag Manager & Analytics', emoji: '📈' },
   geo:        { label: 'Géo & Business',    emoji: '📍' },
   visibility: { label: 'Visibilité pages',  emoji: '👁️' },
   footer:     { label: 'Footer',            emoji: '📄' },

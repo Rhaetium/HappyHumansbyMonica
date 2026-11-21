@@ -7,14 +7,12 @@ import { COOKIE_CONSENT_EVENT, hasOptionalTrackingConsent } from '@/lib/consent'
  * Google Tag Manager + Google Analytics 4 — chargés UNIQUEMENT après l'acceptation des cookies (RGPD).
  * Tant que le visiteur n'a pas accepté (ou s'il refuse), aucun script Google n'est téléchargé.
  *
- * Conteneur GTM : NEXT_PUBLIC_GTM_ID. Mesure GA4 : NEXT_PUBLIC_GA_ID (vide = GA4 désactivé).
+ * Les identifiants sont choisis par le serveur (app/layout.tsx → lib/analytics-ids.ts) : réglage de l'admin
+ * (Paramètres → Tag Manager & Analytics), sinon NEXT_PUBLIC_GTM_ID / NEXT_PUBLIC_GA_ID (vide = désactivé), sinon ceux d'origine.
  * ⚠ GA4 est envoyé directement par le site : ne PAS ajouter aussi une balise GA4 dans Tag Manager
  * (chaque visite serait comptée deux fois).
  * Expose aussi `window.gtag`, utilisé par lib/analytics.ts (trackEvent).
  */
-const GTM_ID = (process.env.NEXT_PUBLIC_GTM_ID ?? 'GTM-5LQ9GB72').trim()
-const GA_ID = (process.env.NEXT_PUBLIC_GA_ID ?? 'G-ZWVFTSVVH3').trim()
-
 type W = { dataLayer?: unknown[]; gtag?: (...args: unknown[]) => void }
 
 function addScript(id: string, src: string) {
@@ -26,9 +24,9 @@ function addScript(id: string, src: string) {
   document.head.appendChild(script)
 }
 
-export default function GoogleTagManager() {
+export default function GoogleTagManager({ gtmId, gaId }: { gtmId: string; gaId: string }) {
   useEffect(() => {
-    if (!GTM_ID && !GA_ID) return
+    if (!gtmId && !gaId) return
 
     const load = () => {
       if (!hasOptionalTrackingConsent()) return
@@ -41,21 +39,21 @@ export default function GoogleTagManager() {
         w.dataLayer!.push(arguments)
       }
 
-      if (GTM_ID) {
+      if (gtmId) {
         w.dataLayer.push({ 'gtm.start': new Date().getTime(), event: 'gtm.js' })
-        addScript('gtm-script', `https://www.googletagmanager.com/gtm.js?id=${encodeURIComponent(GTM_ID)}`)
+        addScript('gtm-script', `https://www.googletagmanager.com/gtm.js?id=${encodeURIComponent(gtmId)}`)
       }
-      if (GA_ID) {
+      if (gaId) {
         w.gtag('js', new Date())
-        w.gtag('config', GA_ID)
-        addScript('ga-script', `https://www.googletagmanager.com/gtag/js?id=${encodeURIComponent(GA_ID)}`)
+        w.gtag('config', gaId)
+        addScript('ga-script', `https://www.googletagmanager.com/gtag/js?id=${encodeURIComponent(gaId)}`)
       }
     }
 
     load() // visiteur ayant déjà accepté lors d'une visite précédente
     window.addEventListener(COOKIE_CONSENT_EVENT, load) // acceptation à l'instant
     return () => window.removeEventListener(COOKIE_CONSENT_EVENT, load)
-  }, [])
+  }, [gtmId, gaId])
 
   return null
 }
