@@ -4,7 +4,7 @@ import { requireCmsAuth } from '@/lib/cms-auth'
 import { DEFAULT_CONTACT_EMAIL } from '@/lib/site-contact'
 import { CALENDLY_BASE_DEFAULT, CALENDLY_EVENT_PLACEHOLDER } from '@/lib/calendly-config';
 import { EMAIL_SUBJECT_DEFAULTS, EMAIL_SUBJECT_SETTING } from '@/lib/email-subjects';
-import { DEFAULT_PERSON_JOB_TITLE, DEFAULT_PERSON_NAME, DEFAULT_SEO_KEYWORDS } from '@/lib/site-seo';
+import { DEFAULT_LANGUAGES, DEFAULT_PERSON_JOB_TITLE, DEFAULT_PERSON_NAME, DEFAULT_SEO_KEYWORDS } from '@/lib/site-seo';
 import { SITE_URL } from '@/lib/site-url';
 
 function getSupabase() {
@@ -86,6 +86,7 @@ const DEFAULT_SETTINGS = [
   { key: 'geo_lng',              label: 'Longitude (GPS)',              group_name: 'geo', type: 'text',     value: '2.3522' },
   { key: 'geo_default_locale',   label: 'Locale (ex: fr-FR)',          group_name: 'geo', type: 'text',     value: 'fr-FR' },
   { key: 'geo_default_region',   label: 'Région ISO (ex: FR)',         group_name: 'geo', type: 'text',     value: 'FR' },
+  { key: 'geo_languages',        label: 'Langues parlées (codes séparés par des virgules : fr, en, ro, de, es…)', group_name: 'geo', type: 'text', value: DEFAULT_LANGUAGES.join(', ') },
   { key: 'geo_service_area',     label: 'Zone de service',             group_name: 'geo', type: 'text',     value: 'Paris, France, Europe, International' },
   { key: 'geo_price_range',      label: 'Gamme de prix (€ à €€€)',     group_name: 'geo', type: 'text',     value: '€€' },
   // Page visibility

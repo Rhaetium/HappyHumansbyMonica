@@ -57,3 +57,30 @@ export function stripBrandSuffix(title: string | null | undefined): string {
   const stripped = t.replace(new RegExp(`\\s*[—–\\-·|:]\\s*${BRAND_NAME}\\s*$`, 'i'), '').trim()
   return stripped || t
 }
+
+/** Langues déclarées par défaut dans les données structurées (réglage CMS : Paramètres → Géo & Business). */
+export const DEFAULT_LANGUAGES = ['fr', 'en', 'ro']
+
+const LANGUAGE_NAMES: Record<string, string> = {
+  fr: 'French', en: 'English', ro: 'Romanian', de: 'German', es: 'Spanish',
+  it: 'Italian', pt: 'Portuguese', nl: 'Dutch', pl: 'Polish', ar: 'Arabic',
+}
+
+/**
+ * Codes de langue saisis dans le CMS (« fr, en, ro, de, es ») : minuscules, deux lettres, sans doublon, douze au plus.
+ * Une entrée invalide est ignorée ; une saisie vide ou sans aucun code valide retombe sur les langues par défaut.
+ */
+export function parseLanguages(value: string | null | undefined): string[] {
+  const codes = [...new Set(
+    (value ?? '')
+      .split(/[,;\s]+/)
+      .map(c => c.trim().toLowerCase())
+      .filter(c => /^[a-z]{2}$/.test(c)),
+  )].slice(0, 12)
+  return codes.length > 0 ? codes : DEFAULT_LANGUAGES
+}
+
+/** Noms anglais des langues, pour schema.org `availableLanguage` ; un code inconnu reste tel quel. */
+export function languageNames(codes: string[]): string[] {
+  return codes.map(c => LANGUAGE_NAMES[c] ?? c)
+}
