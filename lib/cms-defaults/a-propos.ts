@@ -6,7 +6,7 @@ export const A_PROPOS_DEFAULTS: Record<string, string> = {
   hero_image:       'https://images.unsplash.com/photo-1573496359142-b8d87734a5a2?w=1400&q=80&auto=format&fit=crop',
   hero_badge:       'À propos',
   page_title:       'Leadership coaching en profondeur',
-  intro_text:       "Une pratique née au croisement de l'entreprise, du branding, de la transformation humaine et de la pratique philosophique.",
+  intro_text: "Monica Schneider est Executive Coach. Après dix ans en marketing international (Henkel, LVMH, L'Oréal), elle accompagne dirigeants, managers et personnes en transition, avec une approche qui mêle coaching, pratique philosophique et neurosciences. Elle est la créatrice de la méthode Happiness Design.",
   // Parcours section
   parcours_badge:   'Parcours',
   parcours_title:   'Le parcours',
@@ -46,7 +46,7 @@ export const A_PROPOS_DEFAULTS: Record<string, string> = {
   t_monica_schneider_2: "Monica Schneider",
   // ── Référencement (Google, réseaux sociaux) — lu par generateMetadata via lib/page-seo.ts ──
   seo_title: "Monica Schneider — Executive Coach",
-  seo_description: "Ex-L'Oréal, ex-LVMH. Executive Coach certifiée AoEC, EMCC Practitioner, philosophical counselling. Créatrice de la méthode Happiness Design.",
+  seo_description: "Monica Schneider, Executive Coach, 10 ans de marketing international (Henkel, LVMH, L'Oréal), master de pratique philosophique, créatrice de Happiness Design.",
   seo_image: '',
   // ── Disposition des sections (admin → Structure) : JSON {"order":[…],"hidden":[…]} ; vide = ordre d'origine ──
   sections_layout: '',

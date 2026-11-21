@@ -9,12 +9,14 @@ export type LlmsInput = {
   siteName: string
   summary: string
   pages: LlmsLink[]
+  /** Offres avec leur tarif (programmes, formules) : ce que les assistants IA citent le plus pour une question de prix. */
+  offers?: LlmsLink[]
   posts: LlmsLink[]
   faq: FaqItem[]
 }
 
 // Libellés des sections du fichier (lus par les IA, pas affichés sur le site).
-const SECTION = { pages: 'Pages principales', posts: 'Articles du blog', faq: 'Questions fréquentes' } as const
+const SECTION = { pages: 'Pages principales', offers: 'Offres et tarifs', posts: 'Articles du blog', faq: 'Questions fréquentes' } as const
 
 const MAX_POSTS = 20
 const MAX_FAQ = 20
@@ -47,6 +49,9 @@ export function buildLlmsTxt(input: LlmsInput): string {
   const pages = input.pages.filter(p => p.title.trim() && p.url)
   if (pages.length) out.push(`## ${SECTION.pages}`, '', ...pages.map(linkLine), '')
 
+  const offers = (input.offers ?? []).filter(o => o.title.trim() && o.url)
+  if (offers.length) out.push(`## ${SECTION.offers}`, '', ...offers.map(linkLine), '')
+
   const posts = input.posts.filter(p => p.title.trim() && p.url).slice(0, MAX_POSTS)
   if (posts.length) out.push(`## ${SECTION.posts}`, '', ...posts.map(linkLine), '')
 
@@ -59,4 +64,28 @@ export function buildLlmsTxt(input: LlmsInput): string {
   }
 
   return out.join('\n').replace(/\n{3,}/g, '\n\n').trimEnd() + '\n'
+}
+
+/** Une offre telle que saisie dans le CMS (programme de coaching, formule entreprise). */
+export type LlmsOfferInput = { name?: string; desc?: string; price?: string; unit?: string }
+
+/** « Gratuit » → « gratuit », « Sur devis » → « sur devis », « 120 € » reste tel quel (jamais de prix inventé). */
+export function priceLabel(price: string | undefined): string {
+  const p = oneLine(price ?? '')
+  if (!p) return ''
+  return /^(gratuit|gratuite|offert|offerte|sur devis)$/i.test(p) ? p.toLowerCase() : p
+}
+
+/**
+ * Offre → ligne de /llms.txt : nom, description, puis « Tarif : … » (avec la durée ou le format entre parenthèses).
+ * Une offre sans nom est ignorée ; sans prix, la ligne ne mentionne aucun tarif.
+ */
+export function offerLink(offer: LlmsOfferInput, url: string): LlmsLink | null {
+  const title = oneLine(offer.name ?? '')
+  if (!title) return null
+  const price = priceLabel(offer.price)
+  const unit = oneLine(offer.unit ?? '')
+  const desc = oneLine(offer.desc ?? '').replace(/[.\s]+$/, '')
+  const parts = [desc ? `${desc}.` : '', price ? `Tarif : ${price}${unit ? ` (${unit})` : ''}.` : ''].filter(Boolean)
+  return { title, url, description: parts.join(' ') || undefined }
 }

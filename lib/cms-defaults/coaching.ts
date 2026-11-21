@@ -1,3 +1,4 @@
+import { defaultFaqSections } from './page-faqs'
 // Textes par défaut de la page « Coaching » — SOURCE UNIQUE.
 // Lus par la page ET par l'admin du CMS (lib/cms-page-defaults.ts) : ne jamais les dupliquer ailleurs.
 // Chaque clé correspond à un champ de PAGES_CONFIG (components/cms/admin/config.ts).
@@ -89,7 +90,7 @@ export const COACHING_DEFAULTS: Record<string, string> = { ...DEFAULTS, ...DEFAU
   seo_image: '',
   // ── Disposition des sections (admin → Structure) : JSON {"order":[…],"hidden":[…]} ; vide = ordre d'origine ──
   sections_layout: '',
-  custom_sections: '',
+  custom_sections: defaultFaqSections('coaching'),
   // ── Listes modifiables (admin → Coaching) : JSON [{…}] ; vide = anciens champs numérotés ──
   coaching_programs: '',
   coaching_testimonials: '',
