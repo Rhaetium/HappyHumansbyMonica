@@ -31,6 +31,7 @@ export const BLOG_DEFAULTS: Record<string, string> = {
   article_default_description: "Un article Happy Humans — coaching, bonheur et leadership.",
   article_back: "← Retour au blog",
   article_read_time: "min de lecture",
+  article_updated: "Mis à jour le",
   article_opening: "Introduction",
   article_unfinished: "L'article n'est pas encore publié en entier.",
   article_detail: "Pour aller plus loin",

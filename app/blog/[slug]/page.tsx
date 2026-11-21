@@ -1,4 +1,4 @@
-﻿import { getPostBySlug, getAllSlugs, getRelatedPosts, formatDate } from '@/lib/blog-supabase'
+import { getPostBySlug, getAllSlugs, getRelatedPosts, formatDate } from '@/lib/blog-supabase'
 import type { BlogPost } from '@/lib/blog-supabase'
 import type { Metadata } from 'next'
 import { notFound } from 'next/navigation'
@@ -10,6 +10,8 @@ import NewsletterForm from '@/components/NewsletterForm'
 import ShareButtons from '@/components/ShareButtons'
 import EnhancedRichContent from '@/components/EnhancedRichContent'
 import { sanitizeHtml } from '@/lib/sanitize-html'
+import { extractFaq, shouldShowUpdated } from '@/lib/article-template'
+import { faqPageSchema, safeJsonLd } from '@/lib/json-ld'
 import { SITE_URL } from '@/lib/site-url'
 import { unsplashSrcSet } from '@/lib/image-srcset'
 import { stripBrandSuffix } from '@/lib/site-seo'
@@ -175,19 +177,29 @@ export default async function BlogPostPage(props: Props) {
   const { articleLd, breadcrumbLd } = buildJsonLds(post, readTime)
   const canonicalUrl = `${SITE_URL}/blog/${post.slug}`
   const safeContent = sanitizeHtml(post.content)
+  // Section « Questions fréquentes » de l'article → FAQPage (jamais un modèle non rempli)
+  const faqLd = faqPageSchema(extractFaq(safeContent))
+  const showUpdated = shouldShowUpdated(post.published_at, post.updated_at)
 
   return (
     <>
       <Script
         id="article-jsonld"
         type="application/ld+json"
-        dangerouslySetInnerHTML={{ __html: JSON.stringify(articleLd) }}
+        dangerouslySetInnerHTML={{ __html: safeJsonLd(articleLd) }}
       />
       <Script
         id="breadcrumb-jsonld"
         type="application/ld+json"
-        dangerouslySetInnerHTML={{ __html: JSON.stringify(breadcrumbLd) }}
+        dangerouslySetInnerHTML={{ __html: safeJsonLd(breadcrumbLd) }}
       />
+      {faqLd && (
+        <Script
+          id="faq-jsonld"
+          type="application/ld+json"
+          dangerouslySetInnerHTML={{ __html: safeJsonLd(faqLd) }}
+        />
+      )}
 
       <Header />
       <main className="min-h-screen bg-white">
@@ -247,6 +259,12 @@ export default async function BlogPostPage(props: Props) {
                 <span>{post.author ?? 'Happy Humans'}</span>
                 <span>•</span>
                 <span>{formatDate(post.published_at)}</span>
+                {showUpdated && (
+                  <>
+                    <span>•</span>
+                    <span>{c.article_updated} {formatDate(post.updated_at)}</span>
+                  </>
+                )}
                 {readTime > 0 && (
                   <>
                     <span>•</span>
