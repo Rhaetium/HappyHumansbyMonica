@@ -1,5 +1,6 @@
 import Link from 'next/link';
-import { parseBlocks, type CustomBlock } from '@/lib/custom-sections';
+import { parseBlocks, parseListLines, parseStatLines, validFaqItems, type CustomBlock } from '@/lib/custom-sections';
+import { faqPageSchema, safeJsonLd } from '@/lib/json-ld';
 
 /**
  * Blocs personnalisés ajoutés depuis le CMS (admin → page → « Blocs personnalisés »,
@@ -76,6 +77,71 @@ export function CustomBlockView({ b }: { b: CustomBlock }) {
           </div>
         </section>
       );
+    case 'faq': {
+      const items = validFaqItems(b.items);
+      if (items.length === 0) return null;
+      const schema = faqPageSchema(items);
+      return (
+        <section className="bg-[#f5f0e8] px-6 py-14 md:px-10 md:py-20">
+          <div className="mx-auto max-w-3xl">
+            {b.badge && <p className="mb-2 text-center text-xs font-bold uppercase tracking-[0.22em] text-amber-800">{b.badge}</p>}
+            {b.title && <h2 className="mb-8 text-center text-2xl font-serif font-light text-stone-900 md:text-3xl">{b.title}</h2>}
+            {/* <details> : les réponses restent dans le HTML (lisibles par Google et les assistants IA), repliées pour les visiteurs */}
+            <div className="divide-y divide-stone-200">
+              {items.map((it, i) => (
+                <details key={i} className="group py-4">
+                  <summary className="flex cursor-pointer list-none items-start justify-between gap-4 text-left text-base font-medium text-stone-900">
+                    <span>{it.q}</span>
+                    <span aria-hidden className="mt-0.5 text-xl leading-none text-[#2d5f54] transition-transform group-open:rotate-45">+</span>
+                  </summary>
+                  <p className="mt-3 whitespace-pre-line border-l-2 border-[#2d5f54] pl-4 text-sm leading-relaxed text-stone-600">{it.a}</p>
+                </details>
+              ))}
+            </div>
+          </div>
+          {schema && <script type="application/ld+json" dangerouslySetInnerHTML={{ __html: safeJsonLd(schema) }} />}
+        </section>
+      );
+    }
+    case 'liste': {
+      const points = parseListLines(b.text);
+      if (points.length === 0) return null;
+      return (
+        <section className="bg-white px-6 py-14 md:px-10 md:py-20">
+          <div className="mx-auto max-w-3xl">
+            {b.badge && <p className="mb-2 text-xs font-bold uppercase tracking-[0.22em] text-amber-800">{b.badge}</p>}
+            {b.title && <h2 className="mb-6 text-2xl font-serif font-light text-stone-900 md:text-3xl">{b.title}</h2>}
+            <ul className="space-y-3">
+              {points.map((p, i) => (
+                <li key={i} className="flex gap-3 text-base leading-relaxed text-stone-600">
+                  <span aria-hidden className="mt-1 text-[#2d5f54]">✓</span>
+                  <span>{p}</span>
+                </li>
+              ))}
+            </ul>
+          </div>
+        </section>
+      );
+    }
+    case 'chiffres': {
+      const stats = parseStatLines(b.text);
+      if (stats.length === 0) return null;
+      return (
+        <section className="bg-white px-6 py-14 md:px-10 md:py-20">
+          <div className="mx-auto max-w-5xl">
+            {b.title && <h2 className="mb-10 text-center text-2xl font-serif font-light text-stone-900 md:text-3xl">{b.title}</h2>}
+            <dl className="grid gap-8 text-center sm:grid-cols-2 lg:grid-cols-4">
+              {stats.map((st, i) => (
+                <div key={i}>
+                  <dt className="font-serif text-4xl font-light text-[#2d5f54] md:text-5xl">{st.value}</dt>
+                  {st.label && <dd className="mt-2 text-sm leading-snug text-stone-500">{st.label}</dd>}
+                </div>
+              ))}
+            </dl>
+          </div>
+        </section>
+      );
+    }
   }
 }
 
