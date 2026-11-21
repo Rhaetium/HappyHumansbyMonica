@@ -1,6 +1,7 @@
 import { MetadataRoute } from 'next';
 import { getKvSettings } from '@/lib/cms-settings-server';
 import { SITE_URL as BASE_URL } from '@/lib/site-url';
+import { buildRobotsRules } from '@/lib/robots-rules';
 
 
 // Pages pilotables depuis le CMS (Paramètres → Visibilité pages)
@@ -8,15 +9,6 @@ const TOGGLABLE_PAGES = [
   'home', 'a-propos', 'coaching', 'entreprises', 'happiness-design',
   'sparring-partner', 'relations', 'temoignages', 'booking', 'contact',
   'blog', 'faq',
-];
-
-// GEO (visibilité dans les réponses des assistants IA) : on autorise explicitement les robots
-// des moteurs de réponse. Pour les fermer, retirer le nom du robot de cette liste.
-const AI_CRAWLERS = [
-  'GPTBot', 'OAI-SearchBot', 'ChatGPT-User',
-  'ClaudeBot', 'Claude-SearchBot', 'Claude-User',
-  'PerplexityBot', 'Perplexity-User',
-  'Google-Extended', 'Applebot-Extended',
 ];
 
 export default async function robots(): Promise<MetadataRoute.Robots> {
@@ -30,19 +22,8 @@ export default async function robots(): Promise<MetadataRoute.Robots> {
   }
 
   return {
-    rules: [
-      {
-        userAgent: '*',
-        allow: '/',
-        disallow,
-      },
-      // Un groupe dédié ne fusionne pas avec « * » : on y répète les interdictions.
-      {
-        userAgent: AI_CRAWLERS,
-        allow: ['/', '/llms.txt'],
-        disallow,
-      },
-    ],
+    // Robots IA : réglables dans l'admin (Paramètres → Robots IA) ; autorisés tant que rien n'est changé.
+    rules: buildRobotsRules(disallow, kv),
     sitemap: `${BASE_URL}/sitemap.xml`,
     host: BASE_URL,
   };

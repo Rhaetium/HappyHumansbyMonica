@@ -313,11 +313,18 @@ export default function SettingsTab({ loadingSettings, settingsGroup, setSetting
                   )}
 
                   {/* ── VISIBILITÉ — toggles ── */}
-                  {settingsGroup === 'visibility' && (
+                  {(settingsGroup === 'visibility' || settingsGroup === 'ai-robots') && (
                     <div style={{ marginBottom: '1.5rem' }}>
-                      <p style={{ fontSize: '.82rem', color: '#888', marginBottom: '1.25rem', lineHeight: 1.5 }}>
-                        Contrôlez si chaque page est indexée par Google (robots meta). La navigation et le footer se gèrent dans l&apos;onglet <strong>Pages → Navigation</strong>.
-                      </p>
+                      {settingsGroup === 'ai-robots' ? (
+                        <p style={{ fontSize: '.82rem', color: '#888', marginBottom: '1.25rem', lineHeight: 1.5 }}>
+                          Choisissez quels robots d&apos;IA peuvent lire le site (fichier <code>robots.txt</code>). Les <strong>robots de réponse</strong> permettent d&apos;être cité par ChatGPT, Claude ou Perplexity : gardez-les autorisés.
+                          Les <strong>robots d&apos;entraînement</strong> servent à entraîner les modèles : vous pouvez les bloquer sans perdre de visibilité dans les réponses. Un changement est pris en compte par les robots sous quelques jours.
+                        </p>
+                      ) : (
+                        <p style={{ fontSize: '.82rem', color: '#888', marginBottom: '1.25rem', lineHeight: 1.5 }}>
+                          Contrôlez si chaque page est indexée par Google (robots meta). La navigation et le footer se gèrent dans l&apos;onglet <strong>Pages → Navigation</strong>.
+                        </p>
+                      )}
                       <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fill, minmax(280px, 1fr))', gap: '.75rem' }}>
                         {groupItems.map(s => {
                           const isOn = (editedSettings[s.key] ?? 'true') !== 'false';
@@ -331,7 +338,9 @@ export default function SettingsTab({ loadingSettings, settingsGroup, setSetting
                                   border: 'none', cursor: 'pointer', flexShrink: 0,
                                   background: isOn ? '#2d5f54' : '#d1d5db', transition: 'background .18s',
                                 }}
-                                title={isOn ? 'Indexé — cliquer pour désindexer' : 'Non indexé — cliquer pour indexer'}
+                                title={settingsGroup === 'ai-robots'
+                                  ? (isOn ? 'Autorisé — cliquer pour bloquer' : 'Bloqué — cliquer pour autoriser')
+                                  : (isOn ? 'Indexé — cliquer pour désindexer' : 'Non indexé — cliquer pour indexer')}
                               >
                                 <div style={{
                                   position: 'absolute', top: 3, left: isOn ? 23 : 3,
@@ -347,7 +356,7 @@ export default function SettingsTab({ loadingSettings, settingsGroup, setSetting
                   )}
 
                   <div style={{ display: 'flex', flexDirection: 'column', gap: '1.1rem' }}>
-                    {settingsGroup !== 'visibility' && groupItems.filter(s => !(settingsGroup === 'branding' && BRANDING_PANEL_KEYS.includes(s.key))).map(s => {
+                    {settingsGroup !== 'visibility' && settingsGroup !== 'ai-robots' && groupItems.filter(s => !(settingsGroup === 'branding' && BRANDING_PANEL_KEYS.includes(s.key))).map(s => {
                       const field = s as { key: string; label: string; type: string; options?: string[]; optionLabels?: string[]; placeholder?: string };
                       return (
                       <div key={s.key}>

@@ -1000,6 +1000,7 @@ export const SETTINGS_GROUPS: Record<string, { label: string; emoji: string }> =
   analytics:  { label: 'Tag Manager & Analytics', emoji: '📈' },
   geo:        { label: 'Géo & Business',    emoji: '📍' },
   visibility: { label: 'Visibilité pages',  emoji: '👁️' },
+  'ai-robots': { label: 'Robots IA',        emoji: '🤖' },
   footer:     { label: 'Footer',            emoji: '📄' },
 };
 

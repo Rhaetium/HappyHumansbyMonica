@@ -89,6 +89,9 @@ const DEFAULT_SETTINGS = [
   { key: 'geo_languages',        label: 'Langues parlées (codes séparés par des virgules : fr, en, ro, de, es…)', group_name: 'geo', type: 'text', value: DEFAULT_LANGUAGES.join(', ') },
   { key: 'geo_service_area',     label: 'Zone de service',             group_name: 'geo', type: 'text',     value: 'Paris, France, Europe, International' },
   { key: 'geo_price_range',      label: 'Gamme de prix (€ à €€€)',     group_name: 'geo', type: 'text',     value: '€€' },
+  // Robots IA : 'true' = autorisé (défaut), 'false' = bloqué dans /robots.txt
+  { key: 'ai_search_bots',   label: 'Robots IA de réponse (ChatGPT, Claude, Perplexity…) — recommandé : sans eux, le site n\'apparaît pas dans leurs réponses', group_name: 'ai-robots', type: 'text', value: 'true' },
+  { key: 'ai_training_bots', label: 'Robots IA d\'entraînement (GPTBot, ClaudeBot, Google-Extended, Applebot-Extended)', group_name: 'ai-robots', type: 'text', value: 'true' },
   // Page visibility
   { key: 'page_home_indexable',              label: 'Accueil — indexé Google',          group_name: 'visibility', type: 'text', value: 'true' },
   { key: 'page_coaching_indexable',          label: 'Coaching — indexé Google',         group_name: 'visibility', type: 'text', value: 'true' },
