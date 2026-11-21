@@ -16,7 +16,13 @@ export type CustomBlock =
   | { id: string; type: 'texte'; badge?: string; title?: string; text: string; align: TextAlign }
   | { id: string; type: 'image'; image: string; alt?: string; caption?: string }
   | { id: string; type: 'cta'; title: string; text?: string; button: string; href: string }
-  | { id: string; type: 'citation'; quote: string; author?: string };
+  | { id: string; type: 'citation'; quote: string; author?: string }
+  | { id: string; type: 'faq'; badge?: string; title?: string; items: FaqEntry[] }
+  | { id: string; type: 'liste'; badge?: string; title?: string; text: string }
+  | { id: string; type: 'chiffres'; title?: string; text: string };
+
+/** Une question de la FAQ d'un bloc. */
+export type FaqEntry = { q: string; a: string };
 
 export type CustomBlockType = CustomBlock['type'];
 
@@ -26,6 +32,9 @@ export const BLOCK_TEMPLATES: { type: CustomBlockType; label: string; emoji: str
   { type: 'image', label: 'Image pleine largeur', emoji: '🌄' },
   { type: 'cta', label: "Appel à l'action", emoji: '📣' },
   { type: 'citation', label: 'Citation', emoji: '💬' },
+  { type: 'faq', label: 'Questions fréquentes (FAQ)', emoji: '❓' },
+  { type: 'liste', label: 'Liste de points', emoji: '✅' },
+  { type: 'chiffres', label: 'Chiffres clés', emoji: '🔢' },
 ];
 
 export function makeId(): string {
@@ -39,7 +48,34 @@ export function blankBlock(type: CustomBlockType, id: string = makeId()): Custom
     case 'image': return { id, type, image: '' };
     case 'cta': return { id, type, title: '', button: '', href: '/contact' };
     case 'citation': return { id, type, quote: '' };
+    case 'faq': return { id, type, title: '', items: [{ q: '', a: '' }] };
+    case 'liste': return { id, type, title: '', text: '' };
+    case 'chiffres': return { id, type, title: '', text: '' };
   }
+}
+
+/** Liste de points : un point par ligne, lignes vides ignorées. */
+export function parseListLines(text: string | undefined): string[] {
+  return (text ?? '').split('\n').map(l => l.trim()).filter(Boolean);
+}
+
+/** Chiffres clés : une ligne « valeur | libellé » par chiffre (« 10 ans | d'expérience en marketing international »). */
+export function parseStatLines(text: string | undefined): { value: string; label: string }[] {
+  return parseListLines(text)
+    .map(line => {
+      const i = line.indexOf('|');
+      return i < 0 ? { value: line, label: '' } : { value: line.slice(0, i).trim(), label: line.slice(i + 1).trim() };
+    })
+    .filter(s => s.value);
+}
+
+/** Questions valides d'un bloc FAQ (question ET réponse renseignées). */
+export function validFaqItems(items: unknown): FaqEntry[] {
+  if (!Array.isArray(items)) return [];
+  return items
+    .map(i => (i && typeof i === 'object' ? i as Record<string, unknown> : {}))
+    .map(i => ({ q: typeof i.q === 'string' ? i.q.trim() : '', a: typeof i.a === 'string' ? i.a.trim() : '' }))
+    .filter(i => i.q && i.a);
 }
 
 function isBlock(v: unknown): v is CustomBlock {
@@ -55,7 +91,8 @@ export function parseBlocks(json?: string | null): CustomBlock[] {
   try {
     const v = JSON.parse(json);
     if (!Array.isArray(v)) return [];
-    return v.filter(isBlock);
+    // Un bloc FAQ dont la liste est absente ou abîmée garde une liste vide (la page ne casse jamais).
+    return v.filter(isBlock).map(b => (b.type === 'faq' && !Array.isArray((b as { items?: unknown }).items) ? { ...b, items: [] } : b));
   } catch {
     return [];
   }
@@ -74,6 +111,14 @@ export function moveBlock(blocks: CustomBlock[], id: string, dir: -1 | 1): Custo
   const next = [...blocks];
   ;[next[i], next[j]] = [next[j], next[i]];
   return next;
+}
+
+/** Copie un bloc juste après l'original (nouvel identifiant, contenu copié en profondeur). */
+export function duplicateBlock(blocks: CustomBlock[], id: string, newId: string = makeId()): CustomBlock[] {
+  const i = blocks.findIndex(b => b.id === id);
+  if (i < 0) return blocks;
+  const copy = { ...JSON.parse(JSON.stringify(blocks[i])), id: newId } as CustomBlock;
+  return [...blocks.slice(0, i + 1), copy, ...blocks.slice(i + 1)];
 }
 
 export function removeBlock(blocks: CustomBlock[], id: string): CustomBlock[] {

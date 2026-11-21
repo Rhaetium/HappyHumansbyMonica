@@ -2,7 +2,7 @@
 
 import React from 'react'
 import {
-  BLOCK_TEMPLATES, blankBlock, moveBlock, parseBlocks, removeBlock,
+  BLOCK_TEMPLATES, blankBlock, duplicateBlock, moveBlock, parseBlocks, removeBlock,
   serializeBlocks, updateBlock,
   type CustomBlock, type CustomBlockType,
 } from '@/lib/custom-sections'
@@ -41,7 +41,7 @@ export default function CustomSectionsEditor({ value, onChange, hint }: { value:
   return (
     <div>
       <p style={{ fontSize: '.8rem', color: '#7a7a7a', margin: '0 0 .75rem', lineHeight: 1.5 }}>
-        {hint ?? `Ajoutez des sections (titre+texte+image, texte, image, appel à l'action, citation), déplacez-les avec ▲ ▼.
+        {hint ?? `Ajoutez des sections (titre+texte+image, texte, image, appel à l'action, citation, FAQ, liste, chiffres clés), déplacez-les avec ▲ ▼ et copiez-les avec ⧉.
         Elles s'affichent juste avant l'appel à l'action final. Enregistrez le brouillon puis publiez.`}
       </p>
       {blocks.length === 0 && <p style={{ fontSize: '.82rem', color: '#a8a29e', margin: '0 0 .75rem' }}>Aucun bloc pour le moment.</p>}
@@ -59,6 +59,7 @@ export default function CustomSectionsEditor({ value, onChange, hint }: { value:
                 </span>
                 <button type="button" aria-label="Monter" onClick={() => apply(moveBlock(blocks, b.id, -1))} style={smallBtn}>▲</button>
                 <button type="button" aria-label="Descendre" onClick={() => apply(moveBlock(blocks, b.id, 1))} style={smallBtn}>▼</button>
+                <button type="button" aria-label="Dupliquer ce bloc" title="Dupliquer" onClick={() => apply(duplicateBlock(blocks, b.id))} style={smallBtn}>⧉</button>
                 <button type="button" aria-label="Supprimer" onClick={() => { if (confirm('Supprimer ce bloc ?')) apply(removeBlock(blocks, b.id)); }} style={{ ...smallBtn, color: '#dc2626' }}>✕</button>
               </div>
               {b.type === 'split' && (
@@ -106,6 +107,43 @@ export default function CustomSectionsEditor({ value, onChange, hint }: { value:
                   {TA('Texte (vide = sans texte)', b.text, v => set(b.id, { text: v }))}
                   {T('Bouton', b.button, v => set(b.id, { button: v }))}
                   {T('Lien du bouton', b.href, v => set(b.id, { href: v }), '/contact')}
+                </>
+              )}
+              {b.type === 'faq' && (
+                <>
+                  {T('Badge (petit sur-titre)', b.badge, v => set(b.id, { badge: v }))}
+                  {T('Titre (vide = sans titre)', b.title, v => set(b.id, { title: v }))}
+                  {(Array.isArray(b.items) ? b.items : []).map((it, qi) => {
+                    const setItem = (patch: Partial<{ q: string; a: string }>) =>
+                      set(b.id, { items: (b.items ?? []).map((x, xi) => (xi === qi ? { ...x, ...patch } : x)) });
+                    return (
+                      <div key={qi} style={{ border: '1px dashed #d6d3d1', borderRadius: '.5rem', padding: '.55rem .65rem', marginBottom: '.5rem' }}>
+                        {T(`Question ${qi + 1}`, it.q, v => setItem({ q: v }))}
+                        {TA('Réponse', it.a, v => setItem({ a: v }))}
+                        <button type="button" onClick={() => set(b.id, { items: (b.items ?? []).filter((_, xi) => xi !== qi) })}
+                          style={{ background: 'none', border: 'none', color: '#dc2626', cursor: 'pointer', fontSize: '.78rem' }}>Retirer cette question</button>
+                      </div>
+                    );
+                  })}
+                  <button type="button" onClick={() => set(b.id, { items: [...(b.items ?? []), { q: '', a: '' }] })}
+                    style={{ padding: '.35rem .75rem', border: '1.5px solid #2d5f54', background: 'white', color: '#2d5f54', borderRadius: '.5rem', cursor: 'pointer', fontSize: '.8rem', fontWeight: 600 }}>+ Ajouter une question</button>
+                  <p style={{ fontSize: '.74rem', color: '#7a7a7a', margin: '.5rem 0 0', lineHeight: 1.4 }}>
+                    Les questions sont déclarées à Google et aux assistants IA. Une seule FAQ par page est idéale ; une question sans réponse n&apos;est pas affichée.
+                  </p>
+                </>
+              )}
+              {b.type === 'liste' && (
+                <>
+                  {T('Badge (petit sur-titre)', b.badge, v => set(b.id, { badge: v }))}
+                  {T('Titre (vide = sans titre)', b.title, v => set(b.id, { title: v }))}
+                  {TA('Points (un par ligne)', b.text, v => set(b.id, { text: v }))}
+                </>
+              )}
+              {b.type === 'chiffres' && (
+                <>
+                  {T('Titre (vide = sans titre)', b.title, v => set(b.id, { title: v }))}
+                  {TA("Chiffres (un par ligne : « valeur | libellé »)", b.text, v => set(b.id, { text: v }))}
+                  <p style={{ fontSize: '.74rem', color: '#7a7a7a', margin: '0', lineHeight: 1.4 }}>Exemple : « 10 ans | d&apos;expérience en marketing international ». N&apos;indiquez que des chiffres réels.</p>
                 </>
               )}
               {b.type === 'citation' && (
