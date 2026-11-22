@@ -7,6 +7,7 @@ import {
 } from '@/lib/calendly-availability'
 import { sendEmail, adminNotifHtml } from '@/lib/send-email'
 import { DEFAULT_CONTACT_EMAIL } from '@/lib/site-contact'
+import { loadConnectionEnv } from '@/lib/connections'
 
 /**
  * Vérifie qu'un compte Calendly a bien des rendez-vous publics.
@@ -59,7 +60,7 @@ async function recordAlert(slug: string, profileUrl: string) {
   })
   if (error) console.error('[calendly/status] insertion alerte impossible:', error.message)
 
-  const adminEmail = process.env.ADMIN_EMAIL || DEFAULT_CONTACT_EMAIL
+  const adminEmail = (await loadConnectionEnv()).ADMIN_EMAIL || DEFAULT_CONTACT_EMAIL
   await sendEmail({
     to: adminEmail,
     subject: '⚠️ Réservation impossible — Calendly sans rendez-vous public',

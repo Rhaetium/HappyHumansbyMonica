@@ -1,16 +1,18 @@
 import { SITE_URL } from './site-url';
 import { DEFAULT_CONTACT_EMAIL } from './site-contact';
+import { loadConnectionEnv } from './connections';
 
 // Envoi d'email via Brevo — utilisé directement côté serveur (pas d'appel HTTP à soi-même)
 export async function sendEmail({ to, subject, html }: { to: string; subject: string; html: string }) {
-  const apiKey = process.env.BREVO_API_KEY;
+  const cfg = await loadConnectionEnv(); // Vercel d'abord, sinon réglé dans l'admin (onglet Connexions)
+  const apiKey = cfg.BREVO_API_KEY;
   if (!apiKey) {
     console.warn('[sendEmail] BREVO_API_KEY manquante — email non envoyé');
     return { skipped: true };
   }
 
-  const senderEmail = process.env.SENDER_EMAIL || DEFAULT_CONTACT_EMAIL;
-  const senderName  = process.env.SENDER_NAME  || 'Happy Humans';
+  const senderEmail = cfg.SENDER_EMAIL || DEFAULT_CONTACT_EMAIL;
+  const senderName  = cfg.SENDER_NAME  || 'Happy Humans';
 
   const res = await fetch('https://api.brevo.com/v3/smtp/email', {
     method: 'POST',

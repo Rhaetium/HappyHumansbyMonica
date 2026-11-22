@@ -29,6 +29,7 @@ import SearchConsoleStats from '@/components/cms/SearchConsoleStats';
 import SeoPreview from '@/components/cms/SeoPreview';
 import SeoHealth from '@/components/cms/SeoHealth';
 import VisibilityTab from '@/components/cms/admin/VisibilityTab';
+import ConnectionsTab from '@/components/cms/admin/ConnectionsTab';
 import ArticleTemplatePanel from '@/components/cms/admin/ArticleTemplatePanel';
 import { TAB_GROUPS, groupCount, groupForTab, tabsOfGroup } from '@/lib/admin-tab-groups';
 import { actionableCount, auditSeo, type SeoIssue } from '@/lib/seo-audit';
@@ -1054,6 +1055,7 @@ export default function CMSAdmin() {
     { id: 'custom-pages', label: '📄 Pages libres', count: null },
     { id: 'questionnaires', label: '📋 Questionnaires', count: null },
     { id: 'ia', label: '🤖 IA', count: null },
+    { id: 'connexions', label: '🔌 Connexions', count: null },
     { id: 'media',    label: '🖼️ Médiathèque', count: null },
     { id: 'booking',  label: '📅 Réservations', count: null },
     { id: 'messages', label: '💬 Messages', count: unreadVisitorCount(messages) || null },
@@ -1624,6 +1626,7 @@ export default function CMSAdmin() {
         )}
 
         {tab === 'visibilite' && <VisibilityTab onGoto={setTab} />}
+        {tab === 'connexions' && <ConnectionsTab />}
         {tab === 'stats-google' && <SearchConsoleStats />}
 
         {tab === 'pages' && (

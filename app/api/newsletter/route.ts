@@ -1,5 +1,6 @@
 import { NextRequest, NextResponse } from 'next/server'
 import { SITE_URL } from '@/lib/site-url'
+import { loadConnectionEnv } from '@/lib/connections'
 
 // Liens et nom du site des e-mails : toujours l'adresse officielle (lib/site-url.ts), jamais écrite en dur.
 const SITE_HOST = new URL(SITE_URL).hostname
@@ -20,7 +21,7 @@ export async function POST(request: NextRequest) {
     }
 
     // 1. Ajout dans Brevo
-    const brevoApiKey = process.env.BREVO_API_KEY
+    const brevoApiKey = (await loadConnectionEnv()).BREVO_API_KEY
     if (brevoApiKey) {
       const brevoRes = await fetch('https://api.brevo.com/v3/contacts', {
         method: 'POST',

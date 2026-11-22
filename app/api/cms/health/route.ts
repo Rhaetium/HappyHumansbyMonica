@@ -15,6 +15,7 @@ import {
 import { bookingHealthCheck, type HealthCheck } from '@/lib/cms-health';
 import { extractVerificationToken, searchConsoleChecks, sitemapUrl } from '@/lib/search-console';
 import { SITE_URL } from '@/lib/site-url';
+import { loadConnectionEnv } from '@/lib/connections';
 import { checkEnvironment, checkSupabase, toHealthChecks } from '@/lib/env-check';
 
 /**
@@ -62,7 +63,7 @@ let configCache: { at: number; checks: HealthCheck[] } | null = null;
 
 async function readConfigChecks(): Promise<HealthCheck[]> {
   if (configCache && Date.now() - configCache.at < CONFIG_TTL_MS) return configCache.checks;
-  const checks = toHealthChecks([...checkEnvironment(process.env), ...(await checkSupabase(process.env))]);
+  const checks = toHealthChecks([...checkEnvironment({ ...process.env, ...(await loadConnectionEnv()) }), ...(await checkSupabase(process.env))]);
   configCache = { at: Date.now(), checks };
   return checks;
 }
