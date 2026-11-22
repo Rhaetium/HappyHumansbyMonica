@@ -29,6 +29,7 @@ import SearchConsoleStats from '@/components/cms/SearchConsoleStats';
 import SeoPreview from '@/components/cms/SeoPreview';
 import SeoHealth from '@/components/cms/SeoHealth';
 import VisibilityTab from '@/components/cms/admin/VisibilityTab';
+import ArticleTemplatePanel from '@/components/cms/admin/ArticleTemplatePanel';
 import { TAB_GROUPS, groupCount, groupForTab, tabsOfGroup } from '@/lib/admin-tab-groups';
 import { actionableCount, auditSeo, type SeoIssue } from '@/lib/seo-audit';
 import { serpTitle } from '@/lib/seo-preview';
@@ -1335,6 +1336,13 @@ export default function CMSAdmin() {
                   placeholder="Angle personnel, anecdote de séance, citation qui inspire l'article, ou note brouillon…" />
               </div>
               <div style={{ gridColumn: '1/-1' }}>
+                <ArticleTemplatePanel
+                  title={editingArticle?.title || ''}
+                  slug={editingArticle?.slug || ''}
+                  content={editingArticle?.content || ''}
+                  description={editingArticle?.seo_description || ''}
+                  onChangeContent={html => setEditingArticle(p => ({ ...p, content: html }))}
+                />
                 <label style={lbl}>Contenu</label>
                 <div style={{ display: 'flex', gap: '0.5rem', marginBottom: '0.5rem' }}>
                   <button
