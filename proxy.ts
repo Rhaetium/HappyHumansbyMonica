@@ -1,5 +1,7 @@
 import { NextRequest, NextResponse, type NextFetchEvent } from 'next/server'
 import { isAiCrawler, sendCrawlerLog } from '@/lib/ai-crawler-log'
+import { resolveRedirect } from '@/lib/redirects'
+import { getRedirects } from '@/lib/redirects-store'
 
 function getSecret(): string {
   return (
@@ -50,6 +52,13 @@ async function isValidEditSession(token: string | undefined, secret: string): Pr
 }
 
 export async function proxy(req: NextRequest, event: NextFetchEvent) {
+  // Redirections gérées dans l'admin (onglet « Redirections ») : pages et articles renommés. Seulement pour une page
+  // consultée (GET/HEAD), jamais pour l'API, l'admin ni les fichiers (adresse avec une extension).
+  if ((req.method === 'GET' || req.method === 'HEAD') && !req.nextUrl.pathname.includes('.')) {
+    const to = resolveRedirect(await getRedirects(), req.nextUrl.pathname, req.nextUrl.search)
+    if (to) return NextResponse.redirect(/^https:\/\//i.test(to) ? to : new URL(to, req.url), 301)
+  }
+
   const res = NextResponse.next()
 
   // Suivi des robots IA (GPTBot, ClaudeBot…) : n'agit que pour eux, après la réponse, et seulement si le jeton est configuré
