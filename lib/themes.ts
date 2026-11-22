@@ -39,6 +39,15 @@ export const FONT_CHOICES: FontChoice[] = [
   { id: 'poppins', label: 'Poppins (moderne, géométrique)', stack: "'Poppins', system-ui, sans-serif", google: 'Poppins:wght@300;400;500;600;700' },
   { id: 'dm-sans', label: 'DM Sans (nette et sobre)', stack: "'DM Sans', system-ui, sans-serif", google: 'DM+Sans:wght@300;400;500;600;700' },
   { id: 'lora', label: 'Lora (serif chaleureux)', stack: "'Lora', Georgia, serif", google: 'Lora:ital,wght@0,400;0,500;0,600;0,700;1,400' },
+  // Polices supplémentaires (Google Fonts)
+  { id: 'merriweather', label: 'Merriweather (serif de lecture, très lisible)', stack: "'Merriweather', Georgia, serif", google: 'Merriweather:ital,wght@0,300;0,400;0,700;1,400' },
+  { id: 'source-serif', label: 'Source Serif 4 (serif sobre, éditorial)', stack: "'Source Serif 4', Georgia, serif", google: 'Source+Serif+4:ital,wght@0,400;0,500;0,600;0,700;1,400' },
+  { id: 'fraunces', label: 'Fraunces (serif doux et expressif)', stack: "'Fraunces', Georgia, serif", google: 'Fraunces:ital,wght@0,400;0,500;0,600;0,700;1,400' },
+  { id: 'work-sans', label: 'Work Sans (sans-serif neutre)', stack: "'Work Sans', system-ui, sans-serif", google: 'Work+Sans:wght@300;400;500;600;700' },
+  { id: 'open-sans', label: 'Open Sans (sans-serif classique, très lisible)', stack: "'Open Sans', system-ui, sans-serif", google: 'Open+Sans:wght@300;400;500;600;700' },
+  { id: 'raleway', label: 'Raleway (élégante, fine)', stack: "'Raleway', system-ui, sans-serif", google: 'Raleway:wght@300;400;500;600;700' },
+  { id: 'josefin', label: 'Josefin Sans (géométrique, élégante)', stack: "'Josefin Sans', system-ui, sans-serif", google: 'Josefin+Sans:wght@300;400;500;600;700' },
+  { id: 'caveat', label: 'Caveat (écriture manuscrite, pour les titres)', stack: "'Caveat', cursive", google: 'Caveat:wght@400;500;600;700' },
 ];
 
 /**
@@ -62,9 +71,38 @@ export function googleFontsHref(tokens: Pick<ThemeTokens, 'font' | 'fontHeading'
   return 'https://fonts.googleapis.com/css2?' + families.join('&') + '&display=swap';
 }
 
+/**
+ * Police Google Fonts libre, saisie par son nom dans l'admin : identifiant « google:Nom de la police ».
+ * Le nom est limité à des lettres, chiffres et espaces : il finit dans une adresse et dans du CSS, rien d'autre n'est accepté.
+ */
+export const CUSTOM_FONT_PREFIX = 'google:';
+const CUSTOM_FAMILY = /^[A-Za-z][A-Za-z0-9 ]{1,39}$/;
+
+/** Nom de famille valide d'après ce que saisit Monica (« poppins », « Playfair  Display »…), ou '' si invalide. */
+export function cleanFontFamily(raw: string | undefined): string {
+  const name = (raw ?? '').replace(/\s+/g, ' ').trim();
+  return CUSTOM_FAMILY.test(name) ? name : '';
+}
+
+export function customFamilyOf(id: string | undefined): string {
+  return id && id.startsWith(CUSTOM_FONT_PREFIX) ? cleanFontFamily(id.slice(CUSTOM_FONT_PREFIX.length)) : '';
+}
+
 export function fontStack(id: string | undefined, fallback: string): string {
   const found = FONT_CHOICES.find(f => f.id === id);
-  return found ? found.stack : fallback;
+  if (found) return found.stack;
+  const custom = customFamilyOf(id);
+  return custom ? `'${custom}', system-ui, sans-serif` : fallback;
+}
+
+/**
+ * Feuille Google Fonts des polices libres (hors liste) utilisées par le thème, ou null s'il n'y en a pas.
+ * Feuille séparée : un nom de police inconnu de Google ne doit pas empêcher le chargement des autres polices.
+ */
+export function customFontsHref(ids: (string | undefined)[]): string | null {
+  const families = [...new Set(ids.map(customFamilyOf).filter(Boolean))];
+  if (!families.length) return null;
+  return 'https://fonts.googleapis.com/css2?' + families.map(f => 'family=' + f.replace(/ /g, '+') + ':wght@300;400;500;600;700').join('&') + '&display=swap';
 }
 
 export const DEFAULT_PRESET = 'forest';
