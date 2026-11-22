@@ -2,6 +2,8 @@
 
 import React, { useCallback, useEffect, useState } from 'react'
 import CustomSectionsEditor from '@/components/cms/CustomSectionsEditor'
+import CustomPagePreview from '@/components/cms/CustomPagePreview'
+import { PAGE_TEMPLATES, pageFromTemplate, placeholders } from '@/lib/page-templates'
 import { parseBlocks, serializeBlocks } from '@/lib/custom-sections'
 import { uploadImage } from '@/lib/upload-client'
 import { DEFAULT_NAV, NAV_UPDATED_EVENT, type NavItem } from '@/hooks/useCmsNavigation'
@@ -45,6 +47,8 @@ export default function CustomPagesManager() {
   const [saved, setSaved] = useState(false)
   const [error, setError] = useState<string | null>(null)
   const [uploading, setUploading] = useState(false)
+  const [choosing, setChoosing] = useState(false)
+  const [preview, setPreview] = useState(true)
   // Tant que Monica n'a pas touché l'adresse, elle suit le nom de la page
   const [slugEdited, setSlugEdited] = useState(false)
   // Menu du site : permet « Ajouter au menu » en un clic (null = pas encore lu)
@@ -134,14 +138,20 @@ export default function CustomPagesManager() {
     setSlugEdited(true)
   }
 
+  // « Nouvelle page » ouvre le choix d'un modèle ; la page est créée à partir du modèle choisi
   const addPage = () => {
     if (dirty && !confirm('Des modifications ne sont pas enregistrées. Créer une page les abandonne. Continuer ?')) return
-    const created = blankPage(pages)
+    setChoosing(true)
+  }
+
+  const createFromTemplate = (templateId: string) => {
+    const created = pageFromTemplate(pages, templateId)
     setPages(p => [...p, created])
     setEditing({ ...created })
     setDirty(true)
     setSaved(false)
     setSlugEdited(false)
+    setChoosing(false)
   }
 
   const del = (page: CustomPage) => {
@@ -242,15 +252,34 @@ export default function CustomPagesManager() {
         onglet <strong>🧭 Menu</strong> → <strong>➕ Ajouter un lien</strong> → adresse <code>/p/votre-adresse</code>.
       </p>
 
-      {pages.length === 0 ? (
+      {choosing && (
+        <div role="dialog" aria-label="Choisir un modèle de page" style={{ background: 'white', borderRadius: '1rem', padding: '1.25rem 1.5rem', boxShadow: '0 1px 4px rgba(0,0,0,.08)', marginBottom: '1.25rem', border: '1.5px solid #d7e5e0' }}>
+          <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '.75rem' }}>
+            <p style={{ margin: 0, fontWeight: 700, color: '#2d5f54' }}>Par quoi commencer ?</p>
+            <button type="button" onClick={() => setChoosing(false)} style={smallBtn}>Annuler</button>
+          </div>
+          <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fill, minmax(210px, 1fr))', gap: '.75rem' }}>
+            {PAGE_TEMPLATES.map(t => (
+              <button key={t.id} type="button" onClick={() => createFromTemplate(t.id)}
+                style={{ textAlign: 'left', cursor: 'pointer', padding: '.9rem 1rem', borderRadius: '.75rem', background: '#faf9f7', border: '1.5px solid #e5e7eb' }}>
+                <span style={{ display: 'block', fontWeight: 700, color: '#1e3a34', fontSize: '.95rem' }}>{t.emoji} {t.label}</span>
+                <span style={{ display: 'block', fontSize: '.78rem', color: '#666', lineHeight: 1.45, marginTop: '.25rem' }}>{t.description}</span>
+              </button>
+            ))}
+          </div>
+          <p style={{ margin: '.75rem 0 0', fontSize: '.78rem', color: '#888' }}>La page est créée hors ligne : les passages [entre crochets] sont à remplacer avant de la mettre en ligne.</p>
+        </div>
+      )}
+
+      {pages.length === 0 ? (choosing ? null : (
         <div style={{ textAlign: 'center', padding: '3rem 1rem', background: '#faf8f5', border: '1.5px dashed #e0dbd5', borderRadius: '.75rem' }}>
           <p style={{ margin: 0, fontWeight: 600, color: '#44403c' }}>Aucune page libre pour le moment.</p>
           <p style={{ margin: '.35rem 0 1rem', fontSize: '.85rem', color: '#7a7a7a' }}>
             Cliquez sur « ➕ Nouvelle page » pour en créer une : titre, texte, blocs, photos.
           </p>
         </div>
-      ) : (
-        <div style={{ display: 'grid', gridTemplateColumns: '230px 1fr', gap: '1.5rem', alignItems: 'start' }}>
+      )) : (
+        <div style={{ display: 'grid', gridTemplateColumns: editing && preview ? '230px minmax(0, 1fr) minmax(0, 1fr)' : '230px 1fr', gap: '1.5rem', alignItems: 'start' }}>
           {/* Liste */}
           <div style={{ background: 'white', borderRadius: '1rem', padding: '1rem', boxShadow: '0 1px 4px rgba(0,0,0,.06)' }}>
             <p style={{ fontSize: '.75rem', fontWeight: 700, color: '#aaa', textTransform: 'uppercase', letterSpacing: '.08em', margin: '0 .5rem .75rem' }}>Pages créées</p>
@@ -275,13 +304,29 @@ export default function CustomPagesManager() {
           {/* Éditeur */}
           {editing && (
             <div style={{ background: 'white', borderRadius: '1rem', padding: '1.75rem', boxShadow: '0 1px 4px rgba(0,0,0,.06)' }}>
+              <div style={{ display: 'flex', justifyContent: 'flex-end', marginBottom: '.5rem' }}>
+                <button type="button" onClick={() => setPreview(v => !v)} aria-pressed={preview} style={smallBtn}>{preview ? '🙈 Masquer l’aperçu' : '👁 Aperçu en direct'}</button>
+              </div>
+              {(() => {
+                const todo = placeholders(editing)
+                if (!todo.length) return null
+                return (
+                  <p role="status" style={{ margin: '0 0 1rem', padding: '.6rem .9rem', background: '#fff8e1', border: '1px solid #f0c040', borderRadius: '.5rem', fontSize: '.82rem', color: '#7a5c00', lineHeight: 1.5 }}>
+                    ✏️ {todo.length} passage{todo.length > 1 ? 's' : ''} [entre crochets] à remplacer avant de mettre la page en ligne : <em>{todo.slice(0, 3).join(' · ')}{todo.length > 3 ? ' …' : ''}</em>
+                  </p>
+                )
+              })()}
               <div style={{ display: 'flex', justifyContent: 'space-between', gap: '.75rem', flexWrap: 'wrap', alignItems: 'center', marginBottom: '1.25rem' }}>
                 <div style={{ display: 'flex', alignItems: 'center', gap: '.6rem' }}>
                   <button
                     type="button"
                     role="switch"
                     aria-checked={editing.published}
-                    onClick={() => patch({ published: !editing.published })}
+                    onClick={() => {
+                      const left = placeholders(editing).length
+                      if (!editing.published && left && !confirm(`Il reste ${left} passage${left > 1 ? 's' : ''} [entre crochets] dans cette page : les visiteurs les verraient tels quels.\n\nMettre quand même la page en ligne ?`)) return
+                      patch({ published: !editing.published })
+                    }}
                     style={{ width: 50, height: 28, borderRadius: 9999, border: 'none', cursor: 'pointer', background: editing.published ? '#16a34a' : '#d1d5db', position: 'relative', transition: 'background .2s' }}
                     title={editing.published ? 'Cliquer pour mettre la page hors ligne' : 'Cliquer pour mettre la page en ligne'}
                   >
@@ -403,6 +448,13 @@ export default function CustomPagesManager() {
                   {saving ? '⏳ Enregistrement…' : '💾 Enregistrer'}
                 </button>
               </div>
+            </div>
+          )}
+
+          {/* Aperçu en direct */}
+          {editing && preview && (
+            <div style={{ position: 'sticky', top: 90 }}>
+              <CustomPagePreview page={editing} />
             </div>
           )}
         </div>
