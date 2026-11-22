@@ -31,6 +31,7 @@ import SeoHealth from '@/components/cms/SeoHealth';
 import VisibilityTab from '@/components/cms/admin/VisibilityTab';
 import ConnectionsTab from '@/components/cms/admin/ConnectionsTab';
 import { articleStatus, formatSchedule, fromDatetimeLocal, toDatetimeLocal } from '@/lib/article-schedule';
+import RedirectsTab from '@/components/cms/admin/RedirectsTab';
 import ArticleTemplatePanel from '@/components/cms/admin/ArticleTemplatePanel';
 import { TAB_GROUPS, groupCount, groupForTab, tabsOfGroup } from '@/lib/admin-tab-groups';
 import { actionableCount, auditSeo, type SeoIssue } from '@/lib/seo-audit';
@@ -1072,6 +1073,7 @@ export default function CMSAdmin() {
     { id: 'questionnaires', label: '📋 Questionnaires', count: null },
     { id: 'ia', label: '🤖 IA', count: null },
     { id: 'connexions', label: '🔌 Connexions', count: null },
+    { id: 'redirections', label: '↪️ Redirections', count: null },
     { id: 'media',    label: '🖼️ Médiathèque', count: null },
     { id: 'booking',  label: '📅 Réservations', count: null },
     { id: 'messages', label: '💬 Messages', count: unreadVisitorCount(messages) || null },
@@ -1678,6 +1680,7 @@ export default function CMSAdmin() {
         {tab === 'visibilite' && <VisibilityTab onGoto={setTab} />}
         {tab === 'aide' && <HelpTab onGoto={handleTabChange} tabLabel={id => (TABS.find(t => t.id === id)?.label ?? id).replace(/^[^\p{L}\p{N}]+/u, '')} />}
         {tab === 'connexions' && <ConnectionsTab />}
+        {tab === 'redirections' && <RedirectsTab />}
         {tab === 'stats-google' && <SearchConsoleStats />}
 
         {tab === 'pages' && (
