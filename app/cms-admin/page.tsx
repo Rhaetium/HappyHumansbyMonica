@@ -47,6 +47,8 @@ import BookingTab from '@/components/cms/admin/BookingTab';
 import { SectionsEditor, ListEditor } from '@/components/cms/admin/StructureEditors';
 import { SEO_TITLE_IDEAL, SEO_DESCRIPTION_IDEAL, SeoLengthHint } from '@/components/cms/admin/SeoLengthHint';
 import { PageHistoryPanel } from '@/components/cms/admin/PageHistoryPanel';
+import CommandPalette from '@/components/cms/admin/CommandPalette';
+import { buildCommands, isPaletteShortcut, type Command } from '@/lib/command-palette';
 
 // Numéro du dernier message affiché : un message récent n'est pas effacé par le minuteur d'un message plus ancien
 let toastSeq = 0;
@@ -887,6 +889,17 @@ export default function CMSAdmin() {
     // eslint-disable-next-line react-hooks/exhaustive-deps -- saveDraft/saveSettings recréées à chaque rendu, le listener doit rester frais
   }, [isDirty, savingSettings, tab, activePage]);
 
+  // ── Palette de commandes : Ctrl/Cmd + K ──
+  const [paletteOpen, setPaletteOpen] = useState(false);
+  useEffect(() => {
+    if (!authed) return;
+    const onKey = (e: KeyboardEvent) => {
+      if (isPaletteShortcut(e)) { e.preventDefault(); setPaletteOpen(o => !o); }
+    };
+    window.addEventListener('keydown', onKey);
+    return () => window.removeEventListener('keydown', onKey);
+  }, [authed]);
+
   // Save article
   const saveArticle = useCallback(async () => {
     if (!editingArticle) return;
@@ -1064,6 +1077,27 @@ export default function CMSAdmin() {
 
   return (
     <div style={{ minHeight: '100vh', background: '#f5f3ef', fontFamily: 'system-ui, sans-serif' }}>
+      {paletteOpen && (
+        <CommandPalette
+          commands={buildCommands({
+            tabs: TABS.map(t => ({ id: t.id, label: t.label })),
+            pages: Object.entries(PAGES_CONFIG).map(([id, cfg]) => ({ id, label: `${cfg.emoji} ${cfg.label}` })),
+            articles: articles.map(a => ({ id: a.id, title: a.title, published: a.published })),
+            fields: contentIndex,
+          }, { canSave: isDirty && ['pages', 'settings', 'fil-ariane'].includes(tab) })}
+          onClose={() => setPaletteOpen(false)}
+          onRun={(c: Command) => {
+            setPaletteOpen(false);
+            const a = c.action;
+            if (a.type === 'tab') handleTabChange(a.tab);
+            else if (a.type === 'page') openContentPage(a.page);
+            else if (a.type === 'field') { const f = contentIndex.find(x => x.page === a.page && x.key === a.key); if (f) openContentField(f); else openContentPage(a.page); }
+            else if (a.type === 'article') { const art = articles.find(x => x.id === a.id); if (art) openArticleEditor(art); }
+            else if (a.type === 'newArticle') openArticleEditor({});
+            else if (a.type === 'save') { if (tab === 'pages') void saveDraft(activePage); else if (tab === 'fil-ariane') void saveDraft('fil-ariane'); else if (tab === 'settings') void saveSettings(); }
+          }}
+        />
+      )}
       {/* Header */}
       <div style={{ background: '#2d5f54', color: 'white', padding: '1rem 2rem', display: 'flex', alignItems: 'center', justifyContent: 'space-between', position: 'sticky', top: 0, zIndex: 50, boxShadow: '0 2px 12px rgba(0,0,0,.15)' }}>
         <div style={{ display: 'flex', alignItems: 'center', gap: '.75rem' }}>
@@ -1085,6 +1119,10 @@ export default function CMSAdmin() {
             title="Ouvrir le site en mode édition inline"
           >
             ✏️ Éditer le site
+          </button>
+          <button onClick={() => setPaletteOpen(true)} title="Aller à une page, un article, un texte… (Ctrl + K)"
+            style={{ background: 'rgba(255,255,255,.12)', border: '1px solid rgba(255,255,255,.3)', color: 'white', padding: '.4rem .9rem', borderRadius: '.4rem', cursor: 'pointer', fontSize: '.85rem', display: 'flex', alignItems: 'center', gap: '.5rem' }}>
+            🔍 Rechercher <kbd style={{ fontSize: '.7rem', background: 'rgba(255,255,255,.2)', borderRadius: '.25rem', padding: '0 .35rem' }}>Ctrl K</kbd>
           </button>
           <button onClick={logout} style={{ background: 'rgba(255,255,255,.15)', border: 'none', color: 'white', padding: '.4rem .9rem', borderRadius: '.4rem', cursor: 'pointer', fontSize: '.85rem' }}>Déconnexion</button>
         </div>
