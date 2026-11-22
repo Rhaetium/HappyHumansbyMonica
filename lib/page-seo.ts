@@ -53,7 +53,7 @@ export async function pageMetadata(
   // Le gabarit du site ajoute « | Happy Humans » : on retire une marque déjà présente en fin de titre (pas de doublon)
   const title = stripBrandSuffix(rows.seo_title || defaults.seo_title)
   const description = rows.seo_description || defaults.seo_description
-  const image = rows.seo_image || defaults.seo_image || kv.og_image || '/og-default.jpg'
+  const image = rows.seo_image || defaults.seo_image || kv.og_image || '/og-happy-humans.jpg'
   const path = pagePath(page)
   const socialTitle = `${title} | ${BRAND_NAME}`
 
