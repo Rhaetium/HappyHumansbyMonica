@@ -45,6 +45,8 @@ import ArticlesTab from '@/components/cms/admin/ArticlesTab';
 import DashboardTab from '@/components/cms/admin/DashboardTab';
 import SettingsTab from '@/components/cms/admin/SettingsTab';
 import MessagesTab from '@/components/cms/admin/MessagesTab';
+import { useBookingAdmin } from '@/hooks/useBookingAdmin';
+import { useMessagesAdmin } from '@/hooks/useMessagesAdmin';
 import BookingTab from '@/components/cms/admin/BookingTab';
 import { SectionsEditor, ListEditor } from '@/components/cms/admin/StructureEditors';
 import { SEO_TITLE_IDEAL, SEO_DESCRIPTION_IDEAL, SeoLengthHint } from '@/components/cms/admin/SeoLengthHint';
@@ -92,18 +94,6 @@ export default function CMSAdmin() {
   const [mediaPickerTarget, setMediaPickerTarget] = useState<string | null>(null);
   const [articleBaseline, setArticleBaseline] = useState(() => getArticleDraftSignature(null));
   const [showArticlePreview, setShowArticlePreview] = useState(false);
-
-  // Messages contact
-  const [messages, setMessages] = useState<ContactMessage[]>([]);
-  const [messageFilter, setMessageFilter] = useState<MessageFilter>('all');
-  const [loadingMessages, setLoadingMessages] = useState(false);
-
-  // Booking (créneaux + demandes de réservation)
-  const [bookingSlots, setBookingSlots] = useState<BookingSlot[]>([]);
-  const [bookingRequests, setBookingRequests] = useState<BookingRequest[]>([]);
-  const [loadingSlots, setLoadingSlots] = useState(false);
-  const [savingSlot, setSavingSlot] = useState(false);
-  const [newSlot, setNewSlot] = useState({ date: '', time: '10:00', type: 'coaching', notes: '' });
 
   // Paramètres + Contenu pages
   const [settings, setSettings] = useState<Setting[]>([]);
@@ -209,6 +199,11 @@ export default function CMSAdmin() {
     showToast(message);
     return true;
   }, [showToast]);
+
+  // Réservations et messages : logique dans hooks/ (chargement à l'ouverture de l'onglet)
+  const onMessagesUnauthorized = useCallback(() => setAuthed(false), []);
+  const { bookingSlots, bookingRequests, loadingSlots, savingSlot, newSlot, setNewSlot, loadBookingSlots, saveNewSlot, deleteSlot, updateRequestStatus } = useBookingAdmin({ active: authed && tab === 'booking', showToast, handleUnauthorized });
+  const { messages, setMessages, messageFilter, setMessageFilter, loadingMessages, loadMessages } = useMessagesAdmin({ active: authed && (tab === 'messages' || tab === 'dashboard'), showToast, onUnauthorized: onMessagesUnauthorized });
 
   const resetArticleEditor = useCallback((nextTab = 'articles') => {
     setEditingArticle(null);
@@ -367,86 +362,6 @@ export default function CMSAdmin() {
     }
   }, [handleUnauthorized, search, showToast, statusFilter]);
 
-  // Load booking slots
-  const loadBookingSlots = useCallback(async () => {
-    setLoadingSlots(true);
-    try {
-      const res = await fetch('/api/cms/booking-slots');
-      if (handleUnauthorized(res)) return;
-      const data = await res.json();
-      setBookingSlots(data.slots || []);
-    } catch {
-      showToast('Impossible de charger les créneaux.');
-    } finally {
-      setLoadingSlots(false);
-    }
-  }, [handleUnauthorized, showToast]);
-
-  // Load booking requests
-  const loadBookingRequests = useCallback(async () => {
-    try {
-      const res = await fetch('/api/cms/booking-requests');
-      if (handleUnauthorized(res)) return;
-      const data = await res.json();
-      setBookingRequests(data.requests || []);
-    } catch {
-      showToast('Impossible de charger les demandes.');
-    }
-  }, [handleUnauthorized, showToast]);
-
-  // Save new slot
-  const saveNewSlot = async () => {
-    if (!newSlot.date || !newSlot.time) {
-      showToast("Veuillez remplir la date et l'heure");
-      return;
-    }
-    setSavingSlot(true);
-    try {
-      const res = await fetch('/api/cms/booking-slots', {
-        method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify(newSlot),
-      });
-      if (handleUnauthorized(res)) return;
-      showToast('Créneau ajouté');
-      setNewSlot({ date: '', time: '10:00', type: 'coaching', notes: '' });
-      loadBookingSlots();
-    } catch {
-      showToast("Erreur: Impossible d'ajouter");
-    } finally {
-      setSavingSlot(false);
-    }
-  };
-
-  // Delete slot
-  const deleteSlot = async (id: string) => {
-    if (!confirm('Supprimer ce créneau ?')) return;
-    try {
-      const res = await fetch(`/api/cms/booking-slots/${id}`, { method: 'DELETE' });
-      if (handleUnauthorized(res)) return;
-      showToast('Créneau supprimé');
-      loadBookingSlots();
-    } catch {
-      showToast('Erreur: Impossible de supprimer');
-    }
-  };
-
-  // Update request status
-  const updateRequestStatus = async (id: string, status: string) => {
-    try {
-      const res = await fetch(`/api/cms/booking-requests/${id}`, {
-        method: 'PATCH',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ status }),
-      });
-      if (handleUnauthorized(res)) return;
-      showToast('Statut mis à jour');
-      loadBookingRequests();
-    } catch {
-      showToast('Erreur: Impossible de mettre à jour');
-    }
-  };
-
   // Load settings + content
   const loadSettings = useCallback(async () => {
     setLoadingSettings(true);
@@ -490,26 +405,11 @@ export default function CMSAdmin() {
     }
   }, [handleUnauthorized, showToast]);
 
-  const loadMessages = useCallback(async () => {
-    setLoadingMessages(true);
-    try {
-      const res = await fetch('/api/cms/contact-messages');
-      if (res.status === 401) { setAuthed(false); return; }
-      const d = await res.json();
-      setMessages(d.messages || []);
-    } catch { showToast('Impossible de charger les messages.'); }
-    finally { setLoadingMessages(false); }
-  }, [showToast]);
-
   // Chargements par onglet : patterns de fetch standards (setState via callbacks async).
   // eslint-disable-next-line react-hooks/set-state-in-effect -- chargements cursor/onglet depuis l'API
   useEffect(() => { if (authed) loadArticles(); }, [authed, loadArticles]);
   // eslint-disable-next-line react-hooks/set-state-in-effect -- chargements cursor/onglet depuis l'API
-  useEffect(() => { if (authed && tab === 'booking') { loadBookingSlots(); loadBookingRequests(); } }, [authed, tab, loadBookingSlots, loadBookingRequests]);
-  // eslint-disable-next-line react-hooks/set-state-in-effect -- chargements cursor/onglet depuis l'API
   useEffect(() => { if (authed && (tab === 'settings' || tab === 'pages' || tab === 'fil-ariane' || tab === 'contenu' || tab === 'seo')) loadSettings(); }, [authed, tab, loadSettings]);
-  // eslint-disable-next-line react-hooks/set-state-in-effect -- chargements cursor/onglet depuis l'API
-  useEffect(() => { if (authed && (tab === 'messages' || tab === 'dashboard')) loadMessages(); }, [authed, tab, loadMessages]);
 
   // ── Rafraîchir l'aperçu après une sauvegarde réussie ──────
   useEffect(() => {
