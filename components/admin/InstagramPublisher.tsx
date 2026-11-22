@@ -40,7 +40,7 @@ export default function InstagramPublisher({ onSuccess }: InstagramPostFormProps
         setError('No photos found. Try a different search.');
       }
     } catch (err) {
-      setError('Search failed. Try again.');
+      setError(err instanceof Error ? err.message : 'Recherche impossible. Réessayez.');
     } finally {
       setIsSearching(false);
     }

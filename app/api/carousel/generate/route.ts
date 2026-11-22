@@ -3,6 +3,7 @@ import { requireCmsAuth } from '@/lib/cms-auth'
 import { generateText, AiError } from '@/lib/ai-text'
 import { CAROUSEL_SYSTEM, buildCarouselPrompt, parseCarouselResponse } from '@/lib/content-ai'
 import { loadConnectionEnv } from '@/lib/connections'
+import { searchUnsplashPhotos } from '@/lib/unsplash-server'
 
 export const dynamic = 'force-dynamic'
 export const maxDuration = 120
@@ -35,18 +36,7 @@ export async function POST(request: NextRequest) {
 }
 
 async function searchUnsplash(query: string): Promise<string[]> {
-  const key = (await loadConnectionEnv()).NEXT_PUBLIC_UNSPLASH_ACCESS_KEY?.trim()
-  if (!key) return []
-  try {
-    const res = await fetch(
-      `https://api.unsplash.com/search/photos?query=${encodeURIComponent(query)}&per_page=5&orientation=portrait`,
-      { headers: { Authorization: `Client-ID ${key}` } },
-    )
-    if (!res.ok) return []
-    const data = (await res.json()) as { results?: { urls?: { regular?: string } }[] }
-    return (data.results ?? []).map(r => r.urls?.regular).filter((u): u is string => !!u)
-  } catch (e) {
-    console.error('Unsplash error', e)
-    return []
-  }
+  const key = (await loadConnectionEnv()).NEXT_PUBLIC_UNSPLASH_ACCESS_KEY
+  const photos = await searchUnsplashPhotos(key, query, 5)
+  return photos.map(p => p.urls?.regular).filter((u): u is string => !!u)
 }

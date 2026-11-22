@@ -1,84 +1,31 @@
 /**
- * Unsplash API Integration for Free Stock Photos
- * 
- * Use your Unsplash credentials:
- * - Application ID: 921608
- * - Access Key: VKxcQvLNtFlLcgTxXW5YjnsQng4mu-WyIjyNHvLYsWA
+ * Photos Unsplash côté navigateur (admin : publication Instagram, carrousels).
+ * Aucune clé ici : la recherche passe par /api/cms/unsplash, qui lit la clé enregistrée dans les Connexions du CMS.
  */
 
-export const UNSPLASH_CONFIG = {
-  applicationId: '921608',
-  accessKey: 'VKxcQvLNtFlLcgTxXW5YjnsQng4mu-WyIjyNHvLYsWA',
-  secretKey: 'b8b0mVr_GrMJXdB8ddQTSma5Cf2zo-EHXBFAosljpVQ',
-};
+export type { UnsplashPhoto } from '@/lib/unsplash-server'
+import type { UnsplashPhoto } from '@/lib/unsplash-server'
 
-export interface UnsplashPhoto {
-  id: string;
-  urls: {
-    raw: string;
-    full: string;
-    regular: string;
-    small: string;
-    thumb: string;
-  };
-  alt_description: string;
-  description: string;
-  user: {
-    name: string;
-    username: string;
-  };
-  likes: number;
-}
-
-const UNSPLASH_API = 'https://api.unsplash.com';
-
-/**
- * Search Unsplash photos by query
- */
+/** Photos pour une recherche. Lève une erreur lisible si la clé Unsplash n'est pas enregistrée ou si la session a expiré. */
 export async function searchUnsplash(query: string, perPage = 10): Promise<UnsplashPhoto[]> {
-  const { accessKey } = UNSPLASH_CONFIG;
-  
-  try {
-    const response = await fetch(
-      `${UNSPLASH_API}/search/photos?query=${encodeURIComponent(query)}&per_page=${perPage}&orientation=portrait`,
-      {
-        headers: {
-          'Authorization': `Client-ID ${accessKey}`,
-        },
-      }
-    );
-
-    if (!response.ok) {
-      throw new Error('Unsplash API error');
-    }
-
-    const data = await response.json();
-    return data.results || [];
-  } catch (error) {
-    console.error('Unsplash search error:', error);
-    return [];
-  }
+  const res = await fetch(`/api/cms/unsplash?query=${encodeURIComponent(query)}&per_page=${perPage}`, { cache: 'no-store' })
+  const data = (await res.json().catch(() => ({}))) as { results?: UnsplashPhoto[]; configured?: boolean; error?: string }
+  if (!res.ok) throw new Error(data.error || 'Recherche impossible.')
+  if (data.configured === false) throw new Error(data.error || 'Aucune clé Unsplash enregistrée.')
+  return data.results ?? []
 }
 
-/**
- * Get a random photo for a topic
- */
+/** Photo au hasard pour un sujet. */
 export async function getRandomPhoto(topic: string): Promise<UnsplashPhoto | null> {
-  const photos = await searchUnsplash(topic, 1);
-  return photos[0] || null;
+  return (await searchUnsplash(topic, 1))[0] ?? null
 }
 
-/**
- * Format photo URL for Instagram (needs high quality)
- */
+/** Adresse de l'image pour Instagram (la taille « regular » suffit). */
 export function getInstagramUrl(photo: UnsplashPhoto): string {
-  // regular size is good for Instagram
-  return photo.urls.regular;
+  return photo.urls.regular
 }
 
-/**
- * Get photographer credit for caption
- */
+/** Crédit du photographe pour la légende. */
 export function getCredit(photo: UnsplashPhoto): string {
-  return `Photo by ${photo.user.name} @${photo.user.username}`;
+  return `Photo by ${photo.user.name} @${photo.user.username}`
 }
