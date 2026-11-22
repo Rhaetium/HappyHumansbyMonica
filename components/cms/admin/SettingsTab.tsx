@@ -2,8 +2,8 @@
 
 import SiteLogo, { logoPx, resolveLogo } from '@/components/SiteLogo';
 import { THEMES } from '@/components/DynamicTheme';
-import { FONT_CHOICES } from '@/lib/themes';
 import { THEME_PACKS, DEFAULT_PACK_ID } from '@/lib/theme-packs';
+import TypographyPanel from '@/components/cms/admin/TypographyPanel';
 import { SEARCH_CONSOLE_PROPERTY_DEFAULT } from '@/lib/search-console';
 import { lbl, inp } from '@/components/cms/admin/styles';
 import { BRANDING_PANEL_KEYS, SETTINGS_GROUPS } from '@/components/cms/admin/config';
@@ -186,6 +186,7 @@ export default function SettingsTab({ loadingSettings, settingsGroup, setSetting
                           );
                         })}
                       </div>
+                      <TypographyPanel settings={editedSettings} onChange={(k, v) => setEditedSettings(p => ({ ...p, [k]: v }))} />
                       {/* ── PACK D'ILLUSTRATIONS ── */}
                       <div style={{ marginBottom: '1.5rem' }}>
                         <label style={lbl}>Pack d'illustrations (galerie des 7 outils, lead magnet…)</label>
@@ -237,25 +238,6 @@ export default function SettingsTab({ loadingSettings, settingsGroup, setSetting
                         })} style={{ marginTop: '1rem', padding: '.4rem .9rem', background: '#f5f0eb', border: 'none', borderRadius: '.4rem', cursor: 'pointer', fontSize: '.8rem', color: '#666' }}>
                           Réinitialiser les couleurs personnalisées
                         </button>
-                        <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '1rem', marginTop: '1.25rem' }}>
-                          {[
-                            { key: 'theme_font_heading', label: 'Police des titres' },
-                            { key: 'theme_font_body', label: 'Police du texte courant' },
-                          ].map(({ key, label }) => (
-                            <div key={key}>
-                              <label style={lbl}>{label}</label>
-                              <select value={editedSettings[key] || ''}
-                                onChange={e => setEditedSettings(p => ({ ...p, [key]: e.target.value }))}
-                                style={inp}>
-                                <option value="">— Police du preset —</option>
-                                {FONT_CHOICES.map(f => (
-                                  <option key={f.id} value={f.id}>{f.label}</option>
-                                ))}
-                              </select>
-                            </div>
-                          ))}
-                        </div>
-
                       {/* Position du logo */}
                       <div style={{ marginBottom: '1.25rem' }}>
                         <label style={lbl}>Position dans le header</label>

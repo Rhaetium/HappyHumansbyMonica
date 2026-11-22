@@ -2,6 +2,7 @@
 import { useEffect } from 'react';
 import { createClient } from '@supabase/supabase-js';
 import { THEMES, buildThemeCSS, resolveTheme } from '@/lib/themes';
+import { TYPO_SETTING_KEYS, buildTypographyCSS, resolveTypography } from '@/lib/typography';
 
 // Re-export pour l'admin (app/cms-admin/page.tsx : THEME PICKER).
 // SOURCE UNIQUE des presets : lib/themes.ts.
@@ -16,7 +17,7 @@ export default function DynamicTheme() {
     createClient(url, key)
       .from('cms_settings_kv')
       .select('key, value')
-      .in('key', ['theme_preset', 'theme_primary', 'theme_dark', 'theme_light', 'theme_accent', 'theme_bg', 'theme_bg_card', 'theme_text', 'theme_font_heading', 'theme_font_body', 'favicon_url'])
+      .in('key', ['theme_preset', 'theme_primary', 'theme_dark', 'theme_light', 'theme_accent', 'theme_bg', 'theme_bg_card', 'theme_text', ...TYPO_SETTING_KEYS, 'favicon_url'])
       .then(({ data }) => {
         if (!data) return;
 
@@ -32,6 +33,7 @@ export default function DynamicTheme() {
         }
 
         // Thème (même résolution que le SSR : preset + surcharges)
+        const typo = resolveTypography(settings);
         const { id, tokens } = resolveTheme(settings.theme_preset, {
           primary: settings.theme_primary,
           dark: settings.theme_dark,
@@ -40,8 +42,8 @@ export default function DynamicTheme() {
           bg: settings.theme_bg,
           bgCard: settings.theme_bg_card,
           text: settings.theme_text,
-          fontHeading: settings.theme_font_heading,
-          fontBody: settings.theme_font_body,
+          fontHeading: typo.settings.fontHeading,
+          fontBody: typo.settings.fontBody,
         });
         document.documentElement.setAttribute('data-theme', id);
 
@@ -51,7 +53,7 @@ export default function DynamicTheme() {
           styleEl.id = 'hh-dynamic-theme';
           document.head.appendChild(styleEl);
         }
-        styleEl.textContent = buildThemeCSS(tokens);
+        styleEl.textContent = buildThemeCSS(tokens) + '\n' + buildTypographyCSS(typo.settings);
       });
   }, []);
 

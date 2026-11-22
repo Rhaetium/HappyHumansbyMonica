@@ -22,7 +22,8 @@ import {
 import { extractVerificationToken } from '@/lib/search-console';
 import { SITE_URL } from '@/lib/site-url';
 import { resolveFromEnvironment } from '@/lib/analytics-ids';
-import { buildThemeCSS, resolveTheme, googleFontsHref } from '@/lib/themes';
+import { buildThemeCSS, customFontsHref, resolveTheme, googleFontsHref } from '@/lib/themes';
+import { buildTypographyCSS, resolveTypography } from '@/lib/typography';
 import DuotoneFilter from '@/components/DuotoneFilter';
 import GoogleTagManager from '@/components/GoogleTagManager';
 import CmsServerContent from '@/components/CmsServerContent';
@@ -239,15 +240,17 @@ export default async function RootLayout({
   const analyticsIds = resolveFromEnvironment(kv, process.env);
   // Thème SSR : preset + surcharges publiés, injectés dans <head> (zéro flash).
   // Sans Supabase : repli sur le preset par défaut (forest).
+  const typo = resolveTypography(kv);
   const { id: themeId, tokens: themeTokens } = resolveTheme(kv.theme_preset, {
     primary: kv.theme_primary, dark: kv.theme_dark, light: kv.theme_light,
     accent: kv.theme_accent, bg: kv.theme_bg, bgCard: kv.theme_bg_card, text: kv.theme_text,
-    fontHeading: kv.theme_font_heading, fontBody: kv.theme_font_body,
+    fontHeading: typo.settings.fontHeading, fontBody: typo.settings.fontBody,
   });
+  const customFonts = customFontsHref([typo.settings.fontHeading, typo.settings.fontBody]);
   return (
     <html lang="fr" data-theme={themeId}>
       <head>
-        <style id="hh-theme-ssr" dangerouslySetInnerHTML={{ __html: buildThemeCSS(themeTokens) }} />
+        <style id="hh-theme-ssr" dangerouslySetInnerHTML={{ __html: buildThemeCSS(themeTokens) + '\n' + buildTypographyCSS(typo.settings) }} />
         <link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 44 44'%3E%3Cdefs%3E%3ClinearGradient id='g' x1='0%25' y1='0%25' x2='100%25' y2='100%25'%3E%3Cstop offset='0%25' stop-color='%232d5f54'/%3E%3Cstop offset='100%25' stop-color='%233d7a72'/%3E%3C/linearGradient%3E%3C/defs%3E%3Ccircle cx='22' cy='22' r='20' fill='url(%23g)'/%3E%3Cg stroke='white' stroke-width='1.5' fill='none' stroke-linecap='round' stroke-linejoin='round'%3E%3Crect x='11' y='13' width='22' height='20' rx='3'/%3E%3Cline x1='11' y1='19' x2='33' y2='19'/%3E%3Cline x1='16' y1='9' x2='16' y2='15'/%3E%3Cline x1='28' y1='9' x2='28' y2='15'/%3E%3Cpath d='M17 26L20 29L27 22' stroke-width='2'/%3E%3C/g%3E%3C/svg%3E" />
         <link rel="apple-touch-icon" href="/apple-touch-icon.png" />
         <link rel="preconnect" href="https://images.unsplash.com" />
@@ -256,10 +259,11 @@ export default async function RootLayout({
         {/* Polices Google : feuille chargée sans bloquer l'affichage (media="print" puis "all" une fois reçue).
             Le texte s'affiche tout de suite avec la police de secours (display=swap), puis bascule. Sans JavaScript, <noscript> la charge normalement. */}
         <link href={googleFontsHref(themeTokens)} rel="stylesheet" media="print" data-hh-fonts="" suppressHydrationWarning />
+        {customFonts && <link href={customFonts} rel="stylesheet" media="print" data-hh-fonts="" suppressHydrationWarning />}
         <script
           dangerouslySetInnerHTML={{
             __html:
-              "(function(){var l=document.querySelector('link[data-hh-fonts]');if(!l)return;function a(){l.media='all'}if(l.sheet){a()}else{l.addEventListener('load',a);setTimeout(a,3000)}})()",
+              "(function(){document.querySelectorAll('link[data-hh-fonts]').forEach(function(l){function a(){l.media='all'}if(l.sheet){a()}else{l.addEventListener('load',a);setTimeout(a,3000)}})})()",
           }}
         />
         <noscript>
