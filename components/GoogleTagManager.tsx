@@ -35,7 +35,6 @@ export default function GoogleTagManager({ gtmId, gaId }: { gtmId: string; gaId:
       const w = window as unknown as W
       w.dataLayer = w.dataLayer || []
       w.gtag = function gtag() {
-        // eslint-disable-next-line prefer-rest-params
         w.dataLayer!.push(arguments)
       }
 
