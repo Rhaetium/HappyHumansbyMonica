@@ -10,6 +10,7 @@ export const HOME_DEFAULTS: Record<string, string> = {
   hero_subtitle:        'Executive Coach certifiée AoEC · EMCC Practitioner · Philosophical Counselling',
   hero_cta_primary:     'Séance découverte gratuite',
   hero_cta_contact:     'Me contacter',
+  hero_cta_contact_href: '/contact',
   // Services
   services_badge:       'Accompagnement',
   services_title:       'Comment puis-je vous aider ?',
@@ -73,10 +74,14 @@ export const HOME_DEFAULTS: Record<string, string> = {
   // ── Cartes « Explorez les thématiques » (étaient en dur dans la page) ──
   home_card_coaching_title: "Coaching individuel",
   home_card_coaching_desc: "Clarté, confiance et direction — un accompagnement sur mesure pour managers, dirigeants et personnes en transition.",
+  home_card_coaching_href: '/coaching',
   home_card_organisations_title: "Pour les entreprises",
   home_card_organisations_desc: "Coaching de dirigeants, ateliers de cohésion et accompagnement du changement pour remettre de l'alignement.",
+  home_card_organisations_href: '/entreprises',
   home_card_hd_title: "Happiness Design",
   home_card_hd_desc: "12 séances pour reprendre les rênes de votre bonheur — au boulot et ailleurs. Un programme multidisciplinaire unique.",
+  home_card_hd_href: '/happiness-design',
   home_card_relations_title: "Relations & Attachement",
   home_card_relations_desc: "Comprenez votre style d'attachement et transformez durablement vos relations — personnelles et professionnelles.",
+  home_card_relations_href: '/relations',
 }

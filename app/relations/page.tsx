@@ -392,7 +392,7 @@ export default function RelationsPage() {
           <div className="grid gap-6 md:grid-cols-2">
             <div className="rounded-2xl bg-[color:var(--hh-bg)] p-7">
               <div className="w-10 h-10 rounded-full bg-white flex items-center justify-center mb-4 shadow-sm">
-                <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="#2d5f54" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round"><rect x="2" y="7" width="20" height="14" rx="2"/><path d="M16 7V5a2 2 0 0 0-2-2h-4a2 2 0 0 0-2 2v2"/></svg>
+                <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="var(--hh-primary)" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round"><rect x="2" y="7" width="20" height="14" rx="2"/><path d="M16 7V5a2 2 0 0 0-2-2h-4a2 2 0 0 0-2 2v2"/></svg>
               </div>
               <h3 className="text-base font-semibold text-stone-900 mb-3">{c.get('multiculture_entreprise_title')}</h3>
               <div className="text-sm text-stone-600 space-y-2">
@@ -403,7 +403,7 @@ export default function RelationsPage() {
             </div>
             <div className="rounded-2xl bg-[color:var(--hh-bg)] p-7">
               <div className="w-10 h-10 rounded-full bg-white flex items-center justify-center mb-4 shadow-sm">
-                <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="#2d5f54" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round"><circle cx="12" cy="12" r="10"/><line x1="2" y1="12" x2="22" y2="12"/><path d="M12 2a15.3 15.3 0 0 1 4 10 15.3 15.3 0 0 1-4 10 15.3 15.3 0 0 1-4-10 15.3 15.3 0 0 1 4-10z"/></svg>
+                <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="var(--hh-primary)" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round"><circle cx="12" cy="12" r="10"/><line x1="2" y1="12" x2="22" y2="12"/><path d="M12 2a15.3 15.3 0 0 1 4 10 15.3 15.3 0 0 1-4 10 15.3 15.3 0 0 1-4-10 15.3 15.3 0 0 1 4-10z"/></svg>
               </div>
               <h3 className="text-base font-semibold text-stone-900 mb-3">{c.get('multiculture_mc_title')}</h3>
               <p className="text-sm text-stone-600 leading-relaxed">

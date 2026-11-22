@@ -35,7 +35,7 @@ export default function CoachingPage() {
       desc: p.desc,
       cta: p.cta,
       // « calendly » = agenda de réservation (Paramètres → Réservation) plutôt qu'une adresse figée
-      href: p.href === 'calendly' ? calendlyEventUrl('coaching') : (p.href || '/booking'),
+      href: p.href === 'calendly' ? calendlyEventUrl('coaching') : safeHref(p.href, '/booking'),
       calendly: p.href === 'calendly',
       highlight: p.highlight === 'oui',
     }))

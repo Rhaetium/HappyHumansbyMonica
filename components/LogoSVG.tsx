@@ -24,8 +24,8 @@ export default function LogoSVG({ size = 44, className = '', showGradient = true
       {showGradient && (
         <defs>
           <linearGradient id={gradientId} x1="0%" y1="0%" x2="100%" y2="100%">
-            <stop offset="0%" stopColor="#2d5f54"/>
-            <stop offset="50%" stopColor="#2f6b61"/>
+            <stop offset="0%" stopColor="var(--hh-primary)"/>
+            <stop offset="50%" stopColor="var(--hh-primary)"/>
             <stop offset="100%" stopColor="#3d7a72"/>
           </linearGradient>
         </defs>
@@ -34,7 +34,7 @@ export default function LogoSVG({ size = 44, className = '', showGradient = true
         cx={viewBox / 2} 
         cy={viewBox / 2} 
         r={viewBox / 2 - 2} 
-        fill={showGradient ? `url(#${gradientId})` : '#2d5f54'}
+        fill={showGradient ? `url(#${gradientId})` : 'var(--hh-primary)'}
       />
       
       {/* Calendar icon */}

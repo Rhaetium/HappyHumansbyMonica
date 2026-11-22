@@ -25,9 +25,8 @@ const BRAND: Record<string, string> = {
   '#c9a96e': 'accent', '#e8d5b0': 'accent-light',
 }
 
-// Hors périmètre : admin, API, layout global (valeurs de secours), éditeurs, et les illustrations SVG (logo, filtre duotone)
-// dont les couleurs sont des attributs/valeurs numériques.
-const SKIP_FILE = /(^app\/(cms-admin|api)\/|^app\/layout\.tsx$|^components\/(cms|admin)\/|Editor|MediaLibrary|EditableImage|LogoSVG|DuotoneFilter)/
+// Hors périmètre : admin, API, layout global (valeurs de secours) et éditeurs.
+const SKIP_FILE = /(^app\/(cms-admin|api)\/|^app\/layout\.tsx$|^components\/(cms|admin)\/|Editor|MediaLibrary|EditableImage)/
 
 function walk(dir: string, out: string[] = []): string[] {
   for (const e of fs.readdirSync(dir, { withFileTypes: true })) {
@@ -48,7 +47,6 @@ describe('CMS — les couleurs de la marque suivent le thème', () => {
       fs.readFileSync(file, 'utf8').split('\n').forEach((line, i) => {
         const l = line.trim()
         if (l.startsWith('//') || l.startsWith('*') || l.startsWith('{/*')) return
-        if (/(fill|stroke|stopColor|stop-color)=["']#/.test(l)) return // attribut SVG décoratif
         for (const m of l.matchAll(/(?<![\w#])(#[0-9a-fA-F]{6})(?![0-9a-fA-F\w])/g)) {
           const hex = m[1].toLowerCase()
           if (BRAND[hex]) offenders.push(`${rel}:${i + 1} → ${hex} : utilisez var(--hh-${BRAND[hex]})`)

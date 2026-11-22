@@ -164,6 +164,7 @@ export const LIST_DEFS: Record<string, ListDef> = {
       { key: 'desc', label: 'Description', type: 'textarea' },
       { key: 'items', label: 'Ce qui est inclus', type: 'textarea', lines: true, hint: 'Un élément par ligne.' },
       { key: 'cta', label: 'Bouton', type: 'text' },
+      { key: 'href', label: 'Lien du bouton', type: 'text', noReplace: true, hint: 'Une page du site (/contact, /booking, /coaching…) ou une adresse complète commençant par https://. Vide : /contact.' },
       {
         key: 'highlight',
         label: 'Mise en avant',

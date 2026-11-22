@@ -1,5 +1,6 @@
 'use client';
 
+import { safeHref } from '@/lib/safe-href'
 import { useEffect } from 'react';
 import { useRouter } from 'next/navigation';
 import Link from 'next/link';
@@ -60,7 +61,7 @@ export default function DashboardPage() {
             <div className="grid sm:grid-cols-2 gap-4">
               <div className="bg-white rounded-2xl border border-stone-200 p-6">
                 <div className="w-10 h-10 rounded-full bg-[color:color-mix(in_srgb,var(--hh-primary)_10%,transparent)] flex items-center justify-center mb-4">
-                  <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="#2f6b61" strokeWidth="2">
+                  <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="var(--hh-primary)" strokeWidth="2">
                     <path d="M12 2L2 7l10 5 10-5-10-5z"/>
                     <path d="M2 17l10 5 10-5"/>
                     <path d="M2 12l10 5 10-5"/>
@@ -71,7 +72,7 @@ export default function DashboardPage() {
                   {c.get('dash_test_text', undefined, { multiline: true })}
                 </p>
                 <Link
-                  href="/test-attachement"
+                  href={safeHref(c.dash_test_cta_href, '/test-attachement')}
                   className="inline-flex items-center text-sm font-medium text-[color:var(--hh-primary)] hover:underline"
                 >
                   {c.get('dash_test_cta')}
@@ -90,7 +91,7 @@ export default function DashboardPage() {
                   {c.get('dash_relations_text', undefined, { multiline: true })}
                 </p>
                 <Link
-                  href="/relations"
+                  href={safeHref(c.dash_relations_cta_href, '/relations')}
                   className="inline-flex items-center text-sm font-medium text-[#8d5d2f] hover:underline"
                 >
                   {c.get('dash_relations_cta')}
@@ -107,13 +108,13 @@ export default function DashboardPage() {
             </p>
             <div className="flex flex-wrap gap-4">
               <Link
-                href="/contact"
+                href={safeHref(c.dash_contact_cta_href, '/contact')}
                 className="inline-flex items-center px-6 py-3 rounded-full bg-[color:var(--hh-primary)] text-white font-medium hover:bg-[#275a52] transition"
               >
                 {c.get('dash_contact_cta')}
               </Link>
               <Link
-                href="/coaching"
+                href={safeHref(c.dash_coaching_cta_href, '/coaching')}
                 className="inline-flex items-center px-6 py-3 rounded-full border border-stone-300 text-stone-700 font-medium hover:border-[color:var(--hh-primary)] hover:text-[color:var(--hh-primary)] transition"
               >
                 {c.get('dash_coaching_cta')}
