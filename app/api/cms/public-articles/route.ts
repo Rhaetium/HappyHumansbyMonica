@@ -1,5 +1,6 @@
 import { NextResponse } from 'next/server';
 import { createClient } from '@supabase/supabase-js';
+import { liveFilter } from '@/lib/article-schedule';
 
 function getSupabase() {
   const url = process.env.NEXT_PUBLIC_SUPABASE_URL;
@@ -16,6 +17,7 @@ export async function GET() {
     .from('articles')
     .select('id, title, slug, excerpt, featured_image, category, published_at')
     .eq('published', true)
+    .or(liveFilter())
     .order('published_at', { ascending: false })
     .limit(20);
 

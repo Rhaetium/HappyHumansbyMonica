@@ -2,6 +2,7 @@ import { NextResponse } from 'next/server'
 import { createClient } from '@supabase/supabase-js'
 import { requireCmsAuth } from '@/lib/cms-auth'
 import { scheduleIndexNow } from '@/lib/indexnow'
+import { isArticleLive } from '@/lib/article-schedule'
 
 function supabase() {
   return createClient(
@@ -59,7 +60,7 @@ export async function PUT(req: Request, props: { params: Promise<{ id: string }>
 
   if (error) return NextResponse.json({ error: error.message }, { status: 500 })
   // Article en ligne (publié ou modifié) : on prévient Bing & co. après la réponse
-  if (data?.published && data?.slug) scheduleIndexNow([`/blog/${data.slug}`, '/blog'])
+  if (data && isArticleLive(data) && data.slug) scheduleIndexNow([`/blog/${data.slug}`, '/blog'])
   return NextResponse.json({ article: data })
 }
 
