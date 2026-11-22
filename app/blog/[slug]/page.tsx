@@ -20,7 +20,7 @@ import { BLOG_DEFAULTS } from '@/lib/cms-defaults/blog'
 
 export const revalidate = 60
 
-const DEFAULT_OG = `${SITE_URL}/og-default.jpg`
+const DEFAULT_OG = `${SITE_URL}/og-happy-humans.jpg`
 
 interface Props {
   params: Promise<{ slug: string }>

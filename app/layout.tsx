@@ -49,7 +49,7 @@ export async function generateMetadata(): Promise<Metadata> {
   const seoTitle = kv.seo_title || DEFAULT_TITLE;
   const seoDescription = kv.seo_description || DEFAULT_DESCRIPTION;
   // JPG : Facebook, LinkedIn, WhatsApp et X n'affichent pas les images SVG
-  const ogImage = kv.og_image || '/og-default.jpg';
+  const ogImage = kv.og_image || '/og-happy-humans.jpg';
   const personName = kv.geo_person_name || DEFAULT_PERSON_NAME;
   const keywords = parseKeywords(kv.seo_keywords);
   // Google Search Console : Monica colle la balise fournie par Google, on n'en garde que le jeton.
@@ -136,7 +136,7 @@ const baseMetadata: Metadata = {
       "Accompagnement individuel et collectif pour managers, dirigeants et entreprises en quête d'alignement, de clarté et de transformation durable.",
     images: [
       {
-        url: '/og-default.jpg',
+        url: '/og-happy-humans.jpg',
         width: 1200,
         height: 630,
         alt: 'Happy Humans - coaching et transformation avec Monica Schneider',
@@ -148,7 +148,7 @@ const baseMetadata: Metadata = {
     title: 'Happy Humans | Coaching & transformation avec Monica Schneider',
     description:
       'Executive coaching, philosophical counselling et accompagnement des entreprises avec Monica Schneider.',
-    images: ['/og-default.jpg'],
+    images: ['/og-happy-humans.jpg'],
   },
 };
 
@@ -197,7 +197,7 @@ function buildSchemas(kv: Record<string, string>) {
     url: SITE_URL,
     // PNG : Google n'accepte pas le SVG comme logo d'organisation
     logo: `${SITE_URL}/logo-happy-humans.png`,
-    image: `${SITE_URL}/og-default.jpg`,
+    image: `${SITE_URL}/og-happy-humans.jpg`,
     address: {
       '@type': 'PostalAddress',
       addressLocality: locality || 'Paris',
@@ -223,7 +223,7 @@ function buildSchemas(kv: Record<string, string>) {
     name: kv.geo_person_name || DEFAULT_PERSON_NAME,
     jobTitle: kv.geo_person_job_title || DEFAULT_PERSON_JOB_TITLE,
     url: SITE_URL,
-    image: `${SITE_URL}/og-default.jpg`,
+    image: `${SITE_URL}/og-happy-humans.jpg`,
     ...(locality ? { workLocation: { '@type': 'Place', address: { '@type': 'PostalAddress', addressLocality: locality } } } : {}),
     sameAs: profiles.length ? profiles : DEFAULT_PROFILES,
     knowsLanguage: languages,
