@@ -4,7 +4,7 @@ import { defaultFaqSections } from './page-faqs'
 // Chaque clé correspond à un champ de PAGES_CONFIG (components/cms/admin/config.ts).
 
 export const SPARRING_PARTNER_DEFAULTS: Record<string, string> = {
-  hero_image: 'https://images.unsplash.com/photo-1600880292089-90a7e086ee0c?w=1600&q=80&auto=format&fit=crop',
+  hero_image: '/images/marque/hero-sparring-partner.webp',
   hero_badge:         'Sparring Partner',
   hero_title:         "Un regard extérieur stratégique par une pair qui comprend vos enjeux",
   hero_desc:          "Ex-L'Oreal, ex-LVMH, 5 langues, philo-coaching. Monica vous offre le recul qu'un manager ne peut pas toujours trouver en interne.",
@@ -34,7 +34,7 @@ export const SPARRING_PARTNER_DEFAULTS: Record<string, string> = {
   cta_secondary:     'Poser une question',
   cta_secondary_href: '/contact',
   // ── Textes câblés automatiquement (étaient en dur dans la page) ──
-  t_discussion_strategique: "Discussion stratégique",
+  t_discussion_strategique: "Illustration : un bras de cactus qui montre sa force, pour passer à l'action",
   // ── Référencement (Google, réseaux sociaux) — lu par generateMetadata via lib/page-seo.ts ──
   seo_title: "Sparring Partner pour dirigeants",
   seo_description: "Monica Schneider, sparring partner stratégique pour dirigeants et marketers. Challenger vos idées, préparer vos pitchs, traverser vos transitions.",

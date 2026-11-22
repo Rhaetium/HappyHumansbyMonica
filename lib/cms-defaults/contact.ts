@@ -4,7 +4,7 @@
 
 export const CONTACT_DEFAULTS: Record<string, string> = {
   hero_badge:           'Contact',
-  hero_image:           'https://images.unsplash.com/photo-1497366216548-37526070297c?w=1400&q=80&auto=format&fit=crop',
+  hero_image:           '/images/marque/hero-contact.webp',
   page_title:           'Parlons de ce qui vous amène.',
   intro_text:           "Que vous soyez en plein questionnement, en transition ou simplement curieux·se de voir si le dialogue peut aider — je vous invite à me contacter. Je réponds personnellement à chaque message.",
   photo:                '/monica-schneider.jpg',
@@ -16,7 +16,7 @@ export const CONTACT_DEFAULTS: Record<string, string> = {
   success_title:        'Message envoyé !',
   success_text:         'Monica vous répondra sous 48h.',
   // ── Textes câblés automatiquement (étaient en dur dans la page) ──
-  t_espace_d_echange_calme: "Espace d'échange calme et chaleureux",
+  t_espace_d_echange_calme: "Illustration : un cadeau en forme de cactus, comme une invitation à échanger",
   t_votre_nom: "Votre nom",
   t_votre_email_com: "votre@email.com",
   t_type_de_demande: "Type de demande",

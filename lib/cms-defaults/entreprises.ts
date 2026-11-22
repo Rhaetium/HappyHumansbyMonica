@@ -6,12 +6,12 @@ import { defaultFaqSections } from './page-faqs'
 
 export const ENTREPRISES_DEFAULTS: Record<string, string> = {
   // Hero
-  hero_image:    'https://images.unsplash.com/photo-1522071820081-009f0129c71c?w=1400&q=80',
+  hero_image:    '/images/marque/hero-entreprises.webp',
   hero_badge:    'Entreprises',
   page_title:    "Remettre de l'alignement et de l'élan dans vos équipes.",
   intro_text:    "Coaching de dirigeants, ateliers de cohésion, accompagnement du changement et séminaires sur mesure.",
   // Section « Ce que je propose »
-  section_image: 'https://images.unsplash.com/photo-1522071820081-009f0129c71c?w=800&q=80&auto=format&fit=crop',
+  section_image: '/images/conference/outil-6-action.webp',
   offres_badge:  'Offres',
   section_title: 'Ce que je propose',
   section_text:  "Quand une équipe perd de sa cohérence, les résultats s'en ressentent toujours.\n\nAvec 10 ans passés à développer des marques internationales pour Henkel, LVMH et L'Oréal — en Allemagne, France, Royaume-Uni et Europe de l'Est — j'ai vécu de l'intérieur les dynamiques de transformation d'équipe, de prise de poste et de communication interculturelle.\n\nAujourd'hui j'apporte cette expérience dans ma pratique de coaching. Je travaille avec les dirigeants et les entreprises pour remettre de l'alignement — entre les personnes, entre les objectifs et les moyens, entre ce qu'on dit et ce qu'on fait — ou tout simplement pour rebooster l'engagement et l'élan commun.",
@@ -87,8 +87,8 @@ export const ENTREPRISES_DEFAULTS: Record<string, string> = {
   temoignage_dorothee_author: 'Dorothée*',
   temoignage_dorothee_role:   'Directrice Achats Beauty Retail',
   // ── Textes câblés automatiquement (étaient en dur dans la page) ──
-  t_entreprises: "Entreprises",
-  t_reunion_d_equipe_et: "Réunion d'équipe et leadership en entreprise",
+  t_entreprises: "Illustration : une boîte à outils dont les outils sont des cactus",
+  t_reunion_d_equipe_et: "Illustration : un bras de cactus qui montre sa force, symbole de l'élan d'une équipe",
   t_format: "Format",
   t_rythme: "Rythme",
   t_tarif: "Tarif",

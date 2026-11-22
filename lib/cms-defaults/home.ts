@@ -3,7 +3,7 @@
 // Chaque clé correspond à un champ de PAGES_CONFIG (components/cms/admin/config.ts).
 
 export const HOME_DEFAULTS: Record<string, string> = {
-  hero_image: 'https://images.unsplash.com/photo-1497366216548-37526070297c?w=1600&q=85&auto=format&fit=crop',
+  hero_image: '/images/marque/hero-accueil.webp',
   // Hero
   hero_badge:           'Monica Schneider · Executive Coach · Happy Humans',
   hero_title:           'Clarté, confiance et relations qui vous ressemblent',
@@ -52,7 +52,7 @@ export const HOME_DEFAULTS: Record<string, string> = {
   t_aucune_disponibilite_titre: "Aucune disponibilité pour le moment",
   t_aucune_disponibilite_texte: "L'agenda n'est pas ouvert pour l'instant. Écrivez-moi : je vous proposerai une séance dès que possible.",
   // ── Textes câblés automatiquement (étaient en dur dans la page) ──
-  t_bureau_elegant_avec_lumiere: "Bureau élégant avec lumière naturelle, ambiance coaching professionnel",
+  t_bureau_elegant_avec_lumiere: "Illustration : un cactus en fleur et un cerveau-cactus fleuri, symboles de clarté et de croissance",
   t_seance_decouverte: "Séance découverte",
   t_gratuite_1h_sans_engagement: "gratuite · 1h · sans engagement",
   t_reserver_maintenant: "Réserver maintenant",
