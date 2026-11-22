@@ -103,9 +103,9 @@ COMMENT TRAVAILLER AVEC MOI
 - Déjà modifiable dans l'admin : textes, photos, menu, fil d'Ariane, pages libres (avec modèles), articles
   (brouillon, programmation), ordre et affichage des sections (accueil, à propos, coaching, entreprises,
   happiness design, relations, sparring partner), couleurs, polices, tailles, logo, SEO par page, redirections.
-- Avant de commencer, regarde les pull requests ouvertes et le journal de main : les chantiers « couleurs qui suivent
-  le thème », « destination des boutons » et « SVG et barre mobile » étaient en attente de fusion. S'ils ne sont pas
-  dans main, dis-le-moi et ne pars pas d'un main qui ne les contient pas sans m'en parler.
+- Déjà en ligne (fusionné dans main) : les couleurs de la marque suivent le thème (logo, SVG, effet duotone des photos et
+  barre du navigateur sur mobile), et la destination des boutons se change dans l'admin (champs « … destination du bouton »).
+  Regarde quand même les pull requests ouvertes avant de commencer, au cas où un chantier serait en attente.
 - Pas encore vérifié visuellement : le rendu sur mobile et avec une palette différente de la palette par défaut.
   C'est une priorité de tes vérifications.
 
