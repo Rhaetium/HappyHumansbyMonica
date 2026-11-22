@@ -1,4 +1,5 @@
 'use client'
+import { safeHref } from '@/lib/safe-href'
 import { Fragment, type ReactNode } from 'react'
 import Header from '@/components/Header'
 import Footer from '@/components/Footer'
@@ -56,7 +57,7 @@ export default function HappinessDesignPage() {
           <p className="mt-5 text-xl font-serif font-light text-amber-300 md:text-2xl">{c.get('page_subtitle', undefined, { multiline: true })} <em className="text-stone-400 text-base">{c.t_par_happy_humans}</em></p>
           <p className="mt-7 text-base leading-relaxed text-stone-300 max-w-2xl mx-auto">{c.get('intro_text', undefined, { multiline: true })}</p>
           <div className="mt-10">
-            <Link href="/booking?from=happiness-design" className="rounded-full bg-[color:var(--hh-primary)] px-8 py-3.5 text-sm font-semibold text-white shadow hover:bg-[color:var(--hh-dark)] transition">
+            <Link href={safeHref(c.hero_cta_href, '/booking?from=happiness-design')} className="rounded-full bg-[color:var(--hh-primary)] px-8 py-3.5 text-sm font-semibold text-white shadow hover:bg-[color:var(--hh-dark)] transition">
               {c.get('hero_cta')}
             </Link>
           </div>
@@ -205,7 +206,7 @@ export default function HappinessDesignPage() {
                   </li>
                 ))}
               </ul>
-              <Link href="/contact" className="block rounded-full bg-[color:var(--hh-primary)] py-3 text-center text-sm font-semibold text-white hover:bg-[color:var(--hh-dark)] transition">
+              <Link href={safeHref(c.cta_label_href, '/contact')} className="block rounded-full bg-[color:var(--hh-primary)] py-3 text-center text-sm font-semibold text-white hover:bg-[color:var(--hh-dark)] transition">
                 {c.get('cta_label')}
               </Link>
             </div>
@@ -221,7 +222,7 @@ export default function HappinessDesignPage() {
                   </li>
                 ))}
               </ul>
-              <Link href="/booking?from=happiness-design" className="block rounded-full border border-[color:var(--hh-primary)] py-3 text-center text-sm font-semibold text-[color:var(--hh-primary)] hover:bg-[color:var(--hh-primary)] hover:text-white transition">
+              <Link href={safeHref(c.discovery_cta_href, '/booking?from=happiness-design')} className="block rounded-full border border-[color:var(--hh-primary)] py-3 text-center text-sm font-semibold text-[color:var(--hh-primary)] hover:bg-[color:var(--hh-primary)] hover:text-white transition">
                 {c.get('discovery_cta')}
               </Link>
             </div>
@@ -235,7 +236,7 @@ export default function HappinessDesignPage() {
         <div className="mx-auto max-w-xl px-6">
           <h2 className="mb-4 text-2xl font-serif font-light text-white">{c.get('cta_title')}</h2>
           <p className="text-sm text-emerald-100 mb-7">{c.get('cta_subtitle', undefined, { multiline: true })}</p>
-          <Link href="/booking?from=happiness-design" className="rounded-full bg-white px-8 py-3 text-sm font-semibold text-[color:var(--hh-primary)] hover:bg-amber-50 transition">
+          <Link href={safeHref(c.cta_button_href, '/booking?from=happiness-design')} className="rounded-full bg-white px-8 py-3 text-sm font-semibold text-[color:var(--hh-primary)] hover:bg-amber-50 transition">
             {c.get('cta_button')}
           </Link>
         </div>

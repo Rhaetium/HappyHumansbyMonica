@@ -1,4 +1,5 @@
 'use client'
+import { safeHref } from '@/lib/safe-href'
 import Header from '@/components/Header'
 import Footer from '@/components/Footer'
 import Link from 'next/link'
@@ -82,7 +83,7 @@ export default function AProposPage() {
               </div>
               <h3 className="text-xl font-serif font-semibold text-stone-900 mb-4">{c.get('coaching_label')}</h3>
               <p className="text-sm leading-relaxed text-stone-600">{c.get('coaching_text')}</p>
-              <Link href="/coaching" className="mt-6 inline-flex items-center gap-2 text-sm font-semibold text-[color:var(--hh-primary)] hover:underline">
+              <Link href={safeHref(c.coaching_cta_href, '/coaching')} className="mt-6 inline-flex items-center gap-2 text-sm font-semibold text-[color:var(--hh-primary)] hover:underline">
                 {c.get('coaching_cta')}
               </Link>
             </div>
@@ -94,7 +95,7 @@ export default function AProposPage() {
               </div>
               <h3 className="text-xl font-serif font-semibold text-stone-900 mb-4">{c.get('mentoring_label')}</h3>
               <p className="text-sm leading-relaxed text-stone-600">{c.get('mentoring_text')}</p>
-              <Link href="/contact" className="mt-6 inline-flex items-center gap-2 text-sm font-semibold text-[color:var(--hh-primary)] hover:underline">
+              <Link href={safeHref(c.mentoring_cta_href, '/contact')} className="mt-6 inline-flex items-center gap-2 text-sm font-semibold text-[color:var(--hh-primary)] hover:underline">
                 {c.get('mentoring_cta')}
               </Link>
             </div>
@@ -110,7 +111,7 @@ export default function AProposPage() {
             <p className="text-base leading-relaxed text-stone-700 mb-6">
               {c.get('hd_text', undefined, { multiline: true })}
             </p>
-            <Link href="/happiness-design" className="inline-flex items-center gap-2 text-sm font-semibold text-[color:var(--hh-primary)] hover:underline">
+            <Link href={safeHref(c.hd_cta_href, '/happiness-design')} className="inline-flex items-center gap-2 text-sm font-semibold text-[color:var(--hh-primary)] hover:underline">
               {c.get('hd_cta')}
             </Link>
           </div>
@@ -122,10 +123,10 @@ export default function AProposPage() {
         <div className="mx-auto max-w-2xl px-6">
           <h2 className="mb-4 text-2xl font-serif font-light text-white">{c.get('footer_cta_title')}</h2>
           <div className="flex flex-wrap justify-center gap-4 mt-6">
-            <Link href="/coaching" className="rounded-full bg-white px-7 py-3 text-sm font-semibold text-[color:var(--hh-primary)] hover:bg-amber-50 transition">
+            <Link href={safeHref(c.footer_cta_coaching_href, '/coaching')} className="rounded-full bg-white px-7 py-3 text-sm font-semibold text-[color:var(--hh-primary)] hover:bg-amber-50 transition">
               {c.get('footer_cta_coaching')}
             </Link>
-            <Link href="/booking" className="rounded-full border border-white px-7 py-3 text-sm font-semibold text-white hover:bg-white/10 transition">
+            <Link href={safeHref(c.footer_cta_booking_href, '/booking')} className="rounded-full border border-white px-7 py-3 text-sm font-semibold text-white hover:bg-white/10 transition">
               {c.get('footer_cta_booking')}
             </Link>
           </div>

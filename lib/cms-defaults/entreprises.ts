@@ -16,6 +16,7 @@ export const ENTREPRISES_DEFAULTS: Record<string, string> = {
   section_title: 'Ce que je propose',
   section_text:  "Quand une équipe perd de sa cohérence, les résultats s'en ressentent toujours.\n\nAvec 10 ans passés à développer des marques internationales pour Henkel, LVMH et L'Oréal — en Allemagne, France, Royaume-Uni et Europe de l'Est — j'ai vécu de l'intérieur les dynamiques de transformation d'équipe, de prise de poste et de communication interculturelle.\n\nAujourd'hui j'apporte cette expérience dans ma pratique de coaching. Je travaille avec les dirigeants et les entreprises pour remettre de l'alignement — entre les personnes, entre les objectifs et les moyens, entre ce qu'on dit et ce qu'on fait — ou tout simplement pour rebooster l'engagement et l'élan commun.",
   offres_cta:    'Discuter de votre projet →',
+  offres_cta_href: '/contact',
   // Domaines d'intervention
   domains_badge:    'Expertise',
   domains_title:    "Domaines d'intervention",
@@ -41,15 +42,18 @@ export const ENTREPRISES_DEFAULTS: Record<string, string> = {
   flash_rythme:   '1 séance / 2 semaines',
   flash_tarif:    'Sur devis',
   flash_cta_link: 'En savoir plus ou demander un devis →',
+  flash_cta_link_href: '/contact',
   // Sparring partner
   sparring_badge:    'Sparring Partner — pour les marketers',
   sparring_title:    'Un regard extérieur stratégique',
   sparring_desc:     "Vous êtes marketer·euse et vous avez besoin d'un interlocuteur de confiance pour tester vos idées, challenger votre stratégie ou vous préparer à une prise de parole importante. Monica, ex-L'Oréal / LVMH, vous offre le recul d'une pair qui connaît vos enjeux.",
   sparring_features: "Préparer un pitch ou une présentation\nChallenger une stratégie marketing\nNaviguer une transition de poste\nCommunication en environnement multiculturel",
   sparring_cta_link: 'En savoir plus →',
+  sparring_cta_link_href: '/sparring-partner',
   // Bandeau contact
   cta_title:  'Un projet ? Une question ?',
   cta_button: 'Prendre contact',
+  cta_button_href: '/contact',
   // Tarification
   pricing_badge:    'Investissement',
   pricing_title:    'Des formules adaptées à votre entreprise',
@@ -77,6 +81,7 @@ export const ENTREPRISES_DEFAULTS: Record<string, string> = {
   diff_title:    'Pourquoi une coach avec 10 ans en marketing international ?',
   diff_text:     "La plupart des coachs connaissent les outils. Monica connaît aussi la pression d'un lancement produit chez L'Oréal, le management d'équipes à Berlin, Paris et Londres, et les enjeux de communication dans des organisations matricielles complexes.\n\nCe n'est pas un avantage anecdotique. C'est ce qui lui permet de comprendre vos enjeux sans que vous ayez à les expliquer — et de proposer des solutions qui collent à la réalité du terrain.",
   diff_cta_link: 'Discuter de votre projet →',
+  diff_cta_link_href: '/contact',
   // Témoignage
   temoignage_dorothee_text:   "On a eu un super feedback sur la réunion de présentation que nous avons préparée ensemble. Jérôme (le n+1 de ma cliente) nous a dit : \"Champagne !\"",
   temoignage_dorothee_author: 'Dorothée*',

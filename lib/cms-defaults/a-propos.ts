@@ -28,17 +28,22 @@ export const A_PROPOS_DEFAULTS: Record<string, string> = {
   coaching_label:   'Coaching',
   coaching_text:    "Le coaching est une danse entre le coach et le coaché. À travers les questions du coach, le coaché réfléchit, change de perspective, fait l'expérience de révélations, de aha moments et d'eurekas ! Il ou elle trouve en soi les meilleures solutions pour avancer sereinement vers son objectif. Le coaché design un plan d'action clair et daté. Il ressort de la séance avec un sentiment de clarté, une énergie renouvelée et souvent un sourire confiant. À noter que ma pratique de coaching est enrichie, quand la situation s'y prête, par de la philosophie pratique.",
   coaching_cta:    'Voir le coaching →',
+  coaching_cta_href: '/coaching',
   mentoring_label: 'Mentoring',
   mentoring_text:  "Je vous offre mes conseils sur une problématique alignée avec mon expertise. — Comment être visible tout en restant authentique ? — Comment démontrer du leadership et signaler que nous sommes prêts pour la next step ? — Quel plan de communication interne mettre en place pour rebooster l'engagement ? — Comment naviguer les différences de communication au sein d'environnements multiculturels ?",
   mentoring_cta:   'Me contacter →',
+  mentoring_cta_href: '/contact',
   // Happiness Design CTA
   hd_badge:        'Happiness Design',
   hd_text:         'Je souhaite rendre cette boîte à outils du bonheur, même dans une vie chaotique, accessible au plus grand nombre. Ce projet s\'appelle Happiness Design.',
   hd_cta:          "Pour en savoir plus, c'est par ici →",
+  hd_cta_href: '/happiness-design',
   // Final CTA
   footer_cta_title: "Envie d'en savoir plus ?",
   footer_cta_coaching: 'Voir le coaching',
+  footer_cta_coaching_href: '/coaching',
   footer_cta_booking:  'Réserver une séance (1h)',
+  footer_cta_booking_href: '/booking',
   // ── Textes câblés automatiquement (étaient en dur dans la page) ──
   t_monica_schneider_executive_coach: "Monica Schneider — Executive Coach",
   t_monica_schneider: "Monica Schneider",

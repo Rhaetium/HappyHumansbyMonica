@@ -1,4 +1,5 @@
 'use client'
+import { safeHref } from '@/lib/safe-href'
 import { useState } from 'react'
 import Header from '@/components/Header'
 import Footer from '@/components/Footer'
@@ -71,10 +72,10 @@ export default function FaqPage() {
             <h2 className="text-xl font-serif font-light text-stone-900 mb-2">{c.get('cta_title')}</h2>
             <p className="text-sm text-stone-500 mb-6">{c.get('cta_text')}</p>
             <div className="flex flex-col sm:flex-row gap-3 justify-center">
-              <Link href="/contact" className="inline-block rounded-full border border-[color:var(--hh-primary)] px-6 py-3 text-sm font-semibold text-[color:var(--hh-primary)] hover:bg-[color:var(--hh-primary)] hover:text-white transition">
+              <Link href={safeHref(c.t_ecrire_a_monica_href, '/contact')} className="inline-block rounded-full border border-[color:var(--hh-primary)] px-6 py-3 text-sm font-semibold text-[color:var(--hh-primary)] hover:bg-[color:var(--hh-primary)] hover:text-white transition">
                 {c.t_ecrire_a_monica}
               </Link>
-              <Link href="/booking" className="inline-block rounded-full bg-[color:var(--hh-primary)] px-6 py-3 text-sm font-semibold text-white hover:bg-[color:var(--hh-dark)] transition">
+              <Link href={safeHref(c.t_reserver_une_seance_href, '/booking')} className="inline-block rounded-full bg-[color:var(--hh-primary)] px-6 py-3 text-sm font-semibold text-white hover:bg-[color:var(--hh-dark)] transition">
                 {c.t_reserver_une_seance}
               </Link>
             </div>

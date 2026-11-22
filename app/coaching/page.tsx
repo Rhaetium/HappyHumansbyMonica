@@ -1,4 +1,5 @@
 'use client'
+import { safeHref } from '@/lib/safe-href'
 import Header from '@/components/Header'
 import Footer from '@/components/Footer'
 import Link from 'next/link'
@@ -58,10 +59,10 @@ export default function CoachingPage() {
           <h1 className="text-4xl font-serif font-light leading-tight text-white md:text-6xl">{c.get('hero_title')}</h1>
           <p className="mt-6 text-lg leading-relaxed text-stone-300">{c.get('hero_subtitle', undefined, {multiline:true})}</p>
           <div className="mt-10 flex flex-wrap gap-4 justify-center">
-            <Link href="/booking?from=coaching" className="rounded-full bg-[color:var(--hh-primary)] px-7 py-3.5 text-sm font-semibold text-white shadow-md hover:bg-[color:var(--hh-primary)] transition">
+            <Link href={safeHref(c.hero_cta_primary_href, '/booking?from=coaching')} className="rounded-full bg-[color:var(--hh-primary)] px-7 py-3.5 text-sm font-semibold text-white shadow-md hover:bg-[color:var(--hh-primary)] transition">
               {c.get('hero_cta_primary')}
             </Link>
-            <Link href="/contact" className="rounded-full border border-stone-400 px-7 py-3.5 text-sm font-semibold text-stone-200 hover:border-white hover:text-white transition">
+            <Link href={safeHref(c.hero_cta_contact_href, '/contact')} className="rounded-full border border-stone-400 px-7 py-3.5 text-sm font-semibold text-stone-200 hover:border-white hover:text-white transition">
               {c.get('hero_cta_contact')}
             </Link>
           </div>
@@ -78,7 +79,7 @@ export default function CoachingPage() {
               <div className="text-base leading-relaxed text-stone-600 space-y-3">
                 {c.coaching_b2c_text.split('\n').map((p, i) => p.trim() ? <p key={i}>{p}</p> : null)}
               </div>
-              <Link href="/contact" className="inline-flex items-center gap-2 text-sm font-semibold text-[color:var(--hh-primary)] hover:underline">
+              <Link href={safeHref(c.coaching_b2c_cta_link_href, '/contact')} className="inline-flex items-center gap-2 text-sm font-semibold text-[color:var(--hh-primary)] hover:underline">
                 {c.get('coaching_b2c_cta_link')}
               </Link>
             </div>
@@ -127,10 +128,10 @@ export default function CoachingPage() {
             <p className="text-xs text-stone-500 mt-0.5">{c.get('tunnel_reassurance')}</p>
           </div>
           <div className="flex flex-wrap gap-3 flex-shrink-0">
-            <Link href="/booking?from=coaching" className="rounded-full bg-[color:var(--hh-primary)] px-6 py-2.5 text-sm font-semibold text-white hover:bg-[color:var(--hh-primary)] transition shadow-sm">
+            <Link href={safeHref(c.tunnel_cta_primary_href, '/booking?from=coaching')} className="rounded-full bg-[color:var(--hh-primary)] px-6 py-2.5 text-sm font-semibold text-white hover:bg-[color:var(--hh-primary)] transition shadow-sm">
               {c.get('tunnel_cta_primary')}
             </Link>
-            <Link href="/contact" className="rounded-full border border-[color:var(--hh-primary)] px-6 py-2.5 text-sm font-semibold text-[color:var(--hh-primary)] hover:bg-[color:var(--hh-primary)] hover:text-white transition">
+            <Link href={safeHref(c.tunnel_cta_secondary_href, '/contact')} className="rounded-full border border-[color:var(--hh-primary)] px-6 py-2.5 text-sm font-semibold text-[color:var(--hh-primary)] hover:bg-[color:var(--hh-primary)] hover:text-white transition">
               {c.get('tunnel_cta_secondary')}
             </Link>
           </div>
@@ -190,7 +191,7 @@ export default function CoachingPage() {
               <div className="text-base leading-relaxed text-stone-600 space-y-3">
                 {c.coaching_b2b_text.split('\n').map((p, i) => p.trim() ? <p key={i}>{p}</p> : null)}
               </div>
-              <Link href="/entreprises" className="inline-flex items-center gap-2 text-sm font-semibold text-[color:var(--hh-primary)] hover:underline">
+              <Link href={safeHref(c.coaching_b2b_cta_link_href, '/entreprises')} className="inline-flex items-center gap-2 text-sm font-semibold text-[color:var(--hh-primary)] hover:underline">
                 {c.get('coaching_b2b_cta_link')}
               </Link>
             </div>
@@ -203,7 +204,7 @@ export default function CoachingPage() {
         <div className="mx-auto max-w-2xl px-6 text-center">
           <h2 className="mb-3 text-2xl font-serif font-light text-white">{c.get('cta_title')}</h2>
           <p className="mb-6 text-emerald-100 text-sm">{c.get('form_cta_title', undefined, {multiline:true})}</p>
-          <Link href="/booking?from=coaching" className="rounded-full bg-white px-8 py-3 text-sm font-semibold text-[color:var(--hh-primary)] hover:bg-amber-50 transition">
+          <Link href={safeHref(c.form_cta_button_href, '/booking?from=coaching')} className="rounded-full bg-white px-8 py-3 text-sm font-semibold text-[color:var(--hh-primary)] hover:bg-amber-50 transition">
             {c.get('form_cta_button')}
           </Link>
         </div>

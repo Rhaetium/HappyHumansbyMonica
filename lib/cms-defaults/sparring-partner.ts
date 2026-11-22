@@ -9,7 +9,9 @@ export const SPARRING_PARTNER_DEFAULTS: Record<string, string> = {
   hero_title:         "Un regard extérieur stratégique par une pair qui comprend vos enjeux",
   hero_desc:          "Ex-L'Oreal, ex-LVMH, 5 langues, philo-coaching. Monica vous offre le recul qu'un manager ne peut pas toujours trouver en interne.",
   hero_cta_primary:   'Réserver une session',
+  hero_cta_primary_href: '/booking?from=sparring-partner',
   hero_cta_secondary: 'Poser une question',
+  hero_cta_secondary_href: '/contact',
   section_badge:      "Pour quoi faire ?",
   section_title:      'Les situations qui appellent un sparring partner',
   use_case_1_title:  'Préparer un pitch',
@@ -28,7 +30,9 @@ export const SPARRING_PARTNER_DEFAULTS: Record<string, string> = {
   cta_title:          'Prêt à challenger vos idées ?',
   cta_desc:           'Session 60 à 90 min. Conversation découverte de 30 min offerte.',
   cta_primary:       'Réserver une session',
+  cta_primary_href: '/booking?from=sparring-partner',
   cta_secondary:     'Poser une question',
+  cta_secondary_href: '/contact',
   // ── Textes câblés automatiquement (étaient en dur dans la page) ──
   t_discussion_strategique: "Discussion stratégique",
   // ── Référencement (Google, réseaux sociaux) — lu par generateMetadata via lib/page-seo.ts ──
