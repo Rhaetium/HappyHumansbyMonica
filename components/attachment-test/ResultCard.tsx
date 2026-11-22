@@ -112,7 +112,7 @@ export function ResultCard({ result, onRestart, onBook }: ResultCardProps) {
       </div>
 
       {/* CTA BOOKING — mis en avant */}
-      <div className="bg-[#2f6b61]/80 border border-emerald-400/30 rounded-3xl p-6 md:p-8 text-center">
+      <div className="bg-[color:color-mix(in_srgb,var(--hh-primary)_80%,transparent)] border border-emerald-400/30 rounded-3xl p-6 md:p-8 text-center">
         <div className="mb-3 flex justify-center text-emerald-100"><Icon name="calendar" size={36} /></div>
         <h3 className="text-xl font-semibold text-white mb-2">{c.cta_title}</h3>
         <p className="text-emerald-100 text-sm mb-5 leading-relaxed">
@@ -120,7 +120,7 @@ export function ResultCard({ result, onRestart, onBook }: ResultCardProps) {
         </p>
         <button
           onClick={onBook}
-          className="w-full md:w-auto rounded-full bg-white px-8 py-3.5 text-sm font-semibold text-[#2f6b61] shadow hover:bg-emerald-50 transition"
+          className="w-full md:w-auto rounded-full bg-white px-8 py-3.5 text-sm font-semibold text-[color:var(--hh-primary)] shadow hover:bg-emerald-50 transition"
         >
           {c.cta_button}
         </button>

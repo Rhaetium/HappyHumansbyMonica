@@ -12,7 +12,7 @@ type EditableFieldProps = {
   className?: string;
 };
 
-const EDIT_OUTLINE = '2px dashed #2d5f54';
+const EDIT_OUTLINE = '2px dashed var(--hh-primary)';
 const EDIT_BG = 'rgba(240,255,244,0.95)';
 
 export default function EditableField({

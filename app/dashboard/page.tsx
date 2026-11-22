@@ -31,7 +31,7 @@ export default function DashboardPage() {
   };
 
   return (
-    <main className="min-h-screen bg-gradient-to-br from-[#f7f2e9] via-white to-[#eef5f3]">
+    <main className="min-h-screen bg-gradient-to-br from-[#f7f2e9] via-white to-[color:var(--hh-bg)]">
       <Header />
 
       <section className="pt-28 pb-16 px-4">
@@ -48,7 +48,7 @@ export default function DashboardPage() {
             <button
               type="button"
               onClick={handleSignOut}
-              className="self-start sm:self-auto px-5 py-2.5 rounded-full border border-stone-300 text-stone-700 hover:border-[#2f6b61] hover:text-[#2f6b61] transition"
+              className="self-start sm:self-auto px-5 py-2.5 rounded-full border border-stone-300 text-stone-700 hover:border-[color:var(--hh-primary)] hover:text-[color:var(--hh-primary)] transition"
             >
               {c.get('dash_signout')}
             </button>
@@ -59,7 +59,7 @@ export default function DashboardPage() {
             <h2 className="text-xl font-serif text-stone-900 mb-6">{c.get('dash_resources_title')}</h2>
             <div className="grid sm:grid-cols-2 gap-4">
               <div className="bg-white rounded-2xl border border-stone-200 p-6">
-                <div className="w-10 h-10 rounded-full bg-[#2f6b61]/10 flex items-center justify-center mb-4">
+                <div className="w-10 h-10 rounded-full bg-[color:color-mix(in_srgb,var(--hh-primary)_10%,transparent)] flex items-center justify-center mb-4">
                   <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="#2f6b61" strokeWidth="2">
                     <path d="M12 2L2 7l10 5 10-5-10-5z"/>
                     <path d="M2 17l10 5 10-5"/>
@@ -72,7 +72,7 @@ export default function DashboardPage() {
                 </p>
                 <Link
                   href="/test-attachement"
-                  className="inline-flex items-center text-sm font-medium text-[#2f6b61] hover:underline"
+                  className="inline-flex items-center text-sm font-medium text-[color:var(--hh-primary)] hover:underline"
                 >
                   {c.get('dash_test_cta')}
                 </Link>
@@ -108,13 +108,13 @@ export default function DashboardPage() {
             <div className="flex flex-wrap gap-4">
               <Link
                 href="/contact"
-                className="inline-flex items-center px-6 py-3 rounded-full bg-[#2f6b61] text-white font-medium hover:bg-[#275a52] transition"
+                className="inline-flex items-center px-6 py-3 rounded-full bg-[color:var(--hh-primary)] text-white font-medium hover:bg-[#275a52] transition"
               >
                 {c.get('dash_contact_cta')}
               </Link>
               <Link
                 href="/coaching"
-                className="inline-flex items-center px-6 py-3 rounded-full border border-stone-300 text-stone-700 font-medium hover:border-[#2f6b61] hover:text-[#2f6b61] transition"
+                className="inline-flex items-center px-6 py-3 rounded-full border border-stone-300 text-stone-700 font-medium hover:border-[color:var(--hh-primary)] hover:text-[color:var(--hh-primary)] transition"
               >
                 {c.get('dash_coaching_cta')}
               </Link>
@@ -125,7 +125,7 @@ export default function DashboardPage() {
           <div className="mt-8 text-center">
             <p className="text-sm text-stone-500">
               {c.get('dash_help_text')}{' '}
-              <a href={`mailto:${c.dash_email}`} className="text-[#2f6b61] hover:underline">
+              <a href={`mailto:${c.dash_email}`} className="text-[color:var(--hh-primary)] hover:underline">
                 {c.dash_email}
               </a>
             </p>

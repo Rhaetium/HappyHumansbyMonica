@@ -18,7 +18,7 @@ type LoadState =
 
 type SubmitState = 'idle' | 'sending' | 'done' | 'error'
 
-const ACCENT = '#2f6b61'
+const ACCENT = 'var(--hh-primary)'
 
 export default function QuestionnaireForm({ slug }: { slug: string }) {
   const [load, setLoad] = useState<LoadState>({ status: 'loading' })
@@ -147,7 +147,7 @@ export default function QuestionnaireForm({ slug }: { slug: string }) {
                   return (
                     <label
                       key={opt}
-                      className={`flex min-h-[48px] cursor-pointer items-center gap-3 rounded-xl border px-4 py-3 text-sm transition ${checked ? 'border-[#2f6b61] bg-[#eef5f3] text-stone-900' : 'border-stone-200 text-stone-700 hover:border-stone-300'}`}
+                      className={`flex min-h-[48px] cursor-pointer items-center gap-3 rounded-xl border px-4 py-3 text-sm transition ${checked ? 'border-[color:var(--hh-primary)] bg-[color:var(--hh-bg)] text-stone-900' : 'border-stone-200 text-stone-700 hover:border-stone-300'}`}
                     >
                       <input
                         type="radio"
@@ -155,7 +155,7 @@ export default function QuestionnaireForm({ slug }: { slug: string }) {
                         value={opt}
                         checked={checked}
                         onChange={() => setAnswer(q.id, opt)}
-                        className="h-4 w-4 accent-[#2f6b61]"
+                        className="h-4 w-4 accent-[color:var(--hh-primary)]"
                       />
                       <span>{opt}</span>
                     </label>
@@ -172,7 +172,7 @@ export default function QuestionnaireForm({ slug }: { slug: string }) {
                 maxLength={2000}
                 placeholder={T.text_placeholder}
                 aria-label={q.label}
-                className="w-full rounded-xl border border-stone-200 bg-stone-50 px-4 py-3 text-base text-stone-900 focus:border-[#2f6b61] focus:outline-none focus:ring-2 focus:ring-[#2f6b61]/20"
+                className="w-full rounded-xl border border-stone-200 bg-stone-50 px-4 py-3 text-base text-stone-900 focus:border-[color:var(--hh-primary)] focus:outline-none focus:ring-2 focus:ring-[color:color-mix(in_srgb,var(--hh-primary)_20%,transparent)]"
               />
             )}
           </fieldset>
@@ -186,7 +186,7 @@ export default function QuestionnaireForm({ slug }: { slug: string }) {
               onChange={e => setName(e.target.value)}
               autoComplete="name"
               maxLength={200}
-              className="min-h-[48px] w-full rounded-xl border border-stone-200 bg-stone-50 px-4 text-base focus:border-[#2f6b61] focus:outline-none"
+              className="min-h-[48px] w-full rounded-xl border border-stone-200 bg-stone-50 px-4 text-base focus:border-[color:var(--hh-primary)] focus:outline-none"
             />
           </label>
           <label className="block text-sm text-stone-700">
@@ -198,7 +198,7 @@ export default function QuestionnaireForm({ slug }: { slug: string }) {
               autoComplete="email"
               inputMode="email"
               maxLength={320}
-              className="min-h-[48px] w-full rounded-xl border border-stone-200 bg-stone-50 px-4 text-base focus:border-[#2f6b61] focus:outline-none"
+              className="min-h-[48px] w-full rounded-xl border border-stone-200 bg-stone-50 px-4 text-base focus:border-[color:var(--hh-primary)] focus:outline-none"
             />
           </label>
         </div>
@@ -206,7 +206,7 @@ export default function QuestionnaireForm({ slug }: { slug: string }) {
         <button
           type="submit"
           disabled={submit === 'sending'}
-          className="min-h-[52px] w-full rounded-full px-6 py-3 text-base font-semibold text-white shadow-md transition hover:bg-[#235249] disabled:opacity-60"
+          className="min-h-[52px] w-full rounded-full px-6 py-3 text-base font-semibold text-white shadow-md transition hover:bg-[color:var(--hh-primary)] disabled:opacity-60"
           style={{ backgroundColor: ACCENT }}
         >
           {submit === 'sending' ? T.submitting : T.submit}
@@ -233,7 +233,7 @@ function ScaleInput({ question, value, onChange }: { question: Question; value?:
               aria-checked={checked}
               aria-label={String(p)}
               onClick={() => onChange(p)}
-              className={`min-h-[48px] min-w-[44px] flex-1 rounded-xl border px-2 text-sm font-semibold transition ${checked ? 'border-[#2f6b61] bg-[#2f6b61] text-white' : 'border-stone-200 bg-stone-50 text-stone-700 hover:border-[#2f6b61]'}`}
+              className={`min-h-[48px] min-w-[44px] flex-1 rounded-xl border px-2 text-sm font-semibold transition ${checked ? 'border-[color:var(--hh-primary)] bg-[color:var(--hh-primary)] text-white' : 'border-stone-200 bg-stone-50 text-stone-700 hover:border-[color:var(--hh-primary)]'}`}
             >
               {p}
             </button>

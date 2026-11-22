@@ -54,9 +54,9 @@ export default function AProposPage() {
               {c.photo ? (
                 <EditableImage page="a-propos" fieldKey="photo" variant="block" src={c.photo} alt={c.t_monica_schneider} className="rounded-2xl object-cover object-top shadow-lg w-full h-80" />
               ) : (
-                <div className="rounded-2xl bg-gradient-to-br from-[#f5f0e8] to-[#eef5f3] h-80 flex items-center justify-center">
+                <div className="rounded-2xl bg-gradient-to-br from-[color:var(--hh-bg)] to-[color:var(--hh-bg)] h-80 flex items-center justify-center">
                   <div className="text-center">
-                    <div className="w-20 h-20 rounded-full bg-[#2d5f54] flex items-center justify-center text-white text-2xl font-serif font-bold mx-auto mb-3">{c.t_ms}</div>
+                    <div className="w-20 h-20 rounded-full bg-[color:var(--hh-primary)] flex items-center justify-center text-white text-2xl font-serif font-bold mx-auto mb-3">{c.t_ms}</div>
                     <p className="text-sm text-stone-500">{c.t_monica_schneider_2}</p>
                   </div>
                 </div>
@@ -67,7 +67,7 @@ export default function AProposPage() {
       </section>
     ),
     accompagnements: (
-      <section className="bg-[#f7f4ef] py-20 md:py-28">
+      <section className="bg-[color:var(--hh-bg)] py-20 md:py-28">
         <div className="mx-auto max-w-5xl px-6 md:px-10">
           <div className="mb-12 text-center">
             <p className="mb-2 text-xs font-bold uppercase tracking-[0.2em] text-amber-800">{c.get('acc_badge')}</p>
@@ -77,24 +77,24 @@ export default function AProposPage() {
           <div className="grid gap-8 md:grid-cols-2">
             {/* Coaching */}
             <div className="bg-white rounded-2xl p-8 shadow-sm">
-              <div className="mb-4 flex h-10 w-10 items-center justify-center rounded-full bg-[#eef5f3]">
+              <div className="mb-4 flex h-10 w-10 items-center justify-center rounded-full bg-[color:var(--hh-bg)]">
                 <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="#2d5f54" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round"><path d="M12 2l2.4 7.4H22l-6.2 4.5 2.4 7.4L12 17l-6.2 4.3 2.4-7.4L2 9.4h7.6z"/></svg>
               </div>
               <h3 className="text-xl font-serif font-semibold text-stone-900 mb-4">{c.get('coaching_label')}</h3>
               <p className="text-sm leading-relaxed text-stone-600">{c.get('coaching_text')}</p>
-              <Link href="/coaching" className="mt-6 inline-flex items-center gap-2 text-sm font-semibold text-[#2f6b61] hover:underline">
+              <Link href="/coaching" className="mt-6 inline-flex items-center gap-2 text-sm font-semibold text-[color:var(--hh-primary)] hover:underline">
                 {c.get('coaching_cta')}
               </Link>
             </div>
 
             {/* Mentoring */}
             <div className="bg-white rounded-2xl p-8 shadow-sm">
-              <div className="mb-4 flex h-10 w-10 items-center justify-center rounded-full bg-[#eef5f3]">
+              <div className="mb-4 flex h-10 w-10 items-center justify-center rounded-full bg-[color:var(--hh-bg)]">
                 <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="#2d5f54" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round"><path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z"/></svg>
               </div>
               <h3 className="text-xl font-serif font-semibold text-stone-900 mb-4">{c.get('mentoring_label')}</h3>
               <p className="text-sm leading-relaxed text-stone-600">{c.get('mentoring_text')}</p>
-              <Link href="/contact" className="mt-6 inline-flex items-center gap-2 text-sm font-semibold text-[#2f6b61] hover:underline">
+              <Link href="/contact" className="mt-6 inline-flex items-center gap-2 text-sm font-semibold text-[color:var(--hh-primary)] hover:underline">
                 {c.get('mentoring_cta')}
               </Link>
             </div>
@@ -105,12 +105,12 @@ export default function AProposPage() {
     happiness_design: (
       <section className="bg-white py-16 md:py-20">
         <div className="mx-auto max-w-3xl px-6 md:px-10">
-          <div className="rounded-2xl bg-[#f5f0e8] border border-amber-200 p-8 md:p-10">
+          <div className="rounded-2xl bg-[color:var(--hh-bg)] border border-amber-200 p-8 md:p-10">
             <p className="text-xs font-bold uppercase tracking-[0.2em] text-amber-800 mb-3">{c.get('hd_badge')}</p>
             <p className="text-base leading-relaxed text-stone-700 mb-6">
               {c.get('hd_text', undefined, { multiline: true })}
             </p>
-            <Link href="/happiness-design" className="inline-flex items-center gap-2 text-sm font-semibold text-[#2f6b61] hover:underline">
+            <Link href="/happiness-design" className="inline-flex items-center gap-2 text-sm font-semibold text-[color:var(--hh-primary)] hover:underline">
               {c.get('hd_cta')}
             </Link>
           </div>
@@ -118,11 +118,11 @@ export default function AProposPage() {
       </section>
     ),
     cta: (
-      <section className="bg-[#2f6b61] py-16 text-center">
+      <section className="bg-[color:var(--hh-primary)] py-16 text-center">
         <div className="mx-auto max-w-2xl px-6">
           <h2 className="mb-4 text-2xl font-serif font-light text-white">{c.get('footer_cta_title')}</h2>
           <div className="flex flex-wrap justify-center gap-4 mt-6">
-            <Link href="/coaching" className="rounded-full bg-white px-7 py-3 text-sm font-semibold text-[#2f6b61] hover:bg-amber-50 transition">
+            <Link href="/coaching" className="rounded-full bg-white px-7 py-3 text-sm font-semibold text-[color:var(--hh-primary)] hover:bg-amber-50 transition">
               {c.get('footer_cta_coaching')}
             </Link>
             <Link href="/booking" className="rounded-full border border-white px-7 py-3 text-sm font-semibold text-white hover:bg-white/10 transition">

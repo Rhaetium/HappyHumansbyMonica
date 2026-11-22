@@ -13,18 +13,18 @@ export default function Footer() {
   const logo = resolveLogo(settings, { sizeKey: 'logo_footer_size', fallbackSize: 48, maxSize: 72, onDark: true })
   return (
     <footer className="border-t px-6 py-10 md:px-10"
-      style={{ backgroundColor: '#1e3a34', borderColor: '#2d5f54' }}>
+      style={{ backgroundColor: 'var(--hh-dark)', borderColor: 'var(--hh-primary)' }}>
       <div className="mx-auto max-w-5xl">
         <div className="grid grid-cols-1 md:grid-cols-3 gap-8 mb-8">
 
           {/* Brand */}
           <div>
             <Link href="/" aria-label={c.site_name} className="inline-flex items-center gap-3"
-              style={{ fontFamily: 'Cormorant Garamond, serif', fontSize: '1.1rem', letterSpacing: '0.08em', color: '#f5f0e8', fontWeight: 400 }}>
+              style={{ fontFamily: 'Cormorant Garamond, serif', fontSize: '1.1rem', letterSpacing: '0.08em', color: 'var(--hh-bg)', fontWeight: 400 }}>
               <SiteLogo url={logo.url} size={logo.size} shape={logo.shape} alt="" />
               {logo.showName && c.site_name.toUpperCase()}
             </Link>
-            <p className="text-xs italic mt-1" style={{ color: '#c9a96e', fontFamily: 'Cormorant Garamond, serif' }}>
+            <p className="text-xs italic mt-1" style={{ color: 'var(--hh-accent)', fontFamily: 'Cormorant Garamond, serif' }}>
               {c.get('tagline')}
             </p>
             <p className="text-xs mt-2" style={{ color: '#a9c4bd' }}>{c.get('description')}</p>
@@ -39,7 +39,7 @@ export default function Footer() {
 
           {/* Navigation */}
           <div>
-            <p className="text-xs uppercase tracking-widest mb-3" style={{ color: '#c9a96e' }}>{c.get('footer_nav_title')}</p>
+            <p className="text-xs uppercase tracking-widest mb-3" style={{ color: 'var(--hh-accent)' }}>{c.get('footer_nav_title')}</p>
             <div className="flex flex-col gap-2 text-xs" style={{ color: '#a9c4bd' }}>
               <Link href="/" className="hover:text-white transition">{c.get('footer_nav_home')}</Link>
               <Link href="/coaching" className="hover:text-white transition">{c.get('footer_nav_coaching')}</Link>
@@ -55,7 +55,7 @@ export default function Footer() {
 
           {/* Services */}
           <div>
-            <p className="text-xs uppercase tracking-widest mb-3" style={{ color: '#c9a96e' }}>{c.get('footer_services_title')}</p>
+            <p className="text-xs uppercase tracking-widest mb-3" style={{ color: 'var(--hh-accent)' }}>{c.get('footer_services_title')}</p>
             <div className="flex flex-col gap-2 text-xs" style={{ color: '#a9c4bd' }}>
               {[1,2,3,4,5].map(i => {
                 const val = c.get(`service_${i}`)
@@ -67,7 +67,7 @@ export default function Footer() {
 
         </div>
 
-        <div className="w-full h-px mb-6" style={{ backgroundColor: '#2d5f54' }} />
+        <div className="w-full h-px mb-6" style={{ backgroundColor: 'var(--hh-primary)' }} />
 
         <div className="flex flex-col md:flex-row items-center justify-between gap-4 text-xs" style={{ color: '#a9c4bd' }}>
           <div>

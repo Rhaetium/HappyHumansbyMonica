@@ -75,7 +75,7 @@ export default function EntreprisesPage() {
               <div className="text-base leading-relaxed text-stone-600 space-y-4">
                 {c.section_text.split('\n').map((p, i) => p.trim() ? <p key={i}>{p}</p> : null)}
               </div>
-              <Link href="/contact" className="inline-flex items-center gap-2 text-sm font-semibold text-[#2f6b61] hover:underline mt-2">
+              <Link href="/contact" className="inline-flex items-center gap-2 text-sm font-semibold text-[color:var(--hh-primary)] hover:underline mt-2">
                 {c.offres_cta}
               </Link>
             </div>
@@ -90,7 +90,7 @@ export default function EntreprisesPage() {
       </section>
     ),
     domaines: (
-      <section className="bg-[#f5f0e8] py-16 md:py-20 px-6 md:px-10">
+      <section className="bg-[color:var(--hh-bg)] py-16 md:py-20 px-6 md:px-10">
         <div className="mx-auto max-w-5xl">
           <div className="mb-10 text-center">
             <p className="mb-2 text-xs font-bold uppercase tracking-[0.22em] text-amber-800">{c.domains_badge}</p>
@@ -100,7 +100,7 @@ export default function EntreprisesPage() {
           <div className="grid gap-6 md:grid-cols-3">
             {domains.map(({ icon, title, text }, i) => (
               <div key={i} className="bg-white rounded-2xl p-6 shadow-sm">
-                <div className="w-10 h-10 rounded-full bg-[#eef5f3] flex items-center justify-center mb-4 flex-shrink-0">
+                <div className="w-10 h-10 rounded-full bg-[color:var(--hh-bg)] flex items-center justify-center mb-4 flex-shrink-0">
                   {icon}
                 </div>
                 <h3 className="text-sm font-semibold text-stone-900 mb-2">{title}</h3>
@@ -124,30 +124,30 @@ export default function EntreprisesPage() {
               <ul className="space-y-2 text-sm text-stone-600">
                 {lines(c.flash_features).map(item => (
                   <li key={item} className="flex items-start gap-2">
-                    <span className="text-[#2f6b61] mt-0.5 font-bold">→</span>
+                    <span className="text-[color:var(--hh-primary)] mt-0.5 font-bold">→</span>
                     <span>{item}</span>
                   </li>
                 ))}
               </ul>
               <div className="flex flex-wrap gap-3 pt-2">
-                <div className="rounded-xl bg-[#f5f0e8] border border-stone-200 px-4 py-2.5 text-center">
+                <div className="rounded-xl bg-[color:var(--hh-bg)] border border-stone-200 px-4 py-2.5 text-center">
                   <p className="text-xs text-stone-400 uppercase tracking-wider">{c.t_format}</p>
                   <p className="text-sm font-semibold text-stone-900 mt-0.5">{c.flash_format}</p>
                 </div>
-                <div className="rounded-xl bg-[#f5f0e8] border border-stone-200 px-4 py-2.5 text-center">
+                <div className="rounded-xl bg-[color:var(--hh-bg)] border border-stone-200 px-4 py-2.5 text-center">
                   <p className="text-xs text-stone-400 uppercase tracking-wider">{c.t_rythme}</p>
                   <p className="text-sm font-semibold text-stone-900 mt-0.5">{c.flash_rythme}</p>
                 </div>
-                <div className="rounded-xl bg-[#2f6b61] border border-[#2f6b61] px-4 py-2.5 text-center">
+                <div className="rounded-xl bg-[color:var(--hh-primary)] border border-[color:var(--hh-primary)] px-4 py-2.5 text-center">
                   <p className="text-xs text-emerald-200 uppercase tracking-wider">{c.t_tarif}</p>
                   <p className="text-sm font-semibold text-white mt-0.5">{c.flash_tarif}</p>
                 </div>
               </div>
-              <Link href="/contact" className="inline-flex items-center gap-2 text-sm font-semibold text-[#2f6b61] hover:underline">
+              <Link href="/contact" className="inline-flex items-center gap-2 text-sm font-semibold text-[color:var(--hh-primary)] hover:underline">
                 {c.flash_cta_link}
               </Link>
             </div>
-            <div className="rounded-2xl bg-[#f5f0e8] p-8 border border-stone-100">
+            <div className="rounded-2xl bg-[color:var(--hh-bg)] p-8 border border-stone-100">
               <p className="text-xs font-bold uppercase tracking-[0.15em] text-amber-800 mb-4">{c.sparring_badge}</p>
               <h3 className="text-xl font-serif font-semibold text-stone-900 mb-4">{c.sparring_title}</h3>
               <p className="text-sm leading-relaxed text-stone-600 mb-5">
@@ -161,7 +161,7 @@ export default function EntreprisesPage() {
                   </li>
                 ))}
               </ul>
-              <Link href="/sparring-partner" className="inline-block rounded-full bg-[#2f6b61] px-6 py-2.5 text-sm font-semibold text-white hover:bg-[#235249] transition">
+              <Link href="/sparring-partner" className="inline-block rounded-full bg-[color:var(--hh-primary)] px-6 py-2.5 text-sm font-semibold text-white hover:bg-[color:var(--hh-primary)] transition">
                 {c.sparring_cta_link}
               </Link>
             </div>
@@ -170,10 +170,10 @@ export default function EntreprisesPage() {
       </section>
     ),
     contact: (
-      <section className="bg-[#2f6b61] py-16 text-center">
+      <section className="bg-[color:var(--hh-primary)] py-16 text-center">
         <div className="mx-auto max-w-xl px-6">
           <h2 className="mb-4 text-2xl font-serif font-light text-white">{c.cta_title}</h2>
-          <Link href="/contact" className="rounded-full bg-white px-8 py-3 text-sm font-semibold text-[#2f6b61] hover:bg-amber-50 transition">
+          <Link href="/contact" className="rounded-full bg-white px-8 py-3 text-sm font-semibold text-[color:var(--hh-primary)] hover:bg-amber-50 transition">
             {c.cta_button}
           </Link>
         </div>
@@ -189,7 +189,7 @@ export default function EntreprisesPage() {
           </div>
           <div className="grid gap-6 md:grid-cols-3">
             {pricingCards.map(({ label, price, unit, desc, items, cta, highlight }, i) => (
-              <div key={`${label}-${i}`} className={`rounded-2xl p-7 flex flex-col ${highlight ? 'bg-[#2f6b61] text-white shadow-lg ring-2 ring-[#2f6b61]' : 'bg-[#f7f4ef] text-stone-900'}`}>
+              <div key={`${label}-${i}`} className={`rounded-2xl p-7 flex flex-col ${highlight ? 'bg-[color:var(--hh-primary)] text-white shadow-lg ring-2 ring-[color:var(--hh-primary)]' : 'bg-[color:var(--hh-bg)] text-stone-900'}`}>
                 <p className={`text-xs font-bold uppercase tracking-[0.2em] mb-3 ${highlight ? 'text-emerald-200' : 'text-amber-800'}`}>{label}</p>
                 <div className="mb-1">
                   <span className={`text-2xl font-serif font-semibold ${highlight ? 'text-white' : 'text-stone-900'}`}>{price}</span>
@@ -203,7 +203,7 @@ export default function EntreprisesPage() {
                     </li>
                   ))}
                 </ul>
-                <Link href="/contact" className={`mt-auto rounded-full py-2.5 text-center text-sm font-semibold transition ${highlight ? 'bg-white text-[#2f6b61] hover:bg-stone-50' : 'bg-[#2f6b61] text-white hover:bg-[#235249]'}`}>{cta}</Link>
+                <Link href="/contact" className={`mt-auto rounded-full py-2.5 text-center text-sm font-semibold transition ${highlight ? 'bg-white text-[color:var(--hh-primary)] hover:bg-stone-50' : 'bg-[color:var(--hh-primary)] text-white hover:bg-[color:var(--hh-primary)]'}`}>{cta}</Link>
               </div>
             ))}
           </div>
@@ -212,7 +212,7 @@ export default function EntreprisesPage() {
       </section>
     ),
     pourquoi: (
-      <section className="bg-[#f5f0e8] py-12 md:py-16 px-6 md:px-10">
+      <section className="bg-[color:var(--hh-bg)] py-12 md:py-16 px-6 md:px-10">
         <div className="mx-auto max-w-3xl">
           <div className="rounded-2xl bg-white border border-amber-200 p-8 md:p-10">
             <p className="text-xs font-bold uppercase tracking-[0.2em] text-amber-800 mb-3">{c.diff_badge}</p>
@@ -222,7 +222,7 @@ export default function EntreprisesPage() {
             <div className="text-base leading-relaxed text-stone-600 space-y-4">
               {lines(c.diff_text).map((p, i) => <p key={i}>{p}</p>)}
             </div>
-            <Link href="/contact" className="mt-6 inline-flex items-center gap-2 text-sm font-semibold text-[#2f6b61] hover:underline">
+            <Link href="/contact" className="mt-6 inline-flex items-center gap-2 text-sm font-semibold text-[color:var(--hh-primary)] hover:underline">
               {c.diff_cta_link}
             </Link>
           </div>
@@ -230,10 +230,10 @@ export default function EntreprisesPage() {
       </section>
     ),
     temoignage: (
-      <section className="bg-[#f7f4ef] py-14 md:py-16">
+      <section className="bg-[color:var(--hh-bg)] py-14 md:py-16">
         <div className="mx-auto max-w-2xl px-6 md:px-10">
           <div className="bg-white rounded-2xl p-8 shadow-sm text-center">
-            <span className="text-3xl font-serif leading-none text-[#2f6b61] select-none">&ldquo;</span>
+            <span className="text-3xl font-serif leading-none text-[color:var(--hh-primary)] select-none">&ldquo;</span>
             <blockquote lang="fr" className="mt-3 text-base leading-relaxed text-stone-700 italic">
               {c.get('temoignage_dorothee_text', undefined, { multiline: true })}
             </blockquote>

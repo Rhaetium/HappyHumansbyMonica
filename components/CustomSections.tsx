@@ -17,7 +17,7 @@ export function CustomBlockView({ b }: { b: CustomBlock }) {
           {b.title && <h2 className="mb-4 text-2xl font-serif font-light text-stone-900 md:text-3xl">{b.title}</h2>}
           {b.text && <p className="whitespace-pre-line text-base leading-relaxed text-stone-600">{b.text}</p>}
           {b.ctaLabel && b.ctaHref && (
-            <Link href={b.ctaHref} className="mt-6 inline-block rounded-full bg-[#2d5f54] px-7 py-3 text-sm font-semibold text-white transition hover:bg-[#1e3a34]">
+            <Link href={b.ctaHref} className="mt-6 inline-block rounded-full bg-[color:var(--hh-primary)] px-7 py-3 text-sm font-semibold text-white transition hover:bg-[color:var(--hh-dark)]">
               {b.ctaLabel}
             </Link>
           )}
@@ -58,11 +58,11 @@ export function CustomBlockView({ b }: { b: CustomBlock }) {
       );
     case 'cta':
       return (
-        <section className="bg-[#2d5f54] px-6 py-14 text-center md:py-20">
+        <section className="bg-[color:var(--hh-primary)] px-6 py-14 text-center md:py-20">
           <div className="mx-auto max-w-xl">
             <h2 className="mb-3 text-2xl font-serif font-light text-white">{b.title}</h2>
             {b.text && <p className="mb-7 whitespace-pre-line text-sm leading-relaxed text-emerald-100">{b.text}</p>}
-            <Link href={b.href} className="inline-block rounded-full bg-white px-8 py-3 text-sm font-semibold text-[#2d5f54] transition hover:bg-amber-50">
+            <Link href={b.href} className="inline-block rounded-full bg-white px-8 py-3 text-sm font-semibold text-[color:var(--hh-primary)] transition hover:bg-amber-50">
               {b.button}
             </Link>
           </div>
@@ -70,7 +70,7 @@ export function CustomBlockView({ b }: { b: CustomBlock }) {
       );
     case 'citation':
       return (
-        <section className="bg-[#f5f0e8] px-6 py-14 text-center md:px-10 md:py-20">
+        <section className="bg-[color:var(--hh-bg)] px-6 py-14 text-center md:px-10 md:py-20">
           <div className="mx-auto max-w-3xl">
             <p className="font-serif text-xl font-light italic leading-relaxed text-stone-800 md:text-2xl">« {b.quote} »</p>
             {b.author && <p className="mt-4 text-sm font-semibold uppercase tracking-[0.18em] text-stone-500">— {b.author}</p>}
@@ -82,7 +82,7 @@ export function CustomBlockView({ b }: { b: CustomBlock }) {
       if (items.length === 0) return null;
       const schema = faqPageSchema(items);
       return (
-        <section className="bg-[#f5f0e8] px-6 py-14 md:px-10 md:py-20">
+        <section className="bg-[color:var(--hh-bg)] px-6 py-14 md:px-10 md:py-20">
           <div className="mx-auto max-w-3xl">
             {b.badge && <p className="mb-2 text-center text-xs font-bold uppercase tracking-[0.22em] text-amber-800">{b.badge}</p>}
             {b.title && <h2 className="mb-8 text-center text-2xl font-serif font-light text-stone-900 md:text-3xl">{b.title}</h2>}
@@ -92,9 +92,9 @@ export function CustomBlockView({ b }: { b: CustomBlock }) {
                 <details key={i} className="group py-4">
                   <summary className="flex cursor-pointer list-none items-start justify-between gap-4 text-left text-base font-medium text-stone-900">
                     <span>{it.q}</span>
-                    <span aria-hidden className="mt-0.5 text-xl leading-none text-[#2d5f54] transition-transform group-open:rotate-45">+</span>
+                    <span aria-hidden className="mt-0.5 text-xl leading-none text-[color:var(--hh-primary)] transition-transform group-open:rotate-45">+</span>
                   </summary>
-                  <p className="mt-3 whitespace-pre-line border-l-2 border-[#2d5f54] pl-4 text-sm leading-relaxed text-stone-600">{it.a}</p>
+                  <p className="mt-3 whitespace-pre-line border-l-2 border-[color:var(--hh-primary)] pl-4 text-sm leading-relaxed text-stone-600">{it.a}</p>
                 </details>
               ))}
             </div>
@@ -114,7 +114,7 @@ export function CustomBlockView({ b }: { b: CustomBlock }) {
             <ul className="space-y-3">
               {points.map((p, i) => (
                 <li key={i} className="flex gap-3 text-base leading-relaxed text-stone-600">
-                  <span aria-hidden className="mt-1 text-[#2d5f54]">✓</span>
+                  <span aria-hidden className="mt-1 text-[color:var(--hh-primary)]">✓</span>
                   <span>{p}</span>
                 </li>
               ))}
@@ -133,7 +133,7 @@ export function CustomBlockView({ b }: { b: CustomBlock }) {
             <dl className="grid gap-8 text-center sm:grid-cols-2 lg:grid-cols-4">
               {stats.map((st, i) => (
                 <div key={i}>
-                  <dt className="font-serif text-4xl font-light text-[#2d5f54] md:text-5xl">{st.value}</dt>
+                  <dt className="font-serif text-4xl font-light text-[color:var(--hh-primary)] md:text-5xl">{st.value}</dt>
                   {st.label && <dd className="mt-2 text-sm leading-snug text-stone-500">{st.label}</dd>}
                 </div>
               ))}

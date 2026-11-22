@@ -95,7 +95,7 @@ function CalendlyEmbed({
     <>
       {label && (
         <div className="flex justify-center mb-4">
-          <span className="bg-[#eef5f3] text-[#2d5f54] text-xs font-semibold rounded-full px-3 py-1">
+          <span className="bg-[color:var(--hh-bg)] text-[color:var(--hh-primary)] text-xs font-semibold rounded-full px-3 py-1">
             {label}
           </span>
         </div>

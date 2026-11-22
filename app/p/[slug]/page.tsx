@@ -55,7 +55,7 @@ export default async function CustomCmsPage(props: Props) {
     <>
       <Header />
       <main className="pt-[72px]">
-        <section className="bg-[#f5f0e8] px-6 py-20 text-center md:px-10 md:py-24">
+        <section className="bg-[color:var(--hh-bg)] px-6 py-20 text-center md:px-10 md:py-24">
           <h1 className="mx-auto max-w-3xl font-serif text-3xl font-light text-stone-900 md:text-5xl">{page.title}</h1>
           {page.intro && (
             <p className="mx-auto mt-6 max-w-2xl whitespace-pre-line text-base leading-relaxed text-stone-600 md:text-lg">

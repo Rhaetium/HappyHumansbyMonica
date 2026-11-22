@@ -105,7 +105,7 @@ export default function LandingPage({ faq = [] }: { faq?: HomeFaqItem[] }) {
           <div className="mt-10 flex flex-col items-center gap-3 sm:flex-row sm:justify-center">
             <button
               onClick={() => setBookingOpen(true)}
-              className="rounded-full bg-[#2d5f54] px-8 py-3.5 text-sm font-semibold text-white shadow hover:bg-[#1e3a34] transition"
+              className="rounded-full bg-[color:var(--hh-primary)] px-8 py-3.5 text-sm font-semibold text-white shadow hover:bg-[color:var(--hh-dark)] transition"
             >
               {c.get('hero_cta_primary')}
             </button>
@@ -120,7 +120,7 @@ export default function LandingPage({ faq = [] }: { faq?: HomeFaqItem[] }) {
       </section>
     ),
     services: (
-      <section className="bg-[#f5f0e8] px-6 py-20 md:px-10 md:py-24" id="services">
+      <section className="bg-[color:var(--hh-bg)] px-6 py-20 md:px-10 md:py-24" id="services">
         <div className="mx-auto max-w-5xl">
           <div className="mb-12 text-center">
             <p className="mb-2 text-xs font-bold uppercase tracking-[0.22em] text-amber-800">{c.get('services_badge')}</p>
@@ -128,22 +128,22 @@ export default function LandingPage({ faq = [] }: { faq?: HomeFaqItem[] }) {
           </div>
           <div className="grid gap-6 md:grid-cols-2">
             <div className="rounded-2xl bg-white p-8 shadow-sm">
-              <div className="mb-4 flex h-10 w-10 items-center justify-center rounded-full bg-[#eef4f3]">
+              <div className="mb-4 flex h-10 w-10 items-center justify-center rounded-full bg-[color:var(--hh-bg)]">
                 <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="#2d5f54" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round"><path d="M20.84 4.61a5.5 5.5 0 0 0-7.78 0L12 5.67l-1.06-1.06a5.5 5.5 0 0 0-7.78 7.78l1.06 1.06L12 21.23l7.78-7.78 1.06-1.06a5.5 5.5 0 0 0 0-7.78z"/></svg>
               </div>
               <h3 className="mb-3 text-xl font-serif font-semibold text-stone-900">{c.get('services_b2c_title')}</h3>
               <p className="mb-5 text-sm leading-relaxed text-stone-600">{c.get('services_b2c_text')}</p>
-              <button onClick={() => setBookingOpen(true)} className="text-sm font-semibold text-[#2d5f54] hover:underline">
+              <button onClick={() => setBookingOpen(true)} className="text-sm font-semibold text-[color:var(--hh-primary)] hover:underline">
                 {c.get('services_b2c_cta')}
               </button>
             </div>
             <div className="rounded-2xl bg-white p-8 shadow-sm">
-              <div className="mb-4 flex h-10 w-10 items-center justify-center rounded-full bg-[#eef4f3]">
+              <div className="mb-4 flex h-10 w-10 items-center justify-center rounded-full bg-[color:var(--hh-bg)]">
                 <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="#2d5f54" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round"><rect x="2" y="7" width="20" height="14" rx="2"/><path d="M16 7V5a2 2 0 0 0-2-2h-4a2 2 0 0 0-2 2v2"/><line x1="12" y1="12" x2="12" y2="16"/><line x1="10" y1="14" x2="14" y2="14"/></svg>
               </div>
               <h3 className="mb-3 text-xl font-serif font-semibold text-stone-900">{c.get('services_b2b_title')}</h3>
               <p className="mb-5 text-sm leading-relaxed text-stone-600">{c.get('services_b2b_text')}</p>
-              <a href="#contact" className="text-sm font-semibold text-[#2d5f54] hover:underline">
+              <a href="#contact" className="text-sm font-semibold text-[color:var(--hh-primary)] hover:underline">
                 {c.get('services_b2b_cta')}
               </a>
             </div>
@@ -160,13 +160,13 @@ export default function LandingPage({ faq = [] }: { faq?: HomeFaqItem[] }) {
           </div>
           <div className="grid gap-5 sm:grid-cols-2 lg:grid-cols-4">
             {orderedCards.map((card) => (
-              <Link key={card.href} href={card.href} className="group flex h-full flex-col rounded-2xl bg-[#f5f0e8] p-7 transition duration-200 hover:-translate-y-0.5 hover:bg-[#eef5f3] hover:shadow-md focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-[#2d5f54]">
+              <Link key={card.href} href={card.href} className="group flex h-full flex-col rounded-2xl bg-[color:var(--hh-bg)] p-7 transition duration-200 hover:-translate-y-0.5 hover:bg-[color:var(--hh-bg)] hover:shadow-md focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-[color:var(--hh-primary)]">
                 <div className="mb-5 w-10 h-10 rounded-full bg-white flex items-center justify-center shadow-sm">
                   {card.icon}
                 </div>
-                <h3 className="mb-2 text-lg font-serif font-semibold text-stone-900 group-hover:text-[#2d5f54] transition">{card.title}</h3>
+                <h3 className="mb-2 text-lg font-serif font-semibold text-stone-900 group-hover:text-[color:var(--hh-primary)] transition">{card.title}</h3>
                 <p className="text-sm text-stone-500 leading-relaxed mb-4">{card.desc}</p>
-                <span className="mt-auto text-sm font-semibold text-[#2d5f54]">{c.get('cards_link_label')}</span>
+                <span className="mt-auto text-sm font-semibold text-[color:var(--hh-primary)]">{c.get('cards_link_label')}</span>
               </Link>
             ))}
           </div>
@@ -174,7 +174,7 @@ export default function LandingPage({ faq = [] }: { faq?: HomeFaqItem[] }) {
       </section>
     ),
     faq: faq.length === 0 ? null : (
-      <section className="bg-[#f5f0e8] px-6 py-20 md:px-10 md:py-24" id="faq">
+      <section className="bg-[color:var(--hh-bg)] px-6 py-20 md:px-10 md:py-24" id="faq">
         <div className="mx-auto max-w-3xl">
           <div className="mb-10 text-center">
             <p className="mb-2 text-xs font-bold uppercase tracking-[0.22em] text-amber-800">{c.get('faq_badge')}</p>
@@ -186,20 +186,20 @@ export default function LandingPage({ faq = [] }: { faq?: HomeFaqItem[] }) {
               <details key={i} className="group py-4">
                 <summary className="flex cursor-pointer list-none items-start justify-between gap-4 text-left text-base font-medium text-stone-900">
                   <span>{item.q}</span>
-                  <span aria-hidden className="mt-0.5 text-xl leading-none text-[#2d5f54] transition-transform group-open:rotate-45">+</span>
+                  <span aria-hidden className="mt-0.5 text-xl leading-none text-[color:var(--hh-primary)] transition-transform group-open:rotate-45">+</span>
                 </summary>
-                <p className="mt-3 border-l-2 border-[#2d5f54] pl-4 text-sm leading-relaxed text-stone-600">{item.a}</p>
+                <p className="mt-3 border-l-2 border-[color:var(--hh-primary)] pl-4 text-sm leading-relaxed text-stone-600">{item.a}</p>
               </details>
             ))}
           </div>
           <p className="mt-8 text-center">
-            <Link href="/faq" className="text-sm font-semibold text-[#2d5f54] hover:underline">{c.get('faq_more_label')}</Link>
+            <Link href="/faq" className="text-sm font-semibold text-[color:var(--hh-primary)] hover:underline">{c.get('faq_more_label')}</Link>
           </p>
         </div>
       </section>
     ),
     booking: (
-      <section className="bg-[#f5f0e8] px-6 py-20 md:px-10 md:py-24" id="booking">
+      <section className="bg-[color:var(--hh-bg)] px-6 py-20 md:px-10 md:py-24" id="booking">
         <div className="mx-auto max-w-4xl">
           <div className="mb-10 text-center">
             <p className="mb-2 text-xs font-bold uppercase tracking-[0.22em] text-amber-800">{c.get('booking_badge')}</p>
@@ -219,7 +219,7 @@ export default function LandingPage({ faq = [] }: { faq?: HomeFaqItem[] }) {
             href={bookingUrl}
             target="_blank"
             rel="noopener noreferrer"
-            className="group relative mx-auto flex max-w-sm flex-col items-center rounded-2xl bg-gradient-to-br from-[#2d5f54] via-[#2f6b61] to-[#3d7a72] p-8 text-center shadow-xl transition-all duration-300 hover:scale-[1.02] hover:shadow-2xl hover:shadow-[#2d5f54]/20"
+            className="group relative mx-auto flex max-w-sm flex-col items-center rounded-2xl bg-gradient-to-br from-[color:var(--hh-primary)] via-[color:var(--hh-primary)] to-[#3d7a72] p-8 text-center shadow-xl transition-all duration-300 hover:scale-[1.02] hover:shadow-2xl hover:shadow-[color:color-mix(in_srgb,var(--hh-primary)_20%,transparent)]"
           >
             {/* Decorative circles */}
             <div className="absolute -right-4 -top-4 h-24 w-24 rounded-full bg-white/10 blur-2xl" />
@@ -245,7 +245,7 @@ export default function LandingPage({ faq = [] }: { faq?: HomeFaqItem[] }) {
             </p>
               
             {/* Button */}
-            <span className="inline-flex items-center gap-2 rounded-full bg-white px-6 py-3 text-sm font-semibold text-[#2d5f54] shadow-lg transition-all duration-200 group-hover:gap-3">
+            <span className="inline-flex items-center gap-2 rounded-full bg-white px-6 py-3 text-sm font-semibold text-[color:var(--hh-primary)] shadow-lg transition-all duration-200 group-hover:gap-3">
               {c.t_reserver_maintenant}
               <svg className="h-4 w-4 transition-transform group-hover:translate-x-1" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
                 <path d="M5 12h14M12 5l7 7-7 7"/>
@@ -288,7 +288,7 @@ export default function LandingPage({ faq = [] }: { faq?: HomeFaqItem[] }) {
           </div>
           {sent ? (
             <div className="rounded-2xl bg-emerald-50 border border-emerald-200 p-10 text-center">
-              <div className="w-12 h-12 mx-auto mb-4 rounded-full bg-[#2d5f54] flex items-center justify-center"><svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="white" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><polyline points="20 6 9 17 4 12"/></svg></div>
+              <div className="w-12 h-12 mx-auto mb-4 rounded-full bg-[color:var(--hh-primary)] flex items-center justify-center"><svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="white" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><polyline points="20 6 9 17 4 12"/></svg></div>
               <h3 className="text-lg font-semibold text-stone-900 mb-2">{c.get('form_success_title')}</h3>
               <p className="text-sm text-stone-500">{c.form_success_body.replace('{email}', form.email)}</p>
             </div>
@@ -297,23 +297,23 @@ export default function LandingPage({ faq = [] }: { faq?: HomeFaqItem[] }) {
               <div className="grid gap-4 sm:grid-cols-2">
                 <div>
                   <label className="mb-1.5 block text-xs font-semibold uppercase tracking-wider text-stone-400">{c.t_nom}</label>
-                  <input required value={form.name} onChange={e => setForm(f => ({...f, name: e.target.value}))} className="w-full rounded-xl border border-stone-200 px-4 py-3 text-sm outline-none focus:border-[#2d5f54]" placeholder={c.t_votre_nom} />
+                  <input required value={form.name} onChange={e => setForm(f => ({...f, name: e.target.value}))} className="w-full rounded-xl border border-stone-200 px-4 py-3 text-sm outline-none focus:border-[color:var(--hh-primary)]" placeholder={c.t_votre_nom} />
                 </div>
                 <div>
                   <label className="mb-1.5 block text-xs font-semibold uppercase tracking-wider text-stone-400">{c.t_email}</label>
-                  <input required type="email" value={form.email} onChange={e => setForm(f => ({...f, email: e.target.value}))} className="w-full rounded-xl border border-stone-200 px-4 py-3 text-sm outline-none focus:border-[#2d5f54]" placeholder={c.t_votre_email_com} />
+                  <input required type="email" value={form.email} onChange={e => setForm(f => ({...f, email: e.target.value}))} className="w-full rounded-xl border border-stone-200 px-4 py-3 text-sm outline-none focus:border-[color:var(--hh-primary)]" placeholder={c.t_votre_email_com} />
                 </div>
               </div>
               <div>
                 <label className="mb-1.5 block text-xs font-semibold uppercase tracking-wider text-stone-400">{c.t_message}</label>
-                <textarea required value={form.message} onChange={e => setForm(f => ({...f, message: e.target.value}))} rows={4} className="w-full rounded-xl border border-stone-200 px-4 py-3 text-sm outline-none focus:border-[#2d5f54] resize-none" placeholder={c.t_votre_question_ou_demande} />
+                <textarea required value={form.message} onChange={e => setForm(f => ({...f, message: e.target.value}))} rows={4} className="w-full rounded-xl border border-stone-200 px-4 py-3 text-sm outline-none focus:border-[color:var(--hh-primary)] resize-none" placeholder={c.t_votre_question_ou_demande} />
               </div>
-              <button type="submit" disabled={sending} className="w-full rounded-full bg-[#2d5f54] py-3.5 text-sm font-semibold text-white hover:bg-[#1e3a34] disabled:opacity-60 transition">
+              <button type="submit" disabled={sending} className="w-full rounded-full bg-[color:var(--hh-primary)] py-3.5 text-sm font-semibold text-white hover:bg-[color:var(--hh-dark)] disabled:opacity-60 transition">
                 {sending ? c.form_sending : c.form_submit}
               </button>
               {contactEmail && (
                 <p className="text-center text-xs text-stone-400">
-                  {c.contact_email_label} <a href={`mailto:${contactEmail}`} className="text-[#2d5f54] hover:underline">{contactEmail}</a>
+                  {c.contact_email_label} <a href={`mailto:${contactEmail}`} className="text-[color:var(--hh-primary)] hover:underline">{contactEmail}</a>
                 </p>
               )}
             </form>
@@ -329,7 +329,7 @@ export default function LandingPage({ faq = [] }: { faq?: HomeFaqItem[] }) {
   )
 
   return (
-    <div className="min-h-screen bg-[#f5f0e8] font-sans">
+    <div className="min-h-screen bg-[color:var(--hh-bg)] font-sans">
       <Header />
       <main className="pt-[72px]">
         {sectionIds.map(id => {
@@ -373,7 +373,7 @@ export default function LandingPage({ faq = [] }: { faq?: HomeFaqItem[] }) {
                   href={bookingUrl}
                   target="_blank"
                   rel="noopener noreferrer"
-                  className="inline-flex items-center gap-2 rounded-full bg-[#2d5f54] px-8 py-3.5 text-sm font-semibold text-white shadow hover:bg-[#1e3a34] transition"
+                  className="inline-flex items-center gap-2 rounded-full bg-[color:var(--hh-primary)] px-8 py-3.5 text-sm font-semibold text-white shadow hover:bg-[color:var(--hh-dark)] transition"
                   onClick={() => setBookingOpen(false)}
                 >
                   {c.t_reserver_via_calendly}
