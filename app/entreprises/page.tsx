@@ -1,4 +1,5 @@
 'use client'
+import { safeHref } from '@/lib/safe-href'
 import Header from '@/components/Header'
 import Footer from '@/components/Footer'
 import Link from 'next/link'
@@ -75,7 +76,7 @@ export default function EntreprisesPage() {
               <div className="text-base leading-relaxed text-stone-600 space-y-4">
                 {c.section_text.split('\n').map((p, i) => p.trim() ? <p key={i}>{p}</p> : null)}
               </div>
-              <Link href="/contact" className="inline-flex items-center gap-2 text-sm font-semibold text-[color:var(--hh-primary)] hover:underline mt-2">
+              <Link href={safeHref(c.offres_cta_href, '/contact')} className="inline-flex items-center gap-2 text-sm font-semibold text-[color:var(--hh-primary)] hover:underline mt-2">
                 {c.offres_cta}
               </Link>
             </div>
@@ -143,7 +144,7 @@ export default function EntreprisesPage() {
                   <p className="text-sm font-semibold text-white mt-0.5">{c.flash_tarif}</p>
                 </div>
               </div>
-              <Link href="/contact" className="inline-flex items-center gap-2 text-sm font-semibold text-[color:var(--hh-primary)] hover:underline">
+              <Link href={safeHref(c.flash_cta_link_href, '/contact')} className="inline-flex items-center gap-2 text-sm font-semibold text-[color:var(--hh-primary)] hover:underline">
                 {c.flash_cta_link}
               </Link>
             </div>
@@ -161,7 +162,7 @@ export default function EntreprisesPage() {
                   </li>
                 ))}
               </ul>
-              <Link href="/sparring-partner" className="inline-block rounded-full bg-[color:var(--hh-primary)] px-6 py-2.5 text-sm font-semibold text-white hover:bg-[color:var(--hh-primary)] transition">
+              <Link href={safeHref(c.sparring_cta_link_href, '/sparring-partner')} className="inline-block rounded-full bg-[color:var(--hh-primary)] px-6 py-2.5 text-sm font-semibold text-white hover:bg-[color:var(--hh-primary)] transition">
                 {c.sparring_cta_link}
               </Link>
             </div>
@@ -173,7 +174,7 @@ export default function EntreprisesPage() {
       <section className="bg-[color:var(--hh-primary)] py-16 text-center">
         <div className="mx-auto max-w-xl px-6">
           <h2 className="mb-4 text-2xl font-serif font-light text-white">{c.cta_title}</h2>
-          <Link href="/contact" className="rounded-full bg-white px-8 py-3 text-sm font-semibold text-[color:var(--hh-primary)] hover:bg-amber-50 transition">
+          <Link href={safeHref(c.cta_button_href, '/contact')} className="rounded-full bg-white px-8 py-3 text-sm font-semibold text-[color:var(--hh-primary)] hover:bg-amber-50 transition">
             {c.cta_button}
           </Link>
         </div>
@@ -222,7 +223,7 @@ export default function EntreprisesPage() {
             <div className="text-base leading-relaxed text-stone-600 space-y-4">
               {lines(c.diff_text).map((p, i) => <p key={i}>{p}</p>)}
             </div>
-            <Link href="/contact" className="mt-6 inline-flex items-center gap-2 text-sm font-semibold text-[color:var(--hh-primary)] hover:underline">
+            <Link href={safeHref(c.diff_cta_link_href, '/contact')} className="mt-6 inline-flex items-center gap-2 text-sm font-semibold text-[color:var(--hh-primary)] hover:underline">
               {c.diff_cta_link}
             </Link>
           </div>

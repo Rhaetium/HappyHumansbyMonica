@@ -11,6 +11,7 @@ export const HAPPINESS_DESIGN_DEFAULTS: Record<string, string> = {
   page_subtitle: '12 séances pour reprendre les rênes de votre vie et de votre bonheur — au boulot et ailleurs.',
   intro_text:    "Neurosciences, psychologie positive, philosophie pratique, design thinking — toutes les disciplines au service d'une transformation durable, pour que vous repreniez pleinement les rênes de votre vie.",
   hero_cta:      'Séance découverte gratuite (1h)',
+  hero_cta_href: '/booking?from=happiness-design',
   // Pour qui section
   pourqui_badge:   'Pour qui',
   pourqui_title:   'Ce programme est fait pour vous si…',
@@ -71,16 +72,19 @@ export const HAPPINESS_DESIGN_DEFAULTS: Record<string, string> = {
   price_label:             'Tarif',
   price_value:             'Sur devis',
   cta_label:               'Demander un devis →',
+  cta_label_href: '/contact',
   program_complete_features: "12 séances d'1h en individuel\n4 sessions de suivi post-programme\nOutils et exercices entre les séances\nEn ligne ou en présentiel (Paris)",
   discovery_label:         'Séance découverte',
   discovery_price:         'Offerte',
   discovery_unit:          '1h · Sans engagement',
   discovery_features:      "Échange sur votre situation\nPrésentation du programme\nQuestions / réponses\nDécision libre à l'issue",
   discovery_cta:           'Réserver maintenant →',
+  discovery_cta_href: '/booking?from=happiness-design',
   // CTA
   cta_title:    "Prêt·e à reprendre les rênes ?",
   cta_subtitle: "Commençons par une séance découverte d'1h — gratuite et sans engagement.",
   cta_button:   'Réserver ma séance découverte →',
+  cta_button_href: '/booking?from=happiness-design',
   // ── Textes câblés automatiquement (étaient en dur dans la page) ──
   t_lumiere_doree_symbolisant_la: "Lumière dorée symbolisant la transformation et le bonheur",
   t_par_happy_humans: "— par Happy Humans",

@@ -1,4 +1,5 @@
 'use client'
+import { safeHref } from '@/lib/safe-href'
 import Header from '@/components/Header'
 import Footer from '@/components/Footer'
 import Link from 'next/link'
@@ -32,8 +33,8 @@ export default function SparringPartnerPage() {
           <h1 className="text-4xl font-serif font-light leading-tight text-white md:text-6xl">{c.get('hero_title')}</h1>
           <p className="mt-6 text-lg leading-relaxed text-stone-300 max-w-xl mx-auto">{c.get('hero_desc', undefined, { multiline: true })}</p>
           <div className="mt-10 flex flex-wrap gap-4 justify-center">
-            <Link href="/booking?from=sparring-partner" className="rounded-full bg-[color:var(--hh-primary)] px-7 py-3.5 text-sm font-semibold text-white shadow-md hover:bg-[color:var(--hh-primary)] transition">{c.get('hero_cta_primary')}</Link>
-            <Link href="/contact" className="rounded-full border border-stone-400 px-7 py-3.5 text-sm font-semibold text-stone-200 hover:border-white hover:text-white transition">{c.get('hero_cta_secondary')}</Link>
+            <Link href={safeHref(c.hero_cta_primary_href, '/booking?from=sparring-partner')} className="rounded-full bg-[color:var(--hh-primary)] px-7 py-3.5 text-sm font-semibold text-white shadow-md hover:bg-[color:var(--hh-primary)] transition">{c.get('hero_cta_primary')}</Link>
+            <Link href={safeHref(c.hero_cta_secondary_href, '/contact')} className="rounded-full border border-stone-400 px-7 py-3.5 text-sm font-semibold text-stone-200 hover:border-white hover:text-white transition">{c.get('hero_cta_secondary')}</Link>
           </div>
         </div>
       </section>
@@ -78,8 +79,8 @@ export default function SparringPartnerPage() {
           <h2 className="mb-3 text-2xl font-serif font-light text-white">{c.get('cta_title')}</h2>
           <p className="text-sm text-emerald-200 mb-8">{c.get('cta_desc', undefined, { multiline: true })}</p>
           <div className="flex flex-col sm:flex-row gap-4 justify-center">
-            <Link href="/booking?from=sparring-partner" className="rounded-full bg-white px-8 py-3.5 text-sm font-semibold text-[color:var(--hh-primary)] hover:bg-amber-50 transition shadow">{c.get('cta_primary')}</Link>
-            <Link href="/contact" className="rounded-full border border-white px-8 py-3.5 text-sm font-semibold text-white hover:bg-white/10 transition">{c.get('cta_secondary')}</Link>
+            <Link href={safeHref(c.cta_primary_href, '/booking?from=sparring-partner')} className="rounded-full bg-white px-8 py-3.5 text-sm font-semibold text-[color:var(--hh-primary)] hover:bg-amber-50 transition shadow">{c.get('cta_primary')}</Link>
+            <Link href={safeHref(c.cta_secondary_href, '/contact')} className="rounded-full border border-white px-8 py-3.5 text-sm font-semibold text-white hover:bg-white/10 transition">{c.get('cta_secondary')}</Link>
           </div>
         </div>
       </section>

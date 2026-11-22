@@ -9,29 +9,36 @@ const DEFAULTS = {
   hero_title:         "Il y a des moments où il faut réapprendre à habiter son rôle.",
   hero_subtitle:      "Executive Coach certifiée AoEC · EMCC Practitioner · Monica Schneider accompagne des managers, dirigeants et personnes en transition qui veulent retrouver clarté, confiance et une direction qui leur ressemble vraiment.",
   hero_cta_primary:   'Séance découverte gratuite (1h)',
+  hero_cta_primary_href: '/booking?from=coaching',
   hero_cta_contact:   'Me contacter',
+  hero_cta_contact_href: '/contact',
   coaching_b2c_image: 'https://images.unsplash.com/photo-1544027993-37dbfe43562a?w=800&q=80&auto=format&fit=crop',
   coaching_b2c_badge: 'Individuel',
   coaching_b2c_title: 'Coaching individuel',
   coaching_b2c_text: `Un espace pour ralentir, regarder ce qui se passe vraiment — et construire un mouvement qui tient dans la durée.\n\nLe coaching que je propose n'est pas un conseil. C'est un accompagnement qui part de là où vous êtes vraiment.\n\nJe m'appuie sur des techniques classiques d'executive coaching (modèles GROW, Gestalt, Solutions Focused, Co-active…) mais aussi sur des outils rencontrés plus rarement — méditation, philosophie, psychologie, design thinking) pour travailler aussi sur la transformation que vous devez accomplir au plus profond de vous pour réaliser vos objectifs.\n\nPour offrir du recul, de la clarté et de nouvelles perspectives.\n\nVous y voyez plus clair, y compris sur les prochaines actions à mettre en place.\n\nVous ressentez des moments de révélations, d'alignement profonds.\n\nVous vous retrouvez — et vous êtes prêt·e à accélérer avec un élan et une clarté revigorants.`,
   coaching_b2c_cta_link: 'Me contacter →',
+  coaching_b2c_cta_link_href: '/contact',
   coaching_b2b_image: 'https://images.unsplash.com/photo-1522071820081-009f0129c71c?w=800&q=80&auto=format&fit=crop',
   coaching_b2b_badge: 'Entreprises',
   coaching_b2b_title: 'Pour les entreprises',
   coaching_b2b_text:  "Coaching de dirigeants, ateliers de cohésion, accompagnement du changement et séminaires sur mesure.\n\nQuand une équipe perd de sa cohérence, les résultats s'en ressentent toujours. Je travaille avec les dirigeants et les entreprises pour remettre de l'alignement — entre les personnes, entre les objectifs et les moyens, entre ce qu'on dit et ce qu'on fait.",
   coaching_b2b_cta_link: 'Découvrir →',
+  coaching_b2b_cta_link_href: '/entreprises',
   // Programs
   programs_badge:     'Tarifs',
   programs_title:     'Programmes & investissement',
   // CTA tunnel
   tunnel_title:              'Prête à commencer ?',
   tunnel_cta_primary:        'Réserver maintenant →',
+  tunnel_cta_primary_href: '/booking?from=coaching',
   tunnel_cta_secondary:       'Poser une question',
+  tunnel_cta_secondary_href: '/contact',
   tunnel_reassurance:        'Séance découverte gratuite · 1h · Sans engagement · Confirmation immédiate',
   // CTA final
   cta_title:         'Prêt·e à commencer ?',
   form_cta_title:    "Commençons par une séance découverte de 1h — gratuite et sans engagement.",
   form_cta_button:   'Séance découverte gratuite (1h)',
+  form_cta_button_href: '/booking?from=coaching',
 }
 
 const DEFAULTS_TEMOIGNAGES = {

@@ -12,7 +12,9 @@ export const FAQ_DEFAULTS: Record<string, string> = {
   t_espace_calme_pour_reflechir: "Espace calme pour réfléchir",
   t_faq: "FAQ",
   t_ecrire_a_monica: "Écrire à Monica →",
+  t_ecrire_a_monica_href: '/contact',
   t_reserver_une_seance: "Réserver une séance",
+  t_reserver_une_seance_href: '/booking',
   // ── Référencement (Google, réseaux sociaux) — lu par generateMetadata via lib/page-seo.ts ──
   seo_title: "Questions fréquentes sur le coaching",
   seo_description: "Questions fréquentes sur le coaching avec Monica Schneider : séance découverte gratuite, déroulé, durée, philo-coaching et réservation.",
