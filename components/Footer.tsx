@@ -1,4 +1,5 @@
 'use client'
+import { safeHref } from '@/lib/safe-href'
 import Link from 'next/link'
 import { useCmsContent } from '@/hooks/useCmsContent'
 import { FOOTER_DEFAULTS } from '@/lib/cms-defaults/footer'
@@ -41,15 +42,15 @@ export default function Footer() {
           <div>
             <p className="text-xs uppercase tracking-widest mb-3" style={{ color: 'var(--hh-accent)' }}>{c.get('footer_nav_title')}</p>
             <div className="flex flex-col gap-2 text-xs" style={{ color: '#a9c4bd' }}>
-              <Link href="/" className="hover:text-white transition">{c.get('footer_nav_home')}</Link>
-              <Link href="/coaching" className="hover:text-white transition">{c.get('footer_nav_coaching')}</Link>
-              <Link href="/happiness-design" className="hover:text-white transition">{c.get('footer_nav_hd')}</Link>
-              <Link href="/sparring-partner" className="hover:text-white transition">{c.get('footer_nav_sparring')}</Link>
-              <Link href="/entreprises" className="hover:text-white transition">{c.get('footer_nav_entreprises')}</Link>
-              <Link href="/relations" className="hover:text-white transition">{c.get('footer_nav_relations')}</Link>
-              <Link href="/contact" className="hover:text-white transition">{c.get('footer_nav_contact')}</Link>
-              <Link href="/blog" className="hover:text-white transition">{c.get('footer_nav_blog')}</Link>
-              <Link href="/faq" className="hover:text-white transition">{c.get('footer_nav_faq')}</Link>
+              <Link href={safeHref(c.footer_nav_home_href, '/')} className="hover:text-white transition">{c.get('footer_nav_home')}</Link>
+              <Link href={safeHref(c.footer_nav_coaching_href, '/coaching')} className="hover:text-white transition">{c.get('footer_nav_coaching')}</Link>
+              <Link href={safeHref(c.footer_nav_hd_href, '/happiness-design')} className="hover:text-white transition">{c.get('footer_nav_hd')}</Link>
+              <Link href={safeHref(c.footer_nav_sparring_href, '/sparring-partner')} className="hover:text-white transition">{c.get('footer_nav_sparring')}</Link>
+              <Link href={safeHref(c.footer_nav_entreprises_href, '/entreprises')} className="hover:text-white transition">{c.get('footer_nav_entreprises')}</Link>
+              <Link href={safeHref(c.footer_nav_relations_href, '/relations')} className="hover:text-white transition">{c.get('footer_nav_relations')}</Link>
+              <Link href={safeHref(c.footer_nav_contact_href, '/contact')} className="hover:text-white transition">{c.get('footer_nav_contact')}</Link>
+              <Link href={safeHref(c.footer_nav_blog_href, '/blog')} className="hover:text-white transition">{c.get('footer_nav_blog')}</Link>
+              <Link href={safeHref(c.footer_nav_faq_href, '/faq')} className="hover:text-white transition">{c.get('footer_nav_faq')}</Link>
             </div>
           </div>
 
@@ -77,8 +78,8 @@ export default function Footer() {
             </p>
           </div>
           <div className="flex gap-6">
-            <Link href="/mentions-legales" className="hover:text-white transition">{c.t_mentions_legales}</Link>
-            <Link href="/politique-confidentialite" className="hover:text-white transition">{c.t_confidentialite}</Link>
+            <Link href={safeHref(c.t_mentions_legales_href, '/mentions-legales')} className="hover:text-white transition">{c.t_mentions_legales}</Link>
+            <Link href={safeHref(c.t_confidentialite_href, '/politique-confidentialite')} className="hover:text-white transition">{c.t_confidentialite}</Link>
           </div>
         </div>
       </div>

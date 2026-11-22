@@ -68,7 +68,7 @@ export default function AProposPage() {
       </section>
     ),
     accompagnements: (
-      <section className="bg-[color:var(--hh-bg)] py-20 md:py-28">
+      <section className="bg-[color:color-mix(in_srgb,var(--hh-bg),white_27%)] py-20 md:py-28">
         <div className="mx-auto max-w-5xl px-6 md:px-10">
           <div className="mb-12 text-center">
             <p className="mb-2 text-xs font-bold uppercase tracking-[0.2em] text-amber-800">{c.get('acc_badge')}</p>
@@ -79,7 +79,7 @@ export default function AProposPage() {
             {/* Coaching */}
             <div className="bg-white rounded-2xl p-8 shadow-sm">
               <div className="mb-4 flex h-10 w-10 items-center justify-center rounded-full bg-[color:var(--hh-bg)]">
-                <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="#2d5f54" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round"><path d="M12 2l2.4 7.4H22l-6.2 4.5 2.4 7.4L12 17l-6.2 4.3 2.4-7.4L2 9.4h7.6z"/></svg>
+                <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="var(--hh-primary)" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round"><path d="M12 2l2.4 7.4H22l-6.2 4.5 2.4 7.4L12 17l-6.2 4.3 2.4-7.4L2 9.4h7.6z"/></svg>
               </div>
               <h3 className="text-xl font-serif font-semibold text-stone-900 mb-4">{c.get('coaching_label')}</h3>
               <p className="text-sm leading-relaxed text-stone-600">{c.get('coaching_text')}</p>
@@ -91,7 +91,7 @@ export default function AProposPage() {
             {/* Mentoring */}
             <div className="bg-white rounded-2xl p-8 shadow-sm">
               <div className="mb-4 flex h-10 w-10 items-center justify-center rounded-full bg-[color:var(--hh-bg)]">
-                <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="#2d5f54" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round"><path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z"/></svg>
+                <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="var(--hh-primary)" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round"><path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z"/></svg>
               </div>
               <h3 className="text-xl font-serif font-semibold text-stone-900 mb-4">{c.get('mentoring_label')}</h3>
               <p className="text-sm leading-relaxed text-stone-600">{c.get('mentoring_text')}</p>

@@ -1,4 +1,5 @@
 'use client'
+import { safeHref } from '@/lib/safe-href'
 import { useState, Fragment, type ReactNode } from 'react'
 import Link from 'next/link'
 import Header from '@/components/Header'
@@ -17,19 +18,19 @@ import EditableImage from '@/components/EditableImage';
 const CARD_DEFS = {
   coaching: {
     href: '/coaching',
-    icon: <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="#2d5f54" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round"><path d="M12 2l2.4 7.4H22l-6.2 4.5 2.4 7.4L12 17l-6.2 4.3 2.4-7.4L2 9.4h7.6z"/></svg>,
+    icon: <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="var(--hh-primary)" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round"><path d="M12 2l2.4 7.4H22l-6.2 4.5 2.4 7.4L12 17l-6.2 4.3 2.4-7.4L2 9.4h7.6z"/></svg>,
   },
   organisations: {
     href: '/entreprises',
-    icon: <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="#2d5f54" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round"><rect x="2" y="7" width="20" height="14" rx="2"/><path d="M16 7V5a2 2 0 0 0-2-2h-4a2 2 0 0 0-2 2v2"/><line x1="12" y1="12" x2="12" y2="16"/><line x1="10" y1="14" x2="14" y2="14"/></svg>,
+    icon: <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="var(--hh-primary)" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round"><rect x="2" y="7" width="20" height="14" rx="2"/><path d="M16 7V5a2 2 0 0 0-2-2h-4a2 2 0 0 0-2 2v2"/><line x1="12" y1="12" x2="12" y2="16"/><line x1="10" y1="14" x2="14" y2="14"/></svg>,
   },
   'happiness-design': {
     href: '/happiness-design',
-    icon: <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="#c9a96e" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round"><circle cx="12" cy="12" r="5"/><line x1="12" y1="1" x2="12" y2="3"/><line x1="12" y1="21" x2="12" y2="23"/><line x1="4.22" y1="4.22" x2="5.64" y2="5.64"/><line x1="18.36" y1="18.36" x2="19.78" y2="19.78"/><line x1="1" y1="12" x2="3" y2="12"/><line x1="21" y1="12" x2="23" y2="12"/><line x1="4.22" y1="19.78" x2="5.64" y2="18.36"/><line x1="18.36" y1="5.64" x2="19.78" y2="4.22"/></svg>,
+    icon: <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="var(--hh-accent)" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round"><circle cx="12" cy="12" r="5"/><line x1="12" y1="1" x2="12" y2="3"/><line x1="12" y1="21" x2="12" y2="23"/><line x1="4.22" y1="4.22" x2="5.64" y2="5.64"/><line x1="18.36" y1="18.36" x2="19.78" y2="19.78"/><line x1="1" y1="12" x2="3" y2="12"/><line x1="21" y1="12" x2="23" y2="12"/><line x1="4.22" y1="19.78" x2="5.64" y2="18.36"/><line x1="18.36" y1="5.64" x2="19.78" y2="4.22"/></svg>,
   },
   relations: {
     href: '/relations',
-    icon: <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="#2d5f54" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round"><path d="M20.84 4.61a5.5 5.5 0 0 0-7.78 0L12 5.67l-1.06-1.06a5.5 5.5 0 0 0-7.78 7.78l1.06 1.06L12 21.23l7.78-7.78 1.06-1.06a5.5 5.5 0 0 0 0-7.78z"/></svg>,
+    icon: <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="var(--hh-primary)" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round"><path d="M20.84 4.61a5.5 5.5 0 0 0-7.78 0L12 5.67l-1.06-1.06a5.5 5.5 0 0 0-7.78 7.78l1.06 1.06L12 21.23l7.78-7.78 1.06-1.06a5.5 5.5 0 0 0 0-7.78z"/></svg>,
   },
 }
 
@@ -51,10 +52,10 @@ export default function LandingPage({ faq = [] }: { faq?: HomeFaqItem[] }) {
 
   // Titre et texte des cartes « Explorez les thématiques » : modifiables dans le CMS (admin → Accueil → Cartes)
   const cardText = {
-    coaching: { title: c.home_card_coaching_title, desc: c.home_card_coaching_desc },
-    organisations: { title: c.home_card_organisations_title, desc: c.home_card_organisations_desc },
-    'happiness-design': { title: c.home_card_hd_title, desc: c.home_card_hd_desc },
-    relations: { title: c.home_card_relations_title, desc: c.home_card_relations_desc },
+    coaching: { title: c.home_card_coaching_title, desc: c.home_card_coaching_desc, href: safeHref(c.home_card_coaching_href, '/coaching') },
+    organisations: { title: c.home_card_organisations_title, desc: c.home_card_organisations_desc, href: safeHref(c.home_card_organisations_href, '/entreprises') },
+    'happiness-design': { title: c.home_card_hd_title, desc: c.home_card_hd_desc, href: safeHref(c.home_card_hd_href, '/happiness-design') },
+    relations: { title: c.home_card_relations_title, desc: c.home_card_relations_desc, href: safeHref(c.home_card_relations_href, '/relations') },
   }
 
   // Dynamic card order for "Explorez les thématiques"
@@ -110,7 +111,7 @@ export default function LandingPage({ faq = [] }: { faq?: HomeFaqItem[] }) {
               {c.get('hero_cta_primary')}
             </button>
             <Link
-              href="/contact"
+              href={safeHref(c.hero_cta_contact_href, '/contact')}
               className="rounded-full border border-stone-500 px-8 py-3.5 text-sm font-semibold text-stone-200 hover:border-white hover:text-white transition"
             >
               {c.get('hero_cta_contact')}
@@ -129,7 +130,7 @@ export default function LandingPage({ faq = [] }: { faq?: HomeFaqItem[] }) {
           <div className="grid gap-6 md:grid-cols-2">
             <div className="rounded-2xl bg-white p-8 shadow-sm">
               <div className="mb-4 flex h-10 w-10 items-center justify-center rounded-full bg-[color:var(--hh-bg)]">
-                <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="#2d5f54" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round"><path d="M20.84 4.61a5.5 5.5 0 0 0-7.78 0L12 5.67l-1.06-1.06a5.5 5.5 0 0 0-7.78 7.78l1.06 1.06L12 21.23l7.78-7.78 1.06-1.06a5.5 5.5 0 0 0 0-7.78z"/></svg>
+                <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="var(--hh-primary)" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round"><path d="M20.84 4.61a5.5 5.5 0 0 0-7.78 0L12 5.67l-1.06-1.06a5.5 5.5 0 0 0-7.78 7.78l1.06 1.06L12 21.23l7.78-7.78 1.06-1.06a5.5 5.5 0 0 0 0-7.78z"/></svg>
               </div>
               <h3 className="mb-3 text-xl font-serif font-semibold text-stone-900">{c.get('services_b2c_title')}</h3>
               <p className="mb-5 text-sm leading-relaxed text-stone-600">{c.get('services_b2c_text')}</p>
@@ -139,7 +140,7 @@ export default function LandingPage({ faq = [] }: { faq?: HomeFaqItem[] }) {
             </div>
             <div className="rounded-2xl bg-white p-8 shadow-sm">
               <div className="mb-4 flex h-10 w-10 items-center justify-center rounded-full bg-[color:var(--hh-bg)]">
-                <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="#2d5f54" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round"><rect x="2" y="7" width="20" height="14" rx="2"/><path d="M16 7V5a2 2 0 0 0-2-2h-4a2 2 0 0 0-2 2v2"/><line x1="12" y1="12" x2="12" y2="16"/><line x1="10" y1="14" x2="14" y2="14"/></svg>
+                <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="var(--hh-primary)" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round"><rect x="2" y="7" width="20" height="14" rx="2"/><path d="M16 7V5a2 2 0 0 0-2-2h-4a2 2 0 0 0-2 2v2"/><line x1="12" y1="12" x2="12" y2="16"/><line x1="10" y1="14" x2="14" y2="14"/></svg>
               </div>
               <h3 className="mb-3 text-xl font-serif font-semibold text-stone-900">{c.get('services_b2b_title')}</h3>
               <p className="mb-5 text-sm leading-relaxed text-stone-600">{c.get('services_b2b_text')}</p>
@@ -159,8 +160,8 @@ export default function LandingPage({ faq = [] }: { faq?: HomeFaqItem[] }) {
             <h2 className="text-2xl font-serif font-light text-stone-900 md:text-3xl">{c.get('cards_section_title')}</h2>
           </div>
           <div className="grid gap-5 sm:grid-cols-2 lg:grid-cols-4">
-            {orderedCards.map((card) => (
-              <Link key={card.href} href={card.href} className="group flex h-full flex-col rounded-2xl bg-[color:var(--hh-bg)] p-7 transition duration-200 hover:-translate-y-0.5 hover:bg-[color:var(--hh-bg)] hover:shadow-md focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-[color:var(--hh-primary)]">
+            {orderedCards.map((card, i) => (
+              <Link key={`${card.href}-${i}`} href={card.href} className="group flex h-full flex-col rounded-2xl bg-[color:var(--hh-bg)] p-7 transition duration-200 hover:-translate-y-0.5 hover:bg-[color:var(--hh-bg)] hover:shadow-md focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-[color:var(--hh-primary)]">
                 <div className="mb-5 w-10 h-10 rounded-full bg-white flex items-center justify-center shadow-sm">
                   {card.icon}
                 </div>

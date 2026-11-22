@@ -72,23 +72,23 @@ export default function HappinessDesignPage() {
             <h2 className="text-2xl font-serif font-light text-stone-900 md:text-3xl">{c.get('pourqui_title')}</h2>
           </div>
           <div className="grid gap-6 md:grid-cols-3">
-            <div className="bg-[color:var(--hh-bg)] rounded-2xl p-6">
+            <div className="bg-[color:color-mix(in_srgb,var(--hh-bg),white_27%)] rounded-2xl p-6">
               <div className="w-10 h-10 rounded-full bg-white flex items-center justify-center mb-4 shadow-sm">
-                <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="#2d5f54" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round"><rect x="2" y="7" width="20" height="14" rx="2"/><path d="M16 7V5a2 2 0 0 0-2-2h-4a2 2 0 0 0-2 2v2"/></svg>
+                <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="var(--hh-primary)" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round"><rect x="2" y="7" width="20" height="14" rx="2"/><path d="M16 7V5a2 2 0 0 0-2-2h-4a2 2 0 0 0-2 2v2"/></svg>
               </div>
               <h3 className="text-sm font-semibold text-stone-900 mb-2">{c.get('pourqui_1_title')}</h3>
               <p className="text-xs text-stone-500 leading-relaxed">{c.get('pourqui_1_desc', undefined, { multiline: true })}</p>
             </div>
-            <div className="bg-[color:var(--hh-bg)] rounded-2xl p-6">
+            <div className="bg-[color:color-mix(in_srgb,var(--hh-bg),white_27%)] rounded-2xl p-6">
               <div className="w-10 h-10 rounded-full bg-white flex items-center justify-center mb-4 shadow-sm">
-                <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="#2d5f54" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round"><rect x="5" y="2" width="14" height="20" rx="2"/><line x1="9" y1="8" x2="15" y2="8"/><line x1="9" y1="12" x2="15" y2="12"/><line x1="9" y1="16" x2="11" y2="16"/></svg>
+                <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="var(--hh-primary)" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round"><rect x="5" y="2" width="14" height="20" rx="2"/><line x1="9" y1="8" x2="15" y2="8"/><line x1="9" y1="12" x2="15" y2="12"/><line x1="9" y1="16" x2="11" y2="16"/></svg>
               </div>
               <h3 className="text-sm font-semibold text-stone-900 mb-2">{c.get('pourqui_2_title')}</h3>
               <p className="text-xs text-stone-500 leading-relaxed">{c.get('pourqui_2_desc', undefined, { multiline: true })}</p>
             </div>
-            <div className="bg-[color:var(--hh-bg)] rounded-2xl p-6">
+            <div className="bg-[color:color-mix(in_srgb,var(--hh-bg),white_27%)] rounded-2xl p-6">
               <div className="w-10 h-10 rounded-full bg-white flex items-center justify-center mb-4 shadow-sm">
-                <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="#2d5f54" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round"><circle cx="12" cy="12" r="10"/><polygon points="16.24 7.76 14.12 14.12 7.76 16.24 9.88 9.88 16.24 7.76"/></svg>
+                <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="var(--hh-primary)" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round"><circle cx="12" cy="12" r="10"/><polygon points="16.24 7.76 14.12 14.12 7.76 16.24 9.88 9.88 16.24 7.76"/></svg>
               </div>
               <h3 className="text-sm font-semibold text-stone-900 mb-2">{c.get('pourqui_3_title')}</h3>
               <p className="text-xs text-stone-500 leading-relaxed">{c.get('pourqui_3_desc', undefined, { multiline: true })}</p>
@@ -171,7 +171,7 @@ export default function HappinessDesignPage() {
       </section>
     ),
     pricing: (
-      <section className="bg-[color:var(--hh-bg)] px-6 py-16 md:py-20 md:px-10">
+      <section className="bg-[color:color-mix(in_srgb,var(--hh-bg),white_27%)] px-6 py-16 md:py-20 md:px-10">
         <div className="mx-auto max-w-4xl">
           <div className="mb-10 text-center">
             <p className="mb-2 text-xs font-bold uppercase tracking-[0.22em] text-amber-800">{c.get('pricing_badge')}</p>

@@ -32,9 +32,13 @@ import { FOOTER_DEFAULTS } from '@/lib/cms-defaults/footer';
 import { FIL_ARIANE_DEFAULTS } from '@/lib/cms-defaults/fil-ariane';
 
 
-export const viewport: Viewport = {
-  themeColor: '#2d5f54',
-};
+// Couleur de la barre du navigateur sur mobile : la couleur principale du thème choisi dans le CMS (Paramètres → Thème & Couleurs).
+// Valeur de secours (preset par défaut) si la base est indisponible.
+export async function generateViewport(): Promise<Viewport> {
+  const kv = await getKvSettings();
+  const { tokens } = resolveTheme(kv.theme_preset, { primary: kv.theme_primary });
+  return { themeColor: tokens.primary };
+}
 
 const DEFAULT_TITLE = DEFAULT_SITE_TITLE;
 const DEFAULT_DESCRIPTION = DEFAULT_SITE_DESCRIPTION;

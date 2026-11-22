@@ -17,12 +17,12 @@ const lines = (s: string) => s.split('\n').map(l => l.trim()).filter(Boolean)
 
 // Icônes des cartes « Domaines d'intervention » : choisies par carte dans le CMS.
 const DOMAIN_ICONS: Record<string, ReactNode> = {
-  people: <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="#2d5f54" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round"><path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"/><circle cx="9" cy="7" r="4"/><path d="M23 21v-2a4 4 0 0 0-3-3.87"/><path d="M16 3.13a4 4 0 0 1 0 7.75"/></svg>,
-  globe: <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="#2d5f54" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round"><circle cx="12" cy="12" r="10"/><line x1="2" y1="12" x2="22" y2="12"/><path d="M12 2a15.3 15.3 0 0 1 4 10 15.3 15.3 0 0 1-4 10 15.3 15.3 0 0 1-4-10 15.3 15.3 0 0 1 4-10z"/></svg>,
-  chat: <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="#2d5f54" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round"><path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z"/></svg>,
-  growth: <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="#2d5f54" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round"><polyline points="23 6 13.5 15.5 8.5 10.5 1 18"/><polyline points="17 6 23 6 23 12"/></svg>,
-  users: <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="#2d5f54" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round"><path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"/><circle cx="9" cy="7" r="4"/><path d="M23 21v-2a4 4 0 0 0-3-3.87"/><path d="M16 3.13a4 4 0 0 1 0 7.75"/></svg>,
-  smile: <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="#2d5f54" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round"><circle cx="12" cy="12" r="10"/><path d="M8 14s1.5 2 4 2 4-2 4-2"/><line x1="9" y1="9" x2="9.01" y2="9"/><line x1="15" y1="9" x2="15.01" y2="9"/></svg>,
+  people: <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="var(--hh-primary)" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round"><path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"/><circle cx="9" cy="7" r="4"/><path d="M23 21v-2a4 4 0 0 0-3-3.87"/><path d="M16 3.13a4 4 0 0 1 0 7.75"/></svg>,
+  globe: <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="var(--hh-primary)" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round"><circle cx="12" cy="12" r="10"/><line x1="2" y1="12" x2="22" y2="12"/><path d="M12 2a15.3 15.3 0 0 1 4 10 15.3 15.3 0 0 1-4 10 15.3 15.3 0 0 1-4-10 15.3 15.3 0 0 1 4-10z"/></svg>,
+  chat: <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="var(--hh-primary)" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round"><path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z"/></svg>,
+  growth: <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="var(--hh-primary)" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round"><polyline points="23 6 13.5 15.5 8.5 10.5 1 18"/><polyline points="17 6 23 6 23 12"/></svg>,
+  users: <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="var(--hh-primary)" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round"><path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"/><circle cx="9" cy="7" r="4"/><path d="M23 21v-2a4 4 0 0 0-3-3.87"/><path d="M16 3.13a4 4 0 0 1 0 7.75"/></svg>,
+  smile: <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="var(--hh-primary)" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round"><circle cx="12" cy="12" r="10"/><path d="M8 14s1.5 2 4 2 4-2 4-2"/><line x1="9" y1="9" x2="9.01" y2="9"/><line x1="15" y1="9" x2="15.01" y2="9"/></svg>,
 }
 
 export default function EntreprisesPage() {
@@ -46,6 +46,7 @@ export default function EntreprisesPage() {
       desc: card.desc,
       items: lines(card.items ?? ''),
       cta: card.cta,
+      href: card.href,
       highlight: card.highlight === 'oui',
     }))
 
@@ -189,8 +190,8 @@ export default function EntreprisesPage() {
             <p className="mt-3 text-sm text-stone-500 max-w-xl mx-auto">{c.pricing_subtitle}</p>
           </div>
           <div className="grid gap-6 md:grid-cols-3">
-            {pricingCards.map(({ label, price, unit, desc, items, cta, highlight }, i) => (
-              <div key={`${label}-${i}`} className={`rounded-2xl p-7 flex flex-col ${highlight ? 'bg-[color:var(--hh-primary)] text-white shadow-lg ring-2 ring-[color:var(--hh-primary)]' : 'bg-[color:var(--hh-bg)] text-stone-900'}`}>
+            {pricingCards.map(({ label, price, unit, desc, items, cta, href, highlight }, i) => (
+              <div key={`${label}-${i}`} className={`rounded-2xl p-7 flex flex-col ${highlight ? 'bg-[color:var(--hh-primary)] text-white shadow-lg ring-2 ring-[color:var(--hh-primary)]' : 'bg-[color:color-mix(in_srgb,var(--hh-bg),white_27%)] text-stone-900'}`}>
                 <p className={`text-xs font-bold uppercase tracking-[0.2em] mb-3 ${highlight ? 'text-emerald-200' : 'text-amber-800'}`}>{label}</p>
                 <div className="mb-1">
                   <span className={`text-2xl font-serif font-semibold ${highlight ? 'text-white' : 'text-stone-900'}`}>{price}</span>
@@ -204,7 +205,7 @@ export default function EntreprisesPage() {
                     </li>
                   ))}
                 </ul>
-                <Link href="/contact" className={`mt-auto rounded-full py-2.5 text-center text-sm font-semibold transition ${highlight ? 'bg-white text-[color:var(--hh-primary)] hover:bg-stone-50' : 'bg-[color:var(--hh-primary)] text-white hover:bg-[color:var(--hh-primary)]'}`}>{cta}</Link>
+                <Link href={safeHref(href, '/contact')} className={`mt-auto rounded-full py-2.5 text-center text-sm font-semibold transition ${highlight ? 'bg-white text-[color:var(--hh-primary)] hover:bg-stone-50' : 'bg-[color:var(--hh-primary)] text-white hover:bg-[color:var(--hh-primary)]'}`}>{cta}</Link>
               </div>
             ))}
           </div>
@@ -231,7 +232,7 @@ export default function EntreprisesPage() {
       </section>
     ),
     temoignage: (
-      <section className="bg-[color:var(--hh-bg)] py-14 md:py-16">
+      <section className="bg-[color:color-mix(in_srgb,var(--hh-bg),white_27%)] py-14 md:py-16">
         <div className="mx-auto max-w-2xl px-6 md:px-10">
           <div className="bg-white rounded-2xl p-8 shadow-sm text-center">
             <span className="text-3xl font-serif leading-none text-[color:var(--hh-primary)] select-none">&ldquo;</span>
