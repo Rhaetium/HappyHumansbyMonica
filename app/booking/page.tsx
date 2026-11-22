@@ -24,7 +24,7 @@ export default function BookingPage() {
       <main className="pt-[72px]">
 
         {/* HERO SOBRE */}
-        <section className="bg-[#f5f0e8] px-6 py-16 md:py-20 text-center">
+        <section className="bg-[color:var(--hh-bg)] px-6 py-16 md:py-20 text-center">
           <div className="mx-auto max-w-2xl">
             <p className="mb-3 text-xs font-bold uppercase tracking-[0.25em] text-amber-800">{c.get('hero_badge')}</p>
             <h1 className="text-3xl font-serif font-light text-stone-900 md:text-5xl">{c.get('hero_title')}</h1>
@@ -65,7 +65,7 @@ export default function BookingPage() {
                   href={profileUrl}
                   target="_blank"
                   rel="noopener noreferrer"
-                  className="text-[#2d5f54] hover:underline"
+                  className="text-[color:var(--hh-primary)] hover:underline"
                 >
                   {c.t_ouvrir_calendly_directement}
                 </a>
@@ -75,7 +75,7 @@ export default function BookingPage() {
         </section>
 
         {/* RÉASSURANCES */}
-        <section className="bg-[#f5f0e8] py-12">
+        <section className="bg-[color:var(--hh-bg)] py-12">
           <div className="mx-auto max-w-3xl px-6 md:px-10">
             <div className="grid gap-6 sm:grid-cols-3 text-center">
               {[
@@ -96,7 +96,7 @@ export default function BookingPage() {
                 },
               ].map(({ icon, title, desc }, i) => (
                 <div key={i} className="rounded-2xl bg-white p-6">
-                  <div className="w-10 h-10 rounded-full bg-[#eef5f3] flex items-center justify-center shadow-sm mx-auto mb-3">{icon}</div>
+                  <div className="w-10 h-10 rounded-full bg-[color:var(--hh-bg)] flex items-center justify-center shadow-sm mx-auto mb-3">{icon}</div>
                   <h3 className="text-sm font-semibold text-stone-900 mb-2">{title}</h3>
                   <p className="text-xs text-stone-500 leading-relaxed">{desc}</p>
                 </div>
@@ -111,7 +111,7 @@ export default function BookingPage() {
         {/* LIEN DE SECOURS */}
         <section className="bg-white py-8 text-center">
           <p className="text-sm text-stone-500 mb-3">{c.t_vous_preferez_reserver_par}</p>
-          <Link href="/contact" className="inline-flex items-center gap-2 text-sm font-semibold text-[#2d5f54] hover:underline">
+          <Link href="/contact" className="inline-flex items-center gap-2 text-sm font-semibold text-[color:var(--hh-primary)] hover:underline">
             {c.get('email_booking_text')}
           </Link>
         </section>

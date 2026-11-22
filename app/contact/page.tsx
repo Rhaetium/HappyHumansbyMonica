@@ -52,8 +52,8 @@ export default function ContactPage() {
               <div>
                 <p className="mb-8 text-base leading-relaxed text-stone-600">{c.get('intro_text', undefined, { multiline: true })}</p>
                 {sent ? (
-                  <div className="rounded-2xl bg-[#eef5f3] border border-[#2d5f54]/20 p-8 text-center">
-                    <div className="w-12 h-12 mx-auto mb-4 rounded-full bg-[#2d5f54] flex items-center justify-center">
+                  <div className="rounded-2xl bg-[color:var(--hh-bg)] border border-[color:color-mix(in_srgb,var(--hh-primary)_20%,transparent)] p-8 text-center">
+                    <div className="w-12 h-12 mx-auto mb-4 rounded-full bg-[color:var(--hh-primary)] flex items-center justify-center">
                       <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="white" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
                         <polyline points="20 6 9 17 4 12"/>
                       </svg>
@@ -66,18 +66,18 @@ export default function ContactPage() {
                     <div className="grid gap-5 sm:grid-cols-2">
                       <div>
                         <label className="block text-xs font-semibold text-stone-500 uppercase tracking-wider mb-1.5">{c.get('form_name_label')}</label>
-                        <input required value={form.name} onChange={e => setForm(f => ({...f, name: e.target.value}))} className="w-full rounded-xl border border-stone-200 px-4 py-3 text-sm outline-none focus:border-[#2d5f54]" placeholder={c.t_votre_nom} />
+                        <input required value={form.name} onChange={e => setForm(f => ({...f, name: e.target.value}))} className="w-full rounded-xl border border-stone-200 px-4 py-3 text-sm outline-none focus:border-[color:var(--hh-primary)]" placeholder={c.t_votre_nom} />
                       </div>
                       <div>
                         <label className="block text-xs font-semibold text-stone-500 uppercase tracking-wider mb-1.5">{c.get('form_email_label')}</label>
-                        <input required type="email" value={form.email} onChange={e => setForm(f => ({...f, email: e.target.value}))} className="w-full rounded-xl border border-stone-200 px-4 py-3 text-sm outline-none focus:border-[#2d5f54]" placeholder={c.t_votre_email_com} />
+                        <input required type="email" value={form.email} onChange={e => setForm(f => ({...f, email: e.target.value}))} className="w-full rounded-xl border border-stone-200 px-4 py-3 text-sm outline-none focus:border-[color:var(--hh-primary)]" placeholder={c.t_votre_email_com} />
                       </div>
                     </div>
                     <div>
                       
                       <div>
                         <label className="block text-xs font-semibold text-stone-500 uppercase tracking-wider mb-1.5">{c.t_type_de_demande}</label>
-                        <select required value={form.type} onChange={e => setForm(f => ({...f, type: e.target.value}))} className="w-full rounded-xl border border-stone-200 px-4 py-3 text-sm outline-none focus:border-[#2d5f54] bg-white">
+                        <select required value={form.type} onChange={e => setForm(f => ({...f, type: e.target.value}))} className="w-full rounded-xl border border-stone-200 px-4 py-3 text-sm outline-none focus:border-[color:var(--hh-primary)] bg-white">
                           <option value="">{c.t_selectionnez}</option>
                           <option value="coaching-individuel">{c.t_coaching_individuel}</option>
                           <option value="coaching-entreprises">{c.t_coaching_accompagnement_entreprise}</option>
@@ -87,13 +87,13 @@ export default function ContactPage() {
                         </select>
                       </div>
                       <label className="block text-xs font-semibold text-stone-500 uppercase tracking-wider mb-1.5">{c.get('form_subject_label')}</label>
-                      <input value={form.subject} onChange={e => setForm(f => ({...f, subject: e.target.value}))} className="w-full rounded-xl border border-stone-200 px-4 py-3 text-sm outline-none focus:border-[#2d5f54]" placeholder={c.t_objet_de_votre_message} />
+                      <input value={form.subject} onChange={e => setForm(f => ({...f, subject: e.target.value}))} className="w-full rounded-xl border border-stone-200 px-4 py-3 text-sm outline-none focus:border-[color:var(--hh-primary)]" placeholder={c.t_objet_de_votre_message} />
                     </div>
                     <div>
                       <label className="block text-xs font-semibold text-stone-500 uppercase tracking-wider mb-1.5">{c.get('form_message_label')}</label>
-                      <textarea required value={form.message} onChange={e => setForm(f => ({...f, message: e.target.value}))} rows={6} className="w-full rounded-xl border border-stone-200 px-4 py-3 text-sm outline-none focus:border-[#2d5f54] resize-none" placeholder={c.t_decrivez_votre_situation_ou} />
+                      <textarea required value={form.message} onChange={e => setForm(f => ({...f, message: e.target.value}))} rows={6} className="w-full rounded-xl border border-stone-200 px-4 py-3 text-sm outline-none focus:border-[color:var(--hh-primary)] resize-none" placeholder={c.t_decrivez_votre_situation_ou} />
                     </div>
-                    <button type="submit" disabled={sending} className="rounded-full bg-[#2d5f54] px-8 py-3.5 text-sm font-semibold text-white hover:bg-[#1e3a34] transition disabled:opacity-60">
+                    <button type="submit" disabled={sending} className="rounded-full bg-[color:var(--hh-primary)] px-8 py-3.5 text-sm font-semibold text-white hover:bg-[color:var(--hh-dark)] transition disabled:opacity-60">
                       {sending ? 'Envoi…' : c.get('form_submit_label')}
                     </button>
                   </form>
@@ -103,8 +103,8 @@ export default function ContactPage() {
                 {c.photo ? (
                   <EditableImage page="contact" fieldKey="photo" variant="block" src={c.photo} alt={c.t_monica_schneider} className="rounded-2xl object-cover object-top w-full h-64 shadow-lg" />
                 ) : (
-                  <div className="rounded-2xl bg-gradient-to-br from-[#eef5f3] to-[#f5f0e8] h-64 flex items-center justify-center">
-                    <div className="w-20 h-20 rounded-full bg-[#2d5f54] flex items-center justify-center text-white text-2xl font-serif font-bold">{c.t_ms}</div>
+                  <div className="rounded-2xl bg-gradient-to-br from-[color:var(--hh-bg)] to-[color:var(--hh-bg)] h-64 flex items-center justify-center">
+                    <div className="w-20 h-20 rounded-full bg-[color:var(--hh-primary)] flex items-center justify-center text-white text-2xl font-serif font-bold">{c.t_ms}</div>
                   </div>
                 )}
                 <div className="space-y-3 text-sm text-stone-600">

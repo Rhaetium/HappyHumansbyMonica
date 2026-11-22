@@ -49,14 +49,14 @@ export default function FaqPage() {
                     className="flex w-full items-start justify-between gap-4 text-left"
                   >
                     <span className="text-base font-medium text-stone-900 leading-snug pr-4">{faq.q}</span>
-                    <span className={`flex-shrink-0 mt-0.5 text-[#2d5f54] transition-transform duration-200 ${open === i ? 'rotate-45' : ''}`} style={{ fontSize: '1.4rem', lineHeight: 1 }}>+</span>
+                    <span className={`flex-shrink-0 mt-0.5 text-[color:var(--hh-primary)] transition-transform duration-200 ${open === i ? 'rotate-45' : ''}`} style={{ fontSize: '1.4rem', lineHeight: 1 }}>+</span>
                   </button>
                 </h2>
                 {/* Réponse toujours présente dans le HTML (masquée tant que la question est fermée) :
                     les robots des moteurs de réponse IA lisent le texte sans cliquer. */}
                 <p
                   hidden={open !== i}
-                  className="mt-4 text-sm text-stone-500 leading-relaxed border-l-2 border-[#2d5f54] pl-4"
+                  className="mt-4 text-sm text-stone-500 leading-relaxed border-l-2 border-[color:var(--hh-primary)] pl-4"
                 >
                   {faq.a}
                 </p>
@@ -66,15 +66,15 @@ export default function FaqPage() {
         </section>
 
         {/* CTA */}
-        <section className="bg-[#f5f0e8] px-6 py-14 md:px-10 text-center">
+        <section className="bg-[color:var(--hh-bg)] px-6 py-14 md:px-10 text-center">
           <div className="mx-auto max-w-xl">
             <h2 className="text-xl font-serif font-light text-stone-900 mb-2">{c.get('cta_title')}</h2>
             <p className="text-sm text-stone-500 mb-6">{c.get('cta_text')}</p>
             <div className="flex flex-col sm:flex-row gap-3 justify-center">
-              <Link href="/contact" className="inline-block rounded-full border border-[#2d5f54] px-6 py-3 text-sm font-semibold text-[#2d5f54] hover:bg-[#2d5f54] hover:text-white transition">
+              <Link href="/contact" className="inline-block rounded-full border border-[color:var(--hh-primary)] px-6 py-3 text-sm font-semibold text-[color:var(--hh-primary)] hover:bg-[color:var(--hh-primary)] hover:text-white transition">
                 {c.t_ecrire_a_monica}
               </Link>
-              <Link href="/booking" className="inline-block rounded-full bg-[#2d5f54] px-6 py-3 text-sm font-semibold text-white hover:bg-[#1e3a34] transition">
+              <Link href="/booking" className="inline-block rounded-full bg-[color:var(--hh-primary)] px-6 py-3 text-sm font-semibold text-white hover:bg-[color:var(--hh-dark)] transition">
                 {c.t_reserver_une_seance}
               </Link>
             </div>

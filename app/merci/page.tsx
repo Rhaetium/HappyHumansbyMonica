@@ -11,11 +11,11 @@ export default function MerciPage() {
   return (
     <>
       <Header />
-      <main className="min-h-screen pt-[72px] bg-[#f5f0e8] flex items-center justify-center px-6 py-24">
+      <main className="min-h-screen pt-[72px] bg-[color:var(--hh-bg)] flex items-center justify-center px-6 py-24">
         <div className="max-w-xl mx-auto text-center">
 
           {/* Icône succès SVG */}
-          <div className="w-20 h-20 mx-auto mb-8 rounded-full bg-[#eef5f3] flex items-center justify-center">
+          <div className="w-20 h-20 mx-auto mb-8 rounded-full bg-[color:var(--hh-bg)] flex items-center justify-center">
             <svg className="w-10 h-10" fill="none" viewBox="0 0 24 24" stroke="#2d5f54" strokeWidth={1.5}>
               <path strokeLinecap="round" strokeLinejoin="round" d="M4.5 12.75l6 6 9-13.5" />
             </svg>
@@ -33,13 +33,13 @@ export default function MerciPage() {
           <div className="flex flex-col sm:flex-row gap-3 justify-center">
             <Link
               href="/relations"
-              className="px-6 py-3 bg-[#2d5f54] hover:bg-[#1e3a34] text-white rounded-full font-semibold text-sm transition"
+              className="px-6 py-3 bg-[color:var(--hh-primary)] hover:bg-[color:var(--hh-dark)] text-white rounded-full font-semibold text-sm transition"
             >
               {c.t_explorer_les_relations}
             </Link>
             <Link
               href="/booking"
-              className="px-6 py-3 border border-[#2d5f54] text-[#2d5f54] hover:bg-[#2d5f54] hover:text-white rounded-full font-semibold text-sm transition"
+              className="px-6 py-3 border border-[color:var(--hh-primary)] text-[color:var(--hh-primary)] hover:bg-[color:var(--hh-primary)] hover:text-white rounded-full font-semibold text-sm transition"
             >
               {c.t_reserver_une_seance}
             </Link>
@@ -47,7 +47,7 @@ export default function MerciPage() {
 
           <div className="mt-12 p-5 bg-white border border-stone-200 rounded-2xl text-sm text-stone-600">
             <p className="font-semibold text-stone-800 mb-1">{c.t_pas_de_reponse_recue}</p>
-            <p><Rich text={c.t_verifiez_votre_dossier_spam} linkClassName="text-[#2d5f54] underline" /></p>
+            <p><Rich text={c.t_verifiez_votre_dossier_spam} linkClassName="text-[color:var(--hh-primary)] underline" /></p>
           </div>
 
         </div>

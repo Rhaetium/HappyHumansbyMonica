@@ -33,7 +33,7 @@ import { CheckIcon } from '@phosphor-icons/react/dist/ssr/Check'
  * l'icône ou sur son conteneur. Graisse « light » par défaut (trait fin, assorti à la typographie de la marque),
  * « thin » à partir de 48 px ; `weight` permet de choisir : thin, light, regular, bold, fill, duotone.
  *
- *   <Icon name="heart" className="text-[#2d5f54]" size={34} />
+ *   <Icon name="heart" className="text-[color:var(--hh-primary)]" size={34} />
  *   <Icon name="leaf" weight="duotone" />
  *
  * Pour ajouter une icône : importer son fichier ci-dessus et l'ajouter à ICONS.

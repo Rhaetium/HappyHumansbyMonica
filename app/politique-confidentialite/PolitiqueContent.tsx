@@ -12,35 +12,35 @@ export default function PolitiqueContent() {
   return (
     <>
       <Header />
-      <main className="min-h-screen py-20 px-6 md:px-10" style={{ backgroundColor: '#f5f0e8' }}>
+      <main className="min-h-screen py-20 px-6 md:px-10" style={{ backgroundColor: 'var(--hh-bg)' }}>
         <div className="mx-auto max-w-3xl">
 
           {/* Titre */}
           <div className="mb-12 text-center">
-            <p className="text-xs uppercase tracking-widest mb-3" style={{ color: '#c9a96e' }}>{c.t_donnees_personnelles}</p>
-            <h1 className="text-4xl font-light" style={{ fontFamily: 'Cormorant Garamond, Playfair Display, serif', color: '#1e3a34' }}>
+            <p className="text-xs uppercase tracking-widest mb-3" style={{ color: 'var(--hh-accent)' }}>{c.t_donnees_personnelles}</p>
+            <h1 className="text-4xl font-light" style={{ fontFamily: 'Cormorant Garamond, Playfair Display, serif', color: 'var(--hh-dark)' }}>
               {c.t_politique_de_confidentialite}
             </h1>
-            <div className="mx-auto mt-4 w-12 h-px" style={{ backgroundColor: '#c9a96e' }} />
+            <div className="mx-auto mt-4 w-12 h-px" style={{ backgroundColor: 'var(--hh-accent)' }} />
             <p className="mt-4 text-sm" style={{ color: '#4a6862' }}>{c.t_derniere_mise_a_jour}</p>
           </div>
 
-          <div className="space-y-10 text-sm leading-relaxed" style={{ color: '#1e3a34' }}>
+          <div className="space-y-10 text-sm leading-relaxed" style={{ color: 'var(--hh-dark)' }}>
 
             {/* Responsable */}
             <section>
-              <h2 className="text-lg mb-3" style={{ color: '#2d5f54', fontFamily: 'Cormorant Garamond, serif', fontSize: '1.2rem', fontWeight: 600 }}>
+              <h2 className="text-lg mb-3" style={{ color: 'var(--hh-primary)', fontFamily: 'Cormorant Garamond, serif', fontSize: '1.2rem', fontWeight: 600 }}>
                 {c.t_responsable_du_traitement}
               </h2>
               <p style={{ color: '#3d3d3d' }}>
                 <strong>{c.t_happy_humans_monica_schneider}</strong><br />
-                {c.email_label} <a href={`mailto:${c.t_happyhumans_coaching_gmail_com}`} style={{ color: '#2d5f54' }}>{c.t_happyhumans_coaching_gmail_com}</a>
+                {c.email_label} <a href={`mailto:${c.t_happyhumans_coaching_gmail_com}`} style={{ color: 'var(--hh-primary)' }}>{c.t_happyhumans_coaching_gmail_com}</a>
               </p>
             </section>
 
             {/* Données collectées */}
             <section>
-              <h2 className="text-lg mb-3" style={{ color: '#2d5f54', fontFamily: 'Cormorant Garamond, serif', fontSize: '1.2rem', fontWeight: 600 }}>
+              <h2 className="text-lg mb-3" style={{ color: 'var(--hh-primary)', fontFamily: 'Cormorant Garamond, serif', fontSize: '1.2rem', fontWeight: 600 }}>
                 {c.t_donnees_collectees}
               </h2>
               <p style={{ color: '#3d3d3d' }}>{c.t_nous_collectons_uniquement_les}</p>
@@ -53,7 +53,7 @@ export default function PolitiqueContent() {
 
             {/* Finalités */}
             <section>
-              <h2 className="text-lg mb-3" style={{ color: '#2d5f54', fontFamily: 'Cormorant Garamond, serif', fontSize: '1.2rem', fontWeight: 600 }}>
+              <h2 className="text-lg mb-3" style={{ color: 'var(--hh-primary)', fontFamily: 'Cormorant Garamond, serif', fontSize: '1.2rem', fontWeight: 600 }}>
                 {c.t_finalites_du_traitement}
               </h2>
               <ul className="space-y-1 list-disc list-inside" style={{ color: '#3d3d3d' }}>
@@ -65,7 +65,7 @@ export default function PolitiqueContent() {
 
             {/* Durée de conservation */}
             <section>
-              <h2 className="text-lg mb-3" style={{ color: '#2d5f54', fontFamily: 'Cormorant Garamond, serif', fontSize: '1.2rem', fontWeight: 600 }}>
+              <h2 className="text-lg mb-3" style={{ color: 'var(--hh-primary)', fontFamily: 'Cormorant Garamond, serif', fontSize: '1.2rem', fontWeight: 600 }}>
                 {c.t_duree_de_conservation}
               </h2>
               <p style={{ color: '#3d3d3d' }}>{c.t_2_ans_maximum_pour}</p>
@@ -74,7 +74,7 @@ export default function PolitiqueContent() {
 
             {/* Sous-traitants */}
             <section>
-              <h2 className="text-lg mb-3" style={{ color: '#2d5f54', fontFamily: 'Cormorant Garamond, serif', fontSize: '1.2rem', fontWeight: 600 }}>
+              <h2 className="text-lg mb-3" style={{ color: 'var(--hh-primary)', fontFamily: 'Cormorant Garamond, serif', fontSize: '1.2rem', fontWeight: 600 }}>
                 {c.t_hebergement_et_sous_traitants}
               </h2>
               <p style={{ color: '#3d3d3d' }}><Rich text={c.t_les_donnees_peuvent_etre} /></p>
@@ -82,7 +82,7 @@ export default function PolitiqueContent() {
 
             {/* Cookies */}
             <section>
-              <h2 className="text-lg mb-3" style={{ color: '#2d5f54', fontFamily: 'Cormorant Garamond, serif', fontSize: '1.2rem', fontWeight: 600 }}>
+              <h2 className="text-lg mb-3" style={{ color: 'var(--hh-primary)', fontFamily: 'Cormorant Garamond, serif', fontSize: '1.2rem', fontWeight: 600 }}>
                 {c.t_cookies}
               </h2>
               <p style={{ color: '#3d3d3d', fontWeight: 600 }}>{c.t_pas_de_cookies_tiers}</p>
@@ -95,7 +95,7 @@ export default function PolitiqueContent() {
 
             {/* Vos droits */}
             <section>
-              <h2 className="text-lg mb-3" style={{ color: '#2d5f54', fontFamily: 'Cormorant Garamond, serif', fontSize: '1.2rem', fontWeight: 600 }}>
+              <h2 className="text-lg mb-3" style={{ color: 'var(--hh-primary)', fontFamily: 'Cormorant Garamond, serif', fontSize: '1.2rem', fontWeight: 600 }}>
                 {c.t_vos_droits_rgpd}
               </h2>
               <p style={{ color: '#3d3d3d' }}>{c.t_conformement_au_rgpd_vous}</p>
@@ -107,14 +107,14 @@ export default function PolitiqueContent() {
               </ul>
               <p style={{ color: '#3d3d3d' }} className="mt-3">
                 {c.rights_intro}{' '}
-                <a href={`mailto:${c.t_happyhumans_coaching_gmail_com_2}`} style={{ color: '#2d5f54' }}>
+                <a href={`mailto:${c.t_happyhumans_coaching_gmail_com_2}`} style={{ color: 'var(--hh-primary)' }}>
                   {c.t_happyhumans_coaching_gmail_com_2}
                 </a>.
               </p>
             </section>
 
             {/* Copyright */}
-            <section className="pt-6 border-t" style={{ borderColor: '#e8d5b0' }}>
+            <section className="pt-6 border-t" style={{ borderColor: 'var(--hh-accent-light)' }}>
               <p className="text-xs" style={{ color: '#4a6862' }}>
                 {c.t_2026_happy_humans_monica}
               </p>

@@ -95,7 +95,7 @@ export function AttachmentTest({ onBook }: AttachmentTestProps) {
         </p>
         <button
           onClick={handleStart}
-          className="mt-4 w-full md:w-auto px-10 py-4 bg-[#2f6b61] hover:bg-[#235249] text-white font-semibold rounded-2xl text-lg transition-all duration-200 shadow-lg focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-emerald-300"
+          className="mt-4 w-full md:w-auto px-10 py-4 bg-[color:var(--hh-primary)] hover:bg-[color:var(--hh-primary)] text-white font-semibold rounded-2xl text-lg transition-all duration-200 shadow-lg focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-emerald-300"
         >
           {c.start_button}
         </button>
@@ -141,7 +141,7 @@ export function AttachmentTest({ onBook }: AttachmentTestProps) {
           disabled={!canProceed}
           className={`flex-1 py-4 rounded-2xl font-semibold text-white transition-all duration-200 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-emerald-300 ${
             canProceed
-              ? 'bg-[#2f6b61] hover:bg-[#235249] shadow-lg'
+              ? 'bg-[color:var(--hh-primary)] hover:bg-[color:var(--hh-primary)] shadow-lg'
               : 'bg-white/10 border border-white/20 opacity-50 cursor-not-allowed'
           }`}
         >

@@ -12,24 +12,24 @@ export default function MentionsLegalesContent() {
   return (
     <>
       <Header />
-      <main className="min-h-screen py-20 px-6 md:px-10" style={{ backgroundColor: '#f5f0e8' }}>
+      <main className="min-h-screen py-20 px-6 md:px-10" style={{ backgroundColor: 'var(--hh-bg)' }}>
         <div className="mx-auto max-w-3xl">
 
           {/* Titre */}
           <div className="mb-12 text-center">
-            <p className="text-xs uppercase tracking-widest mb-3" style={{ color: '#c9a96e' }}>{c.t_cadre_legal}</p>
-            <h1 className="text-4xl font-light" style={{ fontFamily: 'Cormorant Garamond, Playfair Display, serif', color: '#1e3a34' }}>
+            <p className="text-xs uppercase tracking-widest mb-3" style={{ color: 'var(--hh-accent)' }}>{c.t_cadre_legal}</p>
+            <h1 className="text-4xl font-light" style={{ fontFamily: 'Cormorant Garamond, Playfair Display, serif', color: 'var(--hh-dark)' }}>
               {c.t_mentions_legales}
             </h1>
-            <div className="mx-auto mt-4 w-12 h-px" style={{ backgroundColor: '#c9a96e' }} />
+            <div className="mx-auto mt-4 w-12 h-px" style={{ backgroundColor: 'var(--hh-accent)' }} />
             <p className="mt-4 text-sm" style={{ color: '#4a6862' }}>{c.t_derniere_mise_a_jour}</p>
           </div>
 
-          <div className="space-y-10 text-sm leading-relaxed" style={{ color: '#1e3a34' }}>
+          <div className="space-y-10 text-sm leading-relaxed" style={{ color: 'var(--hh-dark)' }}>
 
             {/* Éditeur */}
             <section>
-              <h2 className="text-lg font-semibold mb-3" style={{ color: '#2d5f54', fontFamily: 'Cormorant Garamond, serif', fontSize: '1.2rem' }}>
+              <h2 className="text-lg font-semibold mb-3" style={{ color: 'var(--hh-primary)', fontFamily: 'Cormorant Garamond, serif', fontSize: '1.2rem' }}>
                 {c.t_identite_de_l_editeur}
               </h2>
               <div className="space-y-1" style={{ color: '#3d3d3d' }}>
@@ -37,12 +37,12 @@ export default function MentionsLegalesContent() {
                 <p><Rich text={c.t_responsable_monica_schneider} /></p>
                 <p><Rich text={c.t_activite_philo_coaching_executive} /></p>
                 <p><strong>{c.t_email}</strong>{' '}
-                  <a href={`mailto:${c.t_happyhumans_coaching_gmail_com}`} style={{ color: '#2d5f54' }}>
+                  <a href={`mailto:${c.t_happyhumans_coaching_gmail_com}`} style={{ color: 'var(--hh-primary)' }}>
                     {c.t_happyhumans_coaching_gmail_com}
                   </a>
                 </p>
                 <p><strong>{c.t_site}</strong>{' '}
-                  <a href={`https://${c.t_happyhumans_vercel_app}`} style={{ color: '#2d5f54' }}>
+                  <a href={`https://${c.t_happyhumans_vercel_app}`} style={{ color: 'var(--hh-primary)' }}>
                     {c.t_happyhumans_vercel_app}
                   </a>
                 </p>
@@ -51,14 +51,14 @@ export default function MentionsLegalesContent() {
 
             {/* Hébergeur */}
             <section>
-              <h2 className="text-lg font-semibold mb-3" style={{ color: '#2d5f54', fontFamily: 'Cormorant Garamond, serif', fontSize: '1.2rem' }}>
+              <h2 className="text-lg font-semibold mb-3" style={{ color: 'var(--hh-primary)', fontFamily: 'Cormorant Garamond, serif', fontSize: '1.2rem' }}>
                 {c.t_hebergeur}
               </h2>
               <div className="space-y-1" style={{ color: '#3d3d3d' }}>
                 <p><Rich text={c.t_societe_vercel_inc} /></p>
                 <p><Rich text={c.t_adresse_340_pine_street} /></p>
                 <p><strong>{c.t_site_2}</strong>{' '}
-                  <a href={`https://${c.t_vercel_com}`} target="_blank" rel="noopener noreferrer" style={{ color: '#2d5f54' }}>
+                  <a href={`https://${c.t_vercel_com}`} target="_blank" rel="noopener noreferrer" style={{ color: 'var(--hh-primary)' }}>
                     {c.t_vercel_com}
                   </a>
                 </p>
@@ -67,13 +67,13 @@ export default function MentionsLegalesContent() {
 
             {/* Base de données */}
             <section>
-              <h2 className="text-lg font-semibold mb-3" style={{ color: '#2d5f54', fontFamily: 'Cormorant Garamond, serif', fontSize: '1.2rem' }}>
+              <h2 className="text-lg font-semibold mb-3" style={{ color: 'var(--hh-primary)', fontFamily: 'Cormorant Garamond, serif', fontSize: '1.2rem' }}>
                 {c.t_base_de_donnees}
               </h2>
               <div className="space-y-1" style={{ color: '#3d3d3d' }}>
                 <p><Rich text={c.t_service_supabase_supabase_inc} /></p>
                 <p><strong>{c.t_site_3}</strong>{' '}
-                  <a href={`https://${c.t_supabase_com}`} target="_blank" rel="noopener noreferrer" style={{ color: '#2d5f54' }}>
+                  <a href={`https://${c.t_supabase_com}`} target="_blank" rel="noopener noreferrer" style={{ color: 'var(--hh-primary)' }}>
                     {c.t_supabase_com}
                   </a>
                 </p>
@@ -82,7 +82,7 @@ export default function MentionsLegalesContent() {
 
             {/* Propriété intellectuelle */}
             <section>
-              <h2 className="text-lg font-semibold mb-3" style={{ color: '#2d5f54', fontFamily: 'Cormorant Garamond, serif', fontSize: '1.2rem' }}>
+              <h2 className="text-lg font-semibold mb-3" style={{ color: 'var(--hh-primary)', fontFamily: 'Cormorant Garamond, serif', fontSize: '1.2rem' }}>
                 {c.t_propriete_intellectuelle}
               </h2>
               <p style={{ color: '#3d3d3d' }}>
@@ -95,7 +95,7 @@ export default function MentionsLegalesContent() {
 
             {/* Limitation de responsabilité */}
             <section>
-              <h2 className="text-lg font-semibold mb-3" style={{ color: '#2d5f54', fontFamily: 'Cormorant Garamond, serif', fontSize: '1.2rem' }}>
+              <h2 className="text-lg font-semibold mb-3" style={{ color: 'var(--hh-primary)', fontFamily: 'Cormorant Garamond, serif', fontSize: '1.2rem' }}>
                 {c.t_limitation_de_responsabilite}
               </h2>
               <p style={{ color: '#3d3d3d' }}>
@@ -105,19 +105,19 @@ export default function MentionsLegalesContent() {
 
             {/* Contact légal */}
             <section>
-              <h2 className="text-lg font-semibold mb-3" style={{ color: '#2d5f54', fontFamily: 'Cormorant Garamond, serif', fontSize: '1.2rem' }}>
+              <h2 className="text-lg font-semibold mb-3" style={{ color: 'var(--hh-primary)', fontFamily: 'Cormorant Garamond, serif', fontSize: '1.2rem' }}>
                 {c.t_contact}
               </h2>
               <p style={{ color: '#3d3d3d' }}>
                 {c.contact_intro}{' '}
-                <a href={`mailto:${c.t_happyhumans_coaching_gmail_com_2}`} style={{ color: '#2d5f54' }}>
+                <a href={`mailto:${c.t_happyhumans_coaching_gmail_com_2}`} style={{ color: 'var(--hh-primary)' }}>
                   {c.t_happyhumans_coaching_gmail_com_2}
                 </a>.
               </p>
             </section>
 
             {/* Copyright */}
-            <section className="pt-6 border-t" style={{ borderColor: '#e8d5b0' }}>
+            <section className="pt-6 border-t" style={{ borderColor: 'var(--hh-accent-light)' }}>
               <p className="text-xs" style={{ color: '#4a6862' }}>
                 {c.t_2026_happy_humans_monica}
               </p>

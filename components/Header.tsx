@@ -96,7 +96,7 @@ export default function Header() {
             {leftItems.map(item => (
               item.href ? (
                 <Link key={item.id} href={item.href}
-                  className="text-sm font-medium text-stone-600 transition-colors duration-200 hover:text-[#2d5f54]">
+                  className="text-sm font-medium text-stone-600 transition-colors duration-200 hover:text-[color:var(--hh-primary)]">
                   {item.label}
                 </Link>
               ) : null
@@ -105,7 +105,7 @@ export default function Header() {
             {dropdownItem && (
               <div ref={dropRef} className="relative">
                 <button onMouseEnter={() => setDropOpen(true)} onClick={() => setDropOpen(d => !d)}
-                  className="flex items-center gap-1 text-sm font-medium text-stone-600 transition-colors duration-200 hover:text-[#2d5f54]">
+                  className="flex items-center gap-1 text-sm font-medium text-stone-600 transition-colors duration-200 hover:text-[color:var(--hh-primary)]">
                   {dropdownItem.label}
                   <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5"
                     strokeLinecap="round" strokeLinejoin="round"
@@ -124,7 +124,7 @@ export default function Header() {
                         <div key={sub.id}>
                           {i > 0 && <div className="mx-3 h-px bg-stone-100" />}
                           <Link href={sub.href || '#'} onClick={() => setDropOpen(false)}
-                            className="flex items-center gap-2 px-4 py-3 text-sm text-stone-700 hover:bg-[#f5f0e8] hover:text-[#2d5f54] transition-colors">
+                            className="flex items-center gap-2 px-4 py-3 text-sm text-stone-700 hover:bg-[color:var(--hh-bg)] hover:text-[color:var(--hh-primary)] transition-colors">
                             {sub.icon && <NavIcon name={sub.icon} />}
                             {sub.label}
                           </Link>
@@ -138,7 +138,7 @@ export default function Header() {
             {rightItems.map(item => (
               item.href ? (
                 <Link key={item.id} href={item.href}
-                  className="text-sm font-medium text-stone-600 transition-colors duration-200 hover:text-[#2d5f54]">
+                  className="text-sm font-medium text-stone-600 transition-colors duration-200 hover:text-[color:var(--hh-primary)]">
                   {item.label}
                 </Link>
               ) : null
@@ -146,7 +146,7 @@ export default function Header() {
 
             {ctaItem && ctaItem.href && (
               <Link href={ctaItem.href}
-                className="rounded-full bg-[#2d5f54] px-4 py-1.5 text-sm font-medium text-white transition-colors duration-200 hover:bg-[#1e3a34]">
+                className="rounded-full bg-[color:var(--hh-primary)] px-4 py-1.5 text-sm font-medium text-white transition-colors duration-200 hover:bg-[color:var(--hh-dark)]">
                 {ctaItem.label}
               </Link>
             )}
@@ -173,7 +173,7 @@ export default function Header() {
                 }
                 return item.href ? (
                   <Link key={item.id} href={item.href} onClick={() => setOpen(false)}
-                    className="text-sm font-medium text-stone-700 hover:text-[#2d5f54] py-2.5 border-b border-stone-50">
+                    className="text-sm font-medium text-stone-700 hover:text-[color:var(--hh-primary)] py-2.5 border-b border-stone-50">
                     {item.label}
                   </Link>
                 ) : null;
@@ -181,7 +181,7 @@ export default function Header() {
 
               {ctaItem && ctaItem.href && (
                 <Link href={ctaItem.href} onClick={() => setOpen(false)}
-                  className="mt-3 rounded-full bg-[#2d5f54] px-4 py-2.5 text-sm font-medium text-white text-center hover:bg-[#1e3a34]">
+                  className="mt-3 rounded-full bg-[color:var(--hh-primary)] px-4 py-2.5 text-sm font-medium text-white text-center hover:bg-[color:var(--hh-dark)]">
                   {ctaItem.label}
                 </Link>
               )}
@@ -197,7 +197,7 @@ export default function Header() {
             <button
               type="button"
               onClick={() => setMenuPanel(o => !o)}
-              className="rounded-full border-2 border-dashed border-[#2d5f54] bg-[#f0fff4] px-4 py-1.5 text-xs font-semibold text-[#2d5f54] hover:bg-white"
+              className="rounded-full border-2 border-dashed border-[color:var(--hh-primary)] bg-[#f0fff4] px-4 py-1.5 text-xs font-semibold text-[color:var(--hh-primary)] hover:bg-white"
             >
               🧭 {menuPanel ? 'Fermer' : 'Modifier le menu et le logo'}
             </button>
@@ -206,7 +206,7 @@ export default function Header() {
         {editingMenu && menuPanel && (
           <div className="mx-auto max-h-[70vh] max-w-3xl overflow-y-auto rounded-b-2xl border border-t-0 border-stone-200 bg-white p-5 shadow-2xl">
             <LogoQuickEditor />
-            <h3 className="mb-2 text-sm font-bold text-[#2d5f54]">🧭 Menu du site</h3>
+            <h3 className="mb-2 text-sm font-bold text-[color:var(--hh-primary)]">🧭 Menu du site</h3>
             <NavigationEditor onSaved={() => undefined} />
           </div>
         )}
@@ -222,7 +222,7 @@ function MobileDropdown({ item, onClose }: { item: NavItem; onClose: () => void 
   return (
     <div>
       <button onClick={() => setOpen(o => !o)}
-        className="flex items-center justify-between text-sm font-medium text-stone-700 hover:text-[#2d5f54] py-2.5 border-b border-stone-50 w-full text-left">
+        className="flex items-center justify-between text-sm font-medium text-stone-700 hover:text-[color:var(--hh-primary)] py-2.5 border-b border-stone-50 w-full text-left">
         {item.label}
         <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5"
           strokeLinecap="round" strokeLinejoin="round"
@@ -231,10 +231,10 @@ function MobileDropdown({ item, onClose }: { item: NavItem; onClose: () => void 
         </svg>
       </button>
       {open && (
-        <div className="ml-4 flex flex-col gap-0 border-l-2 border-[#2d5f54]/20 pl-3 mb-1">
+        <div className="ml-4 flex flex-col gap-0 border-l-2 border-[color:color-mix(in_srgb,var(--hh-primary)_20%,transparent)] pl-3 mb-1">
           {item.dropdownItems?.filter(sub => sub.visible).sort((a, b) => a.position - b.position).map(sub => (
             <Link key={sub.id} href={sub.href || '#'} onClick={onClose}
-              className="text-sm text-stone-600 hover:text-[#2d5f54] py-2">
+              className="text-sm text-stone-600 hover:text-[color:var(--hh-primary)] py-2">
               {sub.label}
             </Link>
           ))}

@@ -12,7 +12,7 @@ export default function NotFound() {
   return (
     <>
       <Header />
-      <main className="pt-[72px] min-h-screen bg-[#f5f0e8] flex flex-col items-center justify-center px-6 py-24 text-center">
+      <main className="pt-[72px] min-h-screen bg-[color:var(--hh-bg)] flex flex-col items-center justify-center px-6 py-24 text-center">
 
         {/* Numéro sobre */}
         <p className="text-[120px] md:text-[180px] font-serif font-light text-stone-200 leading-none select-none">
@@ -30,13 +30,13 @@ export default function NotFound() {
           <div className="flex flex-col sm:flex-row gap-4 justify-center">
             <Link
               href="/"
-              className="rounded-full bg-[#2d5f54] px-7 py-3 text-sm font-semibold text-white hover:bg-[#1e3a34] transition"
+              className="rounded-full bg-[color:var(--hh-primary)] px-7 py-3 text-sm font-semibold text-white hover:bg-[color:var(--hh-dark)] transition"
             >
               {c.notfound_home}
             </Link>
             <Link
               href="/contact"
-              className="rounded-full border border-stone-300 px-7 py-3 text-sm font-semibold text-stone-700 hover:border-[#2d5f54] hover:text-[#2d5f54] transition"
+              className="rounded-full border border-stone-300 px-7 py-3 text-sm font-semibold text-stone-700 hover:border-[color:var(--hh-primary)] hover:text-[color:var(--hh-primary)] transition"
             >
               {c.notfound_contact}
             </Link>
@@ -51,7 +51,7 @@ export default function NotFound() {
             { href: '/happiness-design',  label: c.notfound_link_happiness },
             { href: '/booking',           label: c.notfound_link_booking },
           ].map(l => (
-            <Link key={l.href} href={l.href} className="hover:text-[#2d5f54] transition">{l.label}</Link>
+            <Link key={l.href} href={l.href} className="hover:text-[color:var(--hh-primary)] transition">{l.label}</Link>
           ))}
         </div>
       </main>

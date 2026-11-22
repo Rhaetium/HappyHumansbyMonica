@@ -28,7 +28,7 @@ export function CalendlyBlocked({
       <div className={className} style={style}>
         {title && <p className="text-sm font-semibold text-stone-700">{title}</p>}
         {contactEmail && (
-          <a href={`mailto:${contactEmail}`} className="mt-1 inline-block text-sm text-[#2d5f54] underline">
+          <a href={`mailto:${contactEmail}`} className="mt-1 inline-block text-sm text-[color:var(--hh-primary)] underline">
             {contactEmail}
           </a>
         )}
@@ -44,7 +44,7 @@ export function CalendlyBlocked({
       {contactEmail && (
         <a
           href={`mailto:${contactEmail}`}
-          className="mt-6 inline-flex items-center gap-2 rounded-full bg-[#2d5f54] px-5 py-2.5 text-sm font-semibold text-white hover:opacity-90"
+          className="mt-6 inline-flex items-center gap-2 rounded-full bg-[color:var(--hh-primary)] px-5 py-2.5 text-sm font-semibold text-white hover:opacity-90"
         >
           {contactEmail}
         </a>
