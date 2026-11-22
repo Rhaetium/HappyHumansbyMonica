@@ -10,7 +10,7 @@ import { pageHref } from '@/lib/custom-pages'
 import { pagePath } from '@/lib/page-seo'
 import { SITE_URL } from '@/lib/site-url'
 import { DEFAULT_SITE_TITLE, DEFAULT_SITE_DESCRIPTION } from '@/lib/site-seo'
-import { buildLlmsTxt, type LlmsLink } from '@/lib/llms-txt'
+import { buildLlmsTxt, offerLink, type LlmsLink } from '@/lib/llms-txt'
 import type { FaqItem } from '@/lib/json-ld'
 
 /**
@@ -50,6 +50,21 @@ export async function GET() {
     }
   } catch { /* pages libres indisponibles : on les omet */ }
 
+  // Offres et tarifs : lus dans les listes du CMS (programmes de coaching, formules entreprises), donc toujours à jour
+  const offers: LlmsLink[] = []
+  const addOffers = async (page: string, list: string, nameKey: string) => {
+    if (!isPageIndexable(kv, page) || !PAGE_DEFAULTS[page]) return
+    try {
+      const content = await getPageContent(page, PAGE_DEFAULTS[page])
+      for (const item of readList(content, list)) {
+        const o = offerLink({ name: item[nameKey], desc: item.desc, price: item.price, unit: item.unit }, `${SITE_URL}${pagePath(page)}`)
+        if (o) offers.push(o)
+      }
+    } catch { /* offres indisponibles : on les omet */ }
+  }
+  await addOffers('coaching', 'coaching_programs', 'label')
+  await addOffers('entreprises', 'entreprises_pricing', 'title')
+
   const posts: LlmsLink[] = []
   if (isPageIndexable(kv, 'blog')) {
     try {
@@ -69,6 +84,7 @@ export async function GET() {
     siteName,
     summary: kv.seo_description || DEFAULT_SITE_DESCRIPTION,
     pages,
+    offers,
     posts,
     faq,
   })

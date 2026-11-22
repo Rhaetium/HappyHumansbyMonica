@@ -4,8 +4,11 @@ import React, { useCallback, useEffect, useState } from 'react'
 import CustomSectionsEditor from '@/components/cms/CustomSectionsEditor'
 import { parseBlocks, serializeBlocks } from '@/lib/custom-sections'
 import { uploadImage } from '@/lib/upload-client'
+import { DEFAULT_NAV, NAV_UPDATED_EVENT, type NavItem } from '@/hooks/useCmsNavigation'
+import { bustCmsCache } from '@/hooks/useCmsContent'
+import { addNavLink, cloneNav, navHasHref, removeNavLinkByHref } from '@/lib/cms-nav'
 import {
-  CUSTOM_PAGES_KEY, CUSTOM_PAGES_PAGE, blankPage, isValidSlug, movePage, pageHref,
+  CUSTOM_PAGES_KEY, CUSTOM_PAGES_PAGE, blankPage, duplicatePage, isValidSlug, movePage, pageHref,
   parsePages, removePage, serializePages, slugify, uniqueSlug, upsertPage, type CustomPage,
 } from '@/lib/custom-pages'
 
@@ -44,6 +47,10 @@ export default function CustomPagesManager() {
   const [uploading, setUploading] = useState(false)
   // Tant que Monica n'a pas touché l'adresse, elle suit le nom de la page
   const [slugEdited, setSlugEdited] = useState(false)
+  // Menu du site : permet « Ajouter au menu » en un clic (null = pas encore lu)
+  const [nav, setNav] = useState<NavItem[] | null>(null)
+  const [navBusy, setNavBusy] = useState(false)
+  const [navMsg, setNavMsg] = useState<string | null>(null)
 
   const load = useCallback(async () => {
     setLoading(true)
@@ -79,6 +86,50 @@ export default function CustomPagesManager() {
     if (dirty && !confirm('Des modifications ne sont pas enregistrées. Changer de page les abandonne. Continuer ?')) return
     setEditing({ ...page, blocks: page.blocks.map(b => ({ ...b })) })
     setDirty(false)
+    setSaved(false)
+    setSlugEdited(true)
+  }
+
+  useEffect(() => {
+    let alive = true
+    fetch('/api/cms/navigation', { cache: 'no-store' })
+      .then(r => (r.ok ? r.json() : { nav: null }))
+      .then(d => { if (alive) setNav(Array.isArray(d.nav) && d.nav.length > 0 ? d.nav : cloneNav(DEFAULT_NAV)) })
+      .catch(() => { if (alive) setNav(cloneNav(DEFAULT_NAV)) })
+    return () => { alive = false }
+  }, [])
+
+  /** Ajoute ou retire le lien de la page dans le menu du site, tout de suite (sans passer par l'onglet Menu). */
+  const toggleInMenu = async (page: CustomPage, add: boolean) => {
+    if (!nav) return
+    const href = pageHref(page.slug)
+    const next = add ? addNavLink(nav, page.title, href) : removeNavLinkByHref(nav, href)
+    setNavBusy(true); setNavMsg(null)
+    try {
+      const res = await fetch('/api/cms/navigation', { method: 'PUT', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify({ nav: next }) })
+      if (!res.ok) {
+        const data = await res.json().catch(() => ({}))
+        throw new Error(res.status === 401 ? 'Session expirée : reconnectez-vous à l’administration.' : data.error || `Erreur ${res.status}`)
+      }
+      bustCmsCache('navigation')
+      window.dispatchEvent(new Event(NAV_UPDATED_EVENT))
+      setNav(next)
+      setNavMsg(add ? 'Ajoutée au menu.' : 'Retirée du menu.')
+    } catch (e: unknown) {
+      setNavMsg(e instanceof Error ? e.message : 'Modification du menu impossible.')
+    } finally {
+      setNavBusy(false)
+    }
+  }
+
+  const duplicate = (page: CustomPage) => {
+    if (dirty && !confirm('Des modifications ne sont pas enregistrées. Dupliquer les abandonne. Continuer ?')) return
+    const next = duplicatePage(pages, page.id)
+    const copy = next[next.findIndex(p => p.id === page.id) + 1]
+    if (!copy) return
+    setPages(next)
+    setEditing({ ...copy })
+    setDirty(true)
     setSaved(false)
     setSlugEdited(true)
   }
@@ -316,10 +367,33 @@ export default function CustomPagesManager() {
                 </div>
               </div>
 
+              {nav && (() => {
+                const href = pageHref(editing.slug)
+                const inMenu = navHasHref(nav, href)
+                const ready = editing.published && !dirty
+                return (
+                  <div style={{ background: '#faf9f7', border: '1px solid #ece8e2', borderRadius: '.6rem', padding: '.8rem 1rem', marginBottom: '1rem', display: 'flex', alignItems: 'center', gap: '.75rem', flexWrap: 'wrap' }}>
+                    <span style={{ fontWeight: 700, fontSize: '.85rem' }}>🧭 Dans le menu du site</span>
+                    <span style={{ fontSize: '.8rem', color: inMenu ? '#15803d' : '#78716c' }}>{inMenu ? '● Cette page figure dans le menu' : '○ Cette page n’est pas dans le menu'}</span>
+                    <button type="button" disabled={navBusy || !isValidSlug(editing.slug)} onClick={() => void toggleInMenu(editing, !inMenu)} style={smallBtn}>
+                      {navBusy ? '…' : inMenu ? 'Retirer du menu' : '➕ Ajouter au menu'}
+                    </button>
+                    {!inMenu && !ready && <span style={{ fontSize: '.75rem', color: '#a16207' }}>Enregistrez la page et mettez-la en ligne pour que le lien fonctionne.</span>}
+                    {navMsg && <span style={{ fontSize: '.8rem', color: '#44403c' }}>{navMsg}</span>}
+                    <span style={{ fontSize: '.75rem', color: '#a8a29e' }}>L’ordre se règle dans l’onglet Menu.</span>
+                  </div>
+                )
+              })()}
+
               <div style={{ borderTop: '1.5px solid #ece8e2', paddingTop: '1rem', display: 'flex', justifyContent: 'space-between', alignItems: 'center', gap: '.75rem', flexWrap: 'wrap' }}>
-                <button type="button" onClick={() => del(editing)} style={{ ...smallBtn, color: '#b91c1c', borderColor: '#fecaca' }}>
-                  🗑 Supprimer cette page
-                </button>
+                <span style={{ display: 'flex', gap: '.5rem', flexWrap: 'wrap' }}>
+                  <button type="button" onClick={() => del(editing)} style={{ ...smallBtn, color: '#b91c1c', borderColor: '#fecaca' }}>
+                    🗑 Supprimer cette page
+                  </button>
+                  <button type="button" onClick={() => duplicate(editing)} style={smallBtn} title="Crée une copie hors ligne, à modifier">
+                    ⧉ Dupliquer
+                  </button>
+                </span>
                 <button
                   type="button"
                   onClick={save}

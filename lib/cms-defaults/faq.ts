@@ -5,7 +5,7 @@
 export const FAQ_DEFAULTS: Record<string, string> = {
   hero_image: 'https://images.unsplash.com/photo-1497366754035-f200968a6e72?w=1600&q=80&auto=format&fit=crop',
     page_title: "Ce qu'on nous demande souvent",
-    page_subtitle: "Et si votre question n'est pas là, écrivez-nous directement.",
+    page_subtitle: "Vous trouverez ici les réponses aux questions les plus fréquentes sur la séance découverte gratuite, le déroulé et la durée du coaching, le philo-coaching et la réservation. Une autre question ? Écrivez-nous directement.",
     cta_title: "Une autre question ?",
     cta_text: "Je réponds personnellement à chaque message sous 48h.",
   // ── Textes câblés automatiquement (étaient en dur dans la page) ──
@@ -15,7 +15,7 @@ export const FAQ_DEFAULTS: Record<string, string> = {
   t_reserver_une_seance: "Réserver une séance",
   // ── Référencement (Google, réseaux sociaux) — lu par generateMetadata via lib/page-seo.ts ──
   seo_title: "Questions fréquentes sur le coaching",
-  seo_description: "Tout ce que vous vous demandez sur le coaching, le philo-coaching et la méthode Happiness Design de Monica Schneider. Séance découverte, tarifs, déroulé.",
+  seo_description: "Questions fréquentes sur le coaching avec Monica Schneider : séance découverte gratuite, déroulé, durée, philo-coaching et réservation.",
   seo_image: '',
   // ── Liste modifiable (admin → FAQ) : JSON [{ q, a }] ; vide = FAQ_ITEMS puis anciens champs numérotés ──
   faq_questions: '',

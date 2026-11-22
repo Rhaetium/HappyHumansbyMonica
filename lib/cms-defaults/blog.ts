@@ -6,7 +6,7 @@ export const BLOG_DEFAULTS: Record<string, string> = {
   hero_image: 'https://images.unsplash.com/photo-1455390582262-044cdead277a?w=1600&q=80&auto=format&fit=crop',
   hero_badge:       'Blog Happy Humans',
   hero_title:       'Des moments, des détours,\ndes repères qu\'on aurait aimé avoir avant.',
-  hero_subtitle:    "On écrit depuis le terrain : une arrivée trop tardive, une adresse trouvée au bon moment, une erreur qu'on ne refera pas. Le reste, on le laisse aux brochures.",
+  hero_subtitle: "Des articles et des réflexions sur le coaching, les relations et le leadership : des repères concrets pour clarifier vos choix et avancer. Chaque article répond à une question qu'on me pose souvent.",
   featured_label:   'À lire d\'abord',
   featured_title:   'Un carnet qui donne le ton.',
   empty_title:      "Rien de juste pour cette recherche, pour l'instant.",
@@ -25,12 +25,13 @@ export const BLOG_DEFAULTS: Record<string, string> = {
   t_effacer: "Effacer",
   // ── Référencement (Google, réseaux sociaux) — lu par generateMetadata via lib/page-seo.ts ──
   seo_title: "Ressources & Réflexions",
-  seo_description: "Articles, réflexions et ressources sur le coaching, les relations et le leadership — par Monica Schneider, Happy Humans.",
+  seo_description: "Articles et réflexions de Monica Schneider sur le coaching, les relations et le leadership : des repères concrets pour clarifier vos choix et avancer.",
   seo_image: '',
   // ── Textes ajoutés pour le CMS (étaient en dur dans le code) ──
   article_default_description: "Un article Happy Humans — coaching, bonheur et leadership.",
   article_back: "← Retour au blog",
   article_read_time: "min de lecture",
+  article_updated: "Mis à jour le",
   article_opening: "Introduction",
   article_unfinished: "L'article n'est pas encore publié en entier.",
   article_detail: "Pour aller plus loin",

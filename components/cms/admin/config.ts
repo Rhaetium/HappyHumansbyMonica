@@ -669,6 +669,7 @@ export const PAGES_CONFIG: Record<string, { label: string; emoji: string; sectio
       { key: 'article_back', label: 'Article — Lien « Retour » (en haut et en bas de l’article)', type: 'text' },
       { key: 'article_default_description', label: 'Article — Description Google par défaut (si l’article n’a ni extrait ni description SEO)', type: 'textarea' },
       { key: 'article_read_time', label: 'Article — Mention « min de lecture »', type: 'text' },
+      { key: 'article_updated', label: 'Article — Mention « Mis à jour le » (date de dernière modification)', type: 'text' },
       { key: 'article_opening', label: 'Article — Titre de l’encadré d’introduction', type: 'text' },
       { key: 'article_unfinished', label: 'Article — Message quand le texte est vide', type: 'textarea' },
       { key: 'article_detail', label: 'Article — Titre de l’encadré de notes', type: 'text' },

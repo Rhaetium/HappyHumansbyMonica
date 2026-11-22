@@ -1,5 +1,5 @@
 import { describe, it, expect } from 'vitest'
-import { buildLlmsTxt, truncate } from '@/lib/llms-txt'
+import { buildLlmsTxt, truncate, offerLink, priceLabel } from '@/lib/llms-txt'
 
 const base = {
   siteName: 'Happy Humans',
@@ -60,5 +60,33 @@ describe('truncate', () => {
   })
   it('coupe à la limite d’un mot et ajoute « … »', () => {
     expect(truncate('un deux trois quatre cinq six sept', 20)).toBe('un deux trois…')
+  })
+})
+
+describe('offres et tarifs dans /llms.txt', () => {
+  it('priceLabel : « Gratuit » et « Sur devis » en minuscules, un prix reste tel quel, rien = vide', () => {
+    expect(priceLabel('Gratuit')).toBe('gratuit')
+    expect(priceLabel(' Sur devis ')).toBe('sur devis')
+    expect(priceLabel('120 €')).toBe('120 €')
+    expect(priceLabel(undefined)).toBe('')
+  })
+  it('offerLink : nom, description puis tarif (avec durée entre parenthèses)', () => {
+    expect(offerLink({ name: 'Séance individuelle', desc: 'Séance ponctuelle pour un sujet précis.', price: '120 €', unit: '60 min' }, 'https://x.fr/coaching'))
+      .toEqual({ title: 'Séance individuelle', url: 'https://x.fr/coaching', description: 'Séance ponctuelle pour un sujet précis. Tarif : 120 € (60 min).' })
+  })
+  it('offerLink : sans prix, aucun tarif inventé ; sans nom, ignorée', () => {
+    expect(offerLink({ name: 'Conférence', desc: 'Atelier.' }, 'u')!.description).toBe('Atelier.')
+    expect(offerLink({ name: '  ', price: '10 €' }, 'u')).toBeNull()
+    expect(offerLink({ name: 'Seul' }, 'u')).toEqual({ title: 'Seul', url: 'u', description: undefined })
+  })
+  it('la section « Offres et tarifs » apparaît entre les pages et les articles, et seulement s\'il y a des offres', () => {
+    const base = { siteName: 'Happy Humans', summary: 'Résumé.', pages: [{ title: 'Accueil', url: 'https://x.fr/' }], posts: [{ title: 'Article', url: 'https://x.fr/blog/a' }], faq: [] }
+    const withOffers = buildLlmsTxt({ ...base, offers: [{ title: 'Séance découverte', url: 'https://x.fr/coaching', description: 'Premier échange. Tarif : gratuit.' }] })
+    expect(withOffers).toContain('## Offres et tarifs')
+    expect(withOffers).toContain('- [Séance découverte](https://x.fr/coaching): Premier échange. Tarif : gratuit.')
+    expect(withOffers.indexOf('## Pages principales')).toBeLessThan(withOffers.indexOf('## Offres et tarifs'))
+    expect(withOffers.indexOf('## Offres et tarifs')).toBeLessThan(withOffers.indexOf('## Articles du blog'))
+    expect(buildLlmsTxt({ ...base, offers: [] })).not.toContain('Offres et tarifs')
+    expect(buildLlmsTxt(base)).not.toContain('Offres et tarifs')
   })
 })

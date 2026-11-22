@@ -88,3 +88,46 @@ export function removeSubItem(items: NavItem[], parentId: string, subId: string)
 export function cloneNav(items: NavItem[]): NavItem[] {
   return items.map(item => ({ ...item, dropdownItems: item.dropdownItems ? item.dropdownItems.map(sub => ({ ...sub })) : undefined }))
 }
+
+/**
+ * Monte (-1) ou descend (+1) un élément d'une place, sans glisser-déposer (boutons ▲ ▼ : fiable au toucher).
+ * Hors limites : liste inchangée. Le même principe sert aux liens du menu et à ceux d'un menu déroulant.
+ */
+export function moveItemBy<T extends { position: number }>(items: T[], index: number, dir: -1 | 1): T[] {
+  const to = index + dir
+  if (index < 0 || index >= items.length || to < 0 || to >= items.length) return items
+  const next = [...items]
+  ;[next[index], next[to]] = [next[to], next[index]]
+  return renumber(next)
+}
+
+/** Indique si une adresse figure déjà dans le menu (y compris dans un menu déroulant). */
+export function navHasHref(items: NavItem[], href: string): boolean {
+  return items.some(item => item.href === href || (item.dropdownItems ?? []).some(sub => sub.href === href))
+}
+
+/**
+ * Ajoute un lien visible au menu, avant le bouton d'action final (« Réserver une séance ») pour qu'il reste le dernier.
+ * Si l'adresse y est déjà, le menu est renvoyé inchangé.
+ */
+export function addNavLink(items: NavItem[], label: string, href: string): NavItem[] {
+  if (navHasHref(items, href)) return items
+  const link: NavItem = { id: newId(), label: label.trim() || 'Nouvelle page', href, visible: true, position: 0 }
+  const lastCta = items.map(i => !!i.isCta).lastIndexOf(true)
+  const at = lastCta >= 0 && lastCta === items.length - 1 ? lastCta : items.length
+  return renumber([...items.slice(0, at), link, ...items.slice(at)])
+}
+
+/** Retire du menu tous les liens vers une adresse (dans le menu et dans les menus déroulants). */
+export function removeNavLinkByHref(items: NavItem[], href: string): NavItem[] {
+  return renumber(
+    items
+      .filter(item => item.href !== href)
+      .map(item => (item.dropdownItems ? { ...item, dropdownItems: renumber(item.dropdownItems.filter(sub => sub.href !== href)) } : item)),
+  )
+}
+
+/** Monte ou descend d'une place un lien d'un menu déroulant (boutons ▲ ▼). */
+export function moveSubItemBy(items: NavItem[], parentId: string, index: number, dir: -1 | 1): NavItem[] {
+  return items.map(item => (item.id === parentId ? { ...item, dropdownItems: moveItemBy(item.dropdownItems ?? [], index, dir) } : item))
+}

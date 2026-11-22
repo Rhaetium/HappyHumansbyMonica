@@ -1,4 +1,4 @@
-﻿import type { Metadata } from 'next'
+import type { Metadata } from 'next'
 import { getAllPosts, formatDate } from '@/lib/blog-supabase'
 import Header from '@/components/Header'
 import Footer from '@/components/Footer'
@@ -6,6 +6,7 @@ import BlogClientPage from '@/components/BlogClientPage'
 import { pageMetadata } from '@/lib/page-seo'
 import { BLOG_DEFAULTS } from '@/lib/cms-defaults/blog'
 import CmsServerContent from '@/components/CmsServerContent'
+import WebPageJsonLd from '@/components/WebPageJsonLd'
 
 export const revalidate = 60
 
@@ -24,6 +25,7 @@ export default async function BlogPage() {
 
   return (
     <CmsServerContent pages={{ 'blog': BLOG_DEFAULTS }}>
+      <WebPageJsonLd page="blog" defaults={BLOG_DEFAULTS} kind="CollectionPage" />
       <Header />
       <BlogClientPage posts={postsWithFormattedDate} />
       <Footer />
