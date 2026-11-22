@@ -4,7 +4,7 @@ import { defaultFaqSections } from './page-faqs'
 // Chaque clé correspond à un champ de PAGES_CONFIG (components/cms/admin/config.ts).
 
 const DEFAULTS = {
-  hero_image:         'https://images.unsplash.com/photo-1497366754035-f200968a6e72?w=1600&q=80&auto=format&fit=crop',
+  hero_image:         '/images/marque/hero-coaching.webp',
   hero_badge:         'Coaching',
   hero_title:         "Il y a des moments où il faut réapprendre à habiter son rôle.",
   hero_subtitle:      "Executive Coach certifiée AoEC · EMCC Practitioner · Monica Schneider accompagne des managers, dirigeants et personnes en transition qui veulent retrouver clarté, confiance et une direction qui leur ressemble vraiment.",
@@ -12,13 +12,13 @@ const DEFAULTS = {
   hero_cta_primary_href: '/booking?from=coaching',
   hero_cta_contact:   'Me contacter',
   hero_cta_contact_href: '/contact',
-  coaching_b2c_image: 'https://images.unsplash.com/photo-1544027993-37dbfe43562a?w=800&q=80&auto=format&fit=crop',
+  coaching_b2c_image: '/images/conference/outil-4-liberte-fleur.webp',
   coaching_b2c_badge: 'Individuel',
   coaching_b2c_title: 'Coaching individuel',
   coaching_b2c_text: `Un espace pour ralentir, regarder ce qui se passe vraiment — et construire un mouvement qui tient dans la durée.\n\nLe coaching que je propose n'est pas un conseil. C'est un accompagnement qui part de là où vous êtes vraiment.\n\nJe m'appuie sur des techniques classiques d'executive coaching (modèles GROW, Gestalt, Solutions Focused, Co-active…) mais aussi sur des outils rencontrés plus rarement — méditation, philosophie, psychologie, design thinking) pour travailler aussi sur la transformation que vous devez accomplir au plus profond de vous pour réaliser vos objectifs.\n\nPour offrir du recul, de la clarté et de nouvelles perspectives.\n\nVous y voyez plus clair, y compris sur les prochaines actions à mettre en place.\n\nVous ressentez des moments de révélations, d'alignement profonds.\n\nVous vous retrouvez — et vous êtes prêt·e à accélérer avec un élan et une clarté revigorants.`,
   coaching_b2c_cta_link: 'Me contacter →',
   coaching_b2c_cta_link_href: '/contact',
-  coaching_b2b_image: 'https://images.unsplash.com/photo-1522071820081-009f0129c71c?w=800&q=80&auto=format&fit=crop',
+  coaching_b2b_image: '/images/conference/boite-a-outils.webp',
   coaching_b2b_badge: 'Entreprises',
   coaching_b2b_title: 'Pour les entreprises',
   coaching_b2b_text:  "Coaching de dirigeants, ateliers de cohésion, accompagnement du changement et séminaires sur mesure.\n\nQuand une équipe perd de sa cohérence, les résultats s'en ressentent toujours. Je travaille avec les dirigeants et les entreprises pour remettre de l'alignement — entre les personnes, entre les objectifs et les moyens, entre ce qu'on dit et ce qu'on fait.",
@@ -86,9 +86,9 @@ const DEFAULTS_PROGRAMS = {
 
 export const COACHING_DEFAULTS: Record<string, string> = { ...DEFAULTS, ...DEFAULTS_TEMOIGNAGES, ...DEFAULTS_PROGRAMS,
   // ── Textes câblés automatiquement (étaient en dur dans la page) ──
-  t_bureau_elegant_ambiance_coaching: "Bureau élégant, ambiance coaching professionnel",
-  t_coaching_individuel_introspection_: "Coaching individuel — introspection et clarté",
-  t_coaching_d_equipe_et: "Coaching d'équipe et leadership organisationnel",
+  t_bureau_elegant_ambiance_coaching: "Illustration : un cerveau en forme de cactus, pour comprendre comment on fonctionne",
+  t_coaching_individuel_introspection_: "Illustration : un cactus qui fleurit, symbole de la liberté de se transformer",
+  t_coaching_d_equipe_et: "Illustration : une boîte à outils dont les outils sont des cactus, pour les équipes et les dirigeants",
   // Affiché à la place du bouton d'une carte de programme dont le rendez-vous Calendly n'a rien de public
   t_aucune_disponibilite_titre: "Aucune disponibilité pour le moment",
   // ── Référencement (Google, réseaux sociaux) — lu par generateMetadata via lib/page-seo.ts ──

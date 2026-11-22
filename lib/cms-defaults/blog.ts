@@ -3,7 +3,7 @@
 // Chaque clé correspond à un champ de PAGES_CONFIG (components/cms/admin/config.ts).
 
 export const BLOG_DEFAULTS: Record<string, string> = {
-  hero_image: 'https://images.unsplash.com/photo-1455390582262-044cdead277a?w=1600&q=80&auto=format&fit=crop',
+  hero_image: '/images/marque/hero-blog.webp',
   hero_badge:       'Blog Happy Humans',
   hero_title:       'Des moments, des détours,\ndes repères qu\'on aurait aimé avoir avant.',
   hero_subtitle: "Des articles et des réflexions sur le coaching, les relations et le leadership : des repères concrets pour clarifier vos choix et avancer. Chaque article répond à une question qu'on me pose souvent.",
@@ -19,7 +19,7 @@ export const BLOG_DEFAULTS: Record<string, string> = {
   guides_title:     'Guides pratiques',
   guides_desc:      "Des repères concrets quand le terrain devient plus utile que la théorie.",
   // ── Textes câblés automatiquement (étaient en dur dans la page) ──
-  t_ecriture_et_reflexion: "Écriture et réflexion",
+  t_ecriture_et_reflexion: "Illustration : une figure de cactus assise qui réfléchit",
   t_lire_le_carnet: "Lire le carnet →",
   t_rechercher_un_carnet_un: "Rechercher un carnet, un lieu, un détail",
   t_effacer: "Effacer",

@@ -3,7 +3,7 @@
 // Chaque clé correspond à un champ de PAGES_CONFIG (components/cms/admin/config.ts).
 
 export const A_PROPOS_DEFAULTS: Record<string, string> = {
-  hero_image:       'https://images.unsplash.com/photo-1573496359142-b8d87734a5a2?w=1400&q=80&auto=format&fit=crop',
+  hero_image:       '/images/marque/hero-a-propos.webp',
   hero_badge:       'À propos',
   page_title:       'Leadership coaching en profondeur',
   intro_text: "Monica Schneider est Executive Coach. Après dix ans en marketing international (Henkel, LVMH, L'Oréal), elle accompagne dirigeants, managers et personnes en transition, avec une approche qui mêle coaching, pratique philosophique et neurosciences. Elle est la créatrice de la méthode Happiness Design.",

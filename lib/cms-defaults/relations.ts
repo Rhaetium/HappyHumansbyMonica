@@ -4,7 +4,7 @@ import { defaultFaqSections } from './page-faqs'
 // Chaque clé correspond à un champ de PAGES_CONFIG (components/cms/admin/config.ts).
 
 export const RELATIONS_DEFAULTS: Record<string, string> = {
-  hero_image: 'https://images.unsplash.com/photo-1529156069898-49953e39b3ac?w=1600&q=85&auto=format&fit=crop',
+  hero_image: '/images/marque/hero-relations.webp',
   // Hero
   hero_badge:          'Relations & Attachement',
   hero_title:          'Quel est votre style d\'attachement ?',
@@ -93,7 +93,7 @@ export const RELATIONS_DEFAULTS: Record<string, string> = {
   footer_copyright:    '© Happy Humans — Monica Schneider',
   // Result CTA (for quiz),
   // ── Textes câblés automatiquement (étaient en dur dans la page) ──
-  t_connexion_humaine_mains_tendues: "Connexion humaine, mains tendues symbolisant le lien entre personnes",
+  t_connexion_humaine_mains_tendues: "Illustration : un cadeau en forme de cactus, symbole de ce que les épreuves peuvent apporter",
   t_bonne_nouvelle: "Bonne nouvelle :",
   t_secure: "Sécure :",
   t_anxieux: "Anxieux :",

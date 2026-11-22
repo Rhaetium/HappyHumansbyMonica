@@ -3,13 +3,13 @@
 // Chaque clé correspond à un champ de PAGES_CONFIG (components/cms/admin/config.ts).
 
 export const FAQ_DEFAULTS: Record<string, string> = {
-  hero_image: 'https://images.unsplash.com/photo-1497366754035-f200968a6e72?w=1600&q=80&auto=format&fit=crop',
+  hero_image: '/images/marque/hero-faq.webp',
     page_title: "Ce qu'on nous demande souvent",
     page_subtitle: "Vous trouverez ici les réponses aux questions les plus fréquentes sur la séance découverte gratuite, le déroulé et la durée du coaching, le philo-coaching et la réservation. Une autre question ? Écrivez-nous directement.",
     cta_title: "Une autre question ?",
     cta_text: "Je réponds personnellement à chaque message sous 48h.",
   // ── Textes câblés automatiquement (étaient en dur dans la page) ──
-  t_espace_calme_pour_reflechir: "Espace calme pour réfléchir",
+  t_espace_calme_pour_reflechir: "Illustration : une figure de cactus assise qui réfléchit",
   t_faq: "FAQ",
   t_ecrire_a_monica: "Écrire à Monica →",
   t_ecrire_a_monica_href: '/contact',
