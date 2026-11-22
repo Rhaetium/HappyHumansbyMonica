@@ -24,6 +24,8 @@ export const HELP_RECIPES: HelpRecipe[] = [
     steps: ['Flèches ▲ ▼ pour l’ordre, clic dans un nom pour le modifier.', '« Ajouter un lien » pour une nouvelle entrée.', 'L’œil masque un lien sans le supprimer.'] },
   { id: 'style', emoji: '🎨', title: 'Changer les polices, la taille du texte, les couleurs, le logo', tab: 'settings',
     steps: ['Paramètres, puis « Thème & Couleurs ».', 'Choisissez un gabarit de style, puis ajustez police, taille, épaisseur.', 'Les curseurs de taille du logo sont dans le même panneau.', 'Enregistrez.'] },
+  { id: 'redirections', emoji: '↪️', title: 'Renommer une page ou un article sans perdre les visiteurs', tab: 'redirections',
+    steps: ['Après avoir changé l’adresse, ouvrez « Redirections » et « Ajouter une redirection ».', 'À gauche l’ancienne adresse (ex. /ancien-article), à droite la nouvelle (ex. /blog/nouvel-article).', 'Enregistrez : l’ancienne adresse renvoie vers la nouvelle en moins d’une minute.'] },
   { id: 'visibilite', emoji: '🔍', title: 'Savoir si Google et les assistants IA trouvent le site', tab: 'visibilite',
     steps: ['Le résumé en haut donne l’état de la visibilité dans les assistants IA.', 'Search Console montre les recherches qui mènent au site.', 'Les fichiers llms.txt, robots.txt et sitemap.xml doivent tous être au vert.'] },
   { id: 'connexions', emoji: '🔌', title: 'Brancher les e-mails, Instagram, Unsplash', tab: 'connexions',

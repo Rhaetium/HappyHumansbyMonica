@@ -7,7 +7,7 @@ export const TAB_GROUPS: TabGroup[] = [
   { id: 'accueil', label: '🏠 Accueil', tabs: ['dashboard', 'aide'] },
   { id: 'contenu', label: '✏️ Contenu', tabs: ['articles', 'new', 'pages', 'custom-pages', 'contenu', 'media', 'questionnaires'] },
   { id: 'visibilite', label: '🔍 Visibilité', tabs: ['visibilite', 'seo', 'stats-google'] },
-  { id: 'site', label: '🧭 Site', tabs: ['menu', 'fil-ariane', 'ia', 'connexions', 'settings'] },
+  { id: 'site', label: '🧭 Site', tabs: ['menu', 'fil-ariane', 'redirections', 'ia', 'connexions', 'settings'] },
   { id: 'echanges', label: '💬 Échanges', tabs: ['booking', 'messages'] },
 ]
 
