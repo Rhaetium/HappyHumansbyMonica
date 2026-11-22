@@ -191,7 +191,7 @@ export default function EntreprisesPage() {
           </div>
           <div className="grid gap-6 md:grid-cols-3">
             {pricingCards.map(({ label, price, unit, desc, items, cta, href, highlight }, i) => (
-              <div key={`${label}-${i}`} className={`rounded-2xl p-7 flex flex-col ${highlight ? 'bg-[color:var(--hh-primary)] text-white shadow-lg ring-2 ring-[color:var(--hh-primary)]' : 'bg-[color:var(--hh-bg)] text-stone-900'}`}>
+              <div key={`${label}-${i}`} className={`rounded-2xl p-7 flex flex-col ${highlight ? 'bg-[color:var(--hh-primary)] text-white shadow-lg ring-2 ring-[color:var(--hh-primary)]' : 'bg-[color:color-mix(in_srgb,var(--hh-bg),white_27%)] text-stone-900'}`}>
                 <p className={`text-xs font-bold uppercase tracking-[0.2em] mb-3 ${highlight ? 'text-emerald-200' : 'text-amber-800'}`}>{label}</p>
                 <div className="mb-1">
                   <span className={`text-2xl font-serif font-semibold ${highlight ? 'text-white' : 'text-stone-900'}`}>{price}</span>
@@ -232,7 +232,7 @@ export default function EntreprisesPage() {
       </section>
     ),
     temoignage: (
-      <section className="bg-[color:var(--hh-bg)] py-14 md:py-16">
+      <section className="bg-[color:color-mix(in_srgb,var(--hh-bg),white_27%)] py-14 md:py-16">
         <div className="mx-auto max-w-2xl px-6 md:px-10">
           <div className="bg-white rounded-2xl p-8 shadow-sm text-center">
             <span className="text-3xl font-serif leading-none text-[color:var(--hh-primary)] select-none">&ldquo;</span>

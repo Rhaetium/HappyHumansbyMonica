@@ -8,7 +8,7 @@ export default async function QuestionnairePage({ params }: { params: Promise<{ 
   return (
     <>
       <Header />
-      <main className="min-h-[70vh] bg-[color:var(--hh-bg)] pt-[72px]">
+      <main className="min-h-[70vh] bg-[color:color-mix(in_srgb,var(--hh-bg),white_27%)] pt-[72px]">
         <QuestionnaireForm slug={slug} />
       </main>
       <Footer />

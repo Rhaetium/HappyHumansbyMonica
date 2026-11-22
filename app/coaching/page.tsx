@@ -93,7 +93,7 @@ export default function CoachingPage() {
       </section>
     ),
     temoignages: (
-      <section className="bg-[color:var(--hh-bg)] py-16 md:py-20">
+      <section className="bg-[color:color-mix(in_srgb,var(--hh-bg),white_27%)] py-16 md:py-20">
         <div className="mx-auto max-w-5xl px-6 md:px-10">
           <div className="mb-10 text-center">
             <h2 className="text-2xl font-serif font-light text-stone-900 md:text-3xl">{c.get('testimonial_section_title')}</h2>
@@ -147,7 +147,7 @@ export default function CoachingPage() {
           </div>
           <div className="grid gap-6 md:grid-cols-2 lg:grid-cols-4">
             {programs.map(({ label, subtitle, price, unit, desc, cta, href, calendly, highlight }, i) => (
-              <div key={`${label}-${i}`} className={`rounded-2xl p-6 flex flex-col ${highlight ? 'bg-[color:var(--hh-primary)] text-white shadow-lg ring-2 ring-[color:var(--hh-primary)]' : 'bg-[color:var(--hh-bg)] text-stone-900 shadow-sm'}`}>
+              <div key={`${label}-${i}`} className={`rounded-2xl p-6 flex flex-col ${highlight ? 'bg-[color:var(--hh-primary)] text-white shadow-lg ring-2 ring-[color:var(--hh-primary)]' : 'bg-[color:color-mix(in_srgb,var(--hh-bg),white_27%)] text-stone-900 shadow-sm'}`}>
                 <p className={`text-xs font-bold uppercase tracking-[0.15em] mb-1 ${highlight ? 'text-emerald-200' : 'text-amber-800'}`}>{label}</p>
                 {subtitle && <p className={`text-xs mb-3 ${highlight ? 'text-emerald-200' : 'text-stone-500'}`}>{subtitle}</p>}
                 {price && <p className={`text-2xl font-serif font-semibold mb-0.5 ${highlight ? 'text-white' : 'text-stone-900'}`}>{price}</p>}
@@ -177,7 +177,7 @@ export default function CoachingPage() {
       </section>
     ),
     organisations: (
-      <section className="bg-[color:var(--hh-bg)] py-20 md:py-28">
+      <section className="bg-[color:color-mix(in_srgb,var(--hh-bg),white_27%)] py-20 md:py-28">
         <div className="mx-auto max-w-5xl px-6 md:px-10">
           <div className="grid gap-12 md:grid-cols-2 items-center">
             <EditableImage page="coaching" fieldKey="coaching_b2b_image" variant="block" duotone

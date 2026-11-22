@@ -68,7 +68,7 @@ export default function AProposPage() {
       </section>
     ),
     accompagnements: (
-      <section className="bg-[color:var(--hh-bg)] py-20 md:py-28">
+      <section className="bg-[color:color-mix(in_srgb,var(--hh-bg),white_27%)] py-20 md:py-28">
         <div className="mx-auto max-w-5xl px-6 md:px-10">
           <div className="mb-12 text-center">
             <p className="mb-2 text-xs font-bold uppercase tracking-[0.2em] text-amber-800">{c.get('acc_badge')}</p>
