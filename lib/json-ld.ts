@@ -136,3 +136,34 @@ function offerSchema(o: OfferInput, pageUrl: string): Record<string, unknown> | 
   }
 }
 
+
+export type WebPageKind = 'WebPage' | 'AboutPage' | 'ContactPage' | 'CollectionPage'
+
+/**
+ * Schéma de la page elle-même (WebPage et ses variantes) : titre, description, adresse, langue, et liens vers le site et
+ * l'entreprise déclarés dans le layout (@id stables). Uniquement des faits déjà publiés. `null` sans titre ni adresse.
+ */
+export function webPageSchema(input: {
+  name?: string
+  description?: string
+  url: string
+  siteUrl: string
+  kind?: WebPageKind
+  inLanguage?: string
+}): Record<string, unknown> | null {
+  const name = plainText(input.name ?? '')
+  if (!name || !input.url) return null
+  const description = plainText(input.description ?? '')
+  const site = input.siteUrl.replace(/\/+$/, '')
+  return {
+    '@context': 'https://schema.org',
+    '@type': input.kind ?? 'WebPage',
+    '@id': `${input.url}#webpage`,
+    url: input.url,
+    name,
+    ...(description ? { description } : {}),
+    inLanguage: input.inLanguage || 'fr-FR',
+    isPartOf: { '@id': `${site}/#website` },
+    about: { '@id': `${site}/#organization` },
+  }
+}

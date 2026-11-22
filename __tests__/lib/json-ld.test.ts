@@ -1,5 +1,5 @@
 import { describe, it, expect } from 'vitest'
-import { plainText, safeJsonLd, faqPageSchema, breadcrumbListSchema, serviceSchema } from '@/lib/json-ld'
+import { plainText, safeJsonLd, faqPageSchema, breadcrumbListSchema, serviceSchema, webPageSchema } from '@/lib/json-ld'
 
 describe('plainText', () => {
   it('retire le gras, l’italique et les liens du mini-format du CMS', () => {
@@ -108,3 +108,25 @@ describe('serviceSchema', () => {
   })
 })
 
+
+describe('webPageSchema', () => {
+  const base = { name: 'À propos', description: 'Monica Schneider, Executive Coach.', url: 'https://happyhumans.fr/a-propos', siteUrl: 'https://happyhumans.fr/' }
+  it('décrit la page et la rattache au site et à l\'entreprise (@id du layout)', () => {
+    expect(webPageSchema({ ...base, kind: 'AboutPage' })).toEqual({
+      '@context': 'https://schema.org', '@type': 'AboutPage', '@id': 'https://happyhumans.fr/a-propos#webpage',
+      url: base.url, name: 'À propos', description: base.description, inLanguage: 'fr-FR',
+      isPartOf: { '@id': 'https://happyhumans.fr/#website' }, about: { '@id': 'https://happyhumans.fr/#organization' },
+    })
+  })
+  it('WebPage par défaut, langue réglable, description facultative', () => {
+    const s = webPageSchema({ name: 'Contact', url: 'https://happyhumans.fr/contact', siteUrl: 'https://happyhumans.fr', inLanguage: 'en-GB' })!
+    expect(s['@type']).toBe('WebPage')
+    expect(s.inLanguage).toBe('en-GB')
+    expect(s).not.toHaveProperty('description')
+  })
+  it('retire le mini-format du CMS et renvoie null sans titre', () => {
+    expect(webPageSchema({ ...base, name: 'Le **coaching**' })!.name).toBe('Le coaching')
+    expect(webPageSchema({ ...base, name: '  ' })).toBeNull()
+    expect(webPageSchema({ ...base, url: '' })).toBeNull()
+  })
+})

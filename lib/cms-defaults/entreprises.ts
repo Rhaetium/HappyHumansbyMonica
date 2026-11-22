@@ -1,3 +1,4 @@
+import { defaultFaqSections } from './page-faqs'
 // Textes par défaut de la page « Entreprises » — SOURCE UNIQUE.
 // Lus par la page ET par l'admin du CMS (lib/cms-page-defaults.ts) : ne jamais les dupliquer ailleurs.
 // Chaque clé correspond à un champ de PAGES_CONFIG (components/cms/admin/config.ts).
@@ -93,7 +94,7 @@ export const ENTREPRISES_DEFAULTS: Record<string, string> = {
   seo_image: '',
   // ── Disposition des sections (admin → Structure) : JSON {"order":[…],"hidden":[…]} ; vide = ordre d'origine ──
   sections_layout: '',
-  custom_sections: '',
+  custom_sections: defaultFaqSections('entreprises'),
   // ── Listes modifiables (admin → Entreprises) : JSON [{…}] ; vide = anciens champs numérotés ──
   entreprises_domains: '',
   entreprises_pricing: '',
