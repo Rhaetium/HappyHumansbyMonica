@@ -1,1 +1,2 @@
 @AGENTS.md
+@docs/TRAVAILLER-AVEC-MONICA.md
