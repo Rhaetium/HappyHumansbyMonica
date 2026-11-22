@@ -193,3 +193,13 @@ Les outils « ✨ Générer avec l'IA » ont besoin d'une clé. Plusieurs fourni
 - Les modèles gratuits écrivent un peu moins bien que Claude (payant), surtout pour le ton : relisez toujours le résultat.
 - Quota atteint ? Le message le dit. Réessayez plus tard, ou ajoutez un deuxième fournisseur gratuit.
 
+
+## Nouveautés de l'administration
+
+- **Recherche partout** : `Ctrl + K` (ou `Cmd + K` sur Mac) ouvre un champ unique : tapez quelques mots d'un texte, d'une page ou d'un article, et ouvrez-le directement.
+- **Onglet 🆘 Aide** (thème « Accueil ») : la routine de la semaine, un pas-à-pas par tâche, des phrases toutes prêtes pour demander une modification à un assistant, et la **sauvegarde** de tout votre contenu (un fichier à garder en lieu sûr).
+- **Polices, taille du texte, logo** : Paramètres → Thème & Couleurs → Typographie. Choisissez un gabarit (Chaleureux, Charte, Éditorial, Sobre, Classique), puis ajustez. Vous pouvez aussi saisir le nom de n'importe quelle police Google.
+- **Pages libres avec modèles** : « Nouvelle page » propose offre, tarifs, atelier, témoignages. L'aperçu à droite se met à jour pendant que vous écrivez. Les passages [entre crochets] sont à remplacer avant de mettre la page en ligne.
+- **Articles** : le gabarit « une question, un article » et sa liste de contrôle vous guident (réponse courte, trois intertitres, trois questions fréquentes).
+- **Visibilité** : Google (Search Console), assistants IA (Searchable) et mesure d'audience au même endroit.
+- **Connexions** : e-mails, Instagram, Unsplash : collez la clé, elle est stockée chiffrée.

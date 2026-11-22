@@ -47,6 +47,7 @@ import BookingTab from '@/components/cms/admin/BookingTab';
 import { SectionsEditor, ListEditor } from '@/components/cms/admin/StructureEditors';
 import { SEO_TITLE_IDEAL, SEO_DESCRIPTION_IDEAL, SeoLengthHint } from '@/components/cms/admin/SeoLengthHint';
 import { PageHistoryPanel } from '@/components/cms/admin/PageHistoryPanel';
+import HelpTab from '@/components/cms/admin/HelpTab';
 import CommandPalette from '@/components/cms/admin/CommandPalette';
 import { buildCommands, isPaletteShortcut, type Command } from '@/lib/command-palette';
 
@@ -1056,6 +1057,7 @@ export default function CMSAdmin() {
   // ─── CMS ──────────────────────────────────────────────────
   const TABS = [
     { id: 'dashboard', label: '🏠 Tableau de bord', count: null },
+    { id: 'aide',      label: '🆘 Aide', count: null },
     { id: 'articles', label: '📝 Articles', count: articles.length },
     { id: 'new',      label: '✏️ Nouvel article', count: null },
     { id: 'pages',    label: '🗂️ Pages', count: null },
@@ -1664,6 +1666,7 @@ export default function CMSAdmin() {
         )}
 
         {tab === 'visibilite' && <VisibilityTab onGoto={setTab} />}
+        {tab === 'aide' && <HelpTab onGoto={handleTabChange} tabLabel={id => (TABS.find(t => t.id === id)?.label ?? id).replace(/^[^\p{L}\p{N}]+/u, '')} />}
         {tab === 'connexions' && <ConnectionsTab />}
         {tab === 'stats-google' && <SearchConsoleStats />}
 
