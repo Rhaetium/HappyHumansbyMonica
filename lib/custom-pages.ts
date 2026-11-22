@@ -10,7 +10,7 @@
 // Fichier SANS dépendance (ni React, ni Next, ni Supabase) : partagé par la page
 // publique, l'admin et les tests.
 
-import { parseBlocks, type CustomBlock } from './custom-sections'
+import { makeId, parseBlocks, type CustomBlock } from './custom-sections'
 
 export const CUSTOM_PAGES_PAGE = 'custom-pages'
 export const CUSTOM_PAGES_KEY = 'pages'
@@ -175,4 +175,24 @@ export function pageSummary(page: CustomPage): string {
   const parts = [`${page.blocks.length} bloc${page.blocks.length > 1 ? 's' : ''}`]
   if (!page.published) parts.push('hors ligne')
   return parts.join(' · ')
+}
+
+/**
+ * Copie une page pour en faire un modèle : nouvel identifiant, adresse libre (titre-copie), titre « … (copie) »,
+ * HORS LIGNE (on ne publie jamais une copie par surprise), blocs copiés en profondeur avec de nouveaux identifiants,
+ * insérée juste après l'original. Page inconnue : liste inchangée.
+ */
+export function duplicatePage(pages: CustomPage[], id: string): CustomPage[] {
+  const i = pages.findIndex(p => p.id === id)
+  if (i < 0) return pages
+  const src = pages[i]
+  const copy: CustomPage = {
+    ...JSON.parse(JSON.stringify(src)),
+    id: newId(),
+    slug: uniqueSlug(pages, `${src.slug}-copie`),
+    title: `${src.title || 'Page'} (copie)`,
+    published: false,
+    blocks: src.blocks.map(b => ({ ...JSON.parse(JSON.stringify(b)), id: makeId() })),
+  }
+  return [...pages.slice(0, i + 1), copy, ...pages.slice(i + 1)]
 }

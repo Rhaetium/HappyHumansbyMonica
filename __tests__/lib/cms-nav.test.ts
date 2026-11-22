@@ -1,9 +1,7 @@
 import { describe, it, expect } from 'vitest'
 import { DEFAULT_NAV, type NavItem } from '@/hooks/useCmsNavigation'
-import {
-  addNavItem, addSubItem, cloneNav, moveItem, moveSubItem,
-  removeNavItem, removeSubItem, renumber, updateNavItem, updateSubItem,
-} from '@/lib/cms-nav'
+import { addNavItem, addSubItem, cloneNav, moveItem, moveSubItem,
+  removeNavItem, removeSubItem, renumber, updateNavItem, updateSubItem, addNavLink, moveItemBy, moveSubItemBy, navHasHref, removeNavLinkByHref } from '@/lib/cms-nav'
 
 /** Menu de test, indépendant du menu d'origine du site (dont l'ordre et les libellés peuvent évoluer). */
 const MENU: NavItem[] = [
@@ -122,5 +120,81 @@ describe('menu du site — opérations de l’éditeur', () => {
     const src = [{ position: 9 }, { position: 4 }]
     expect(renumber(src)).toEqual([{ position: 1 }, { position: 2 }])
     expect(src[0].position).toBe(9)
+  })
+})
+
+describe('déplacer sans glisser-déposer (▲ ▼)', () => {
+  const it3 = [
+    { id: 'a', label: 'A', visible: true, position: 1 },
+    { id: 'b', label: 'B', visible: true, position: 2 },
+    { id: 'c', label: 'C', visible: true, position: 3 },
+  ]
+  it('monte et descend d\'une place, en renumérotant', () => {
+    expect(moveItemBy(it3, 1, -1).map(i => [i.id, i.position])).toEqual([['b', 1], ['a', 2], ['c', 3]])
+    expect(moveItemBy(it3, 1, 1).map(i => [i.id, i.position])).toEqual([['a', 1], ['c', 2], ['b', 3]])
+  })
+  it('hors limites : liste inchangée', () => {
+    expect(moveItemBy(it3, 0, -1)).toBe(it3)
+    expect(moveItemBy(it3, 2, 1)).toBe(it3)
+    expect(moveItemBy(it3, 9, 1)).toBe(it3)
+  })
+  it('ne modifie pas la liste d\'origine', () => {
+    moveItemBy(it3, 0, 1)
+    expect(it3.map(i => i.id)).toEqual(['a', 'b', 'c'])
+  })
+})
+
+describe('liens du menu vers une page', () => {
+  const menu = [
+    { id: '1', label: 'Coaching', visible: true, position: 1, isDropdown: true, dropdownItems: [
+      { id: '1a', href: '/coaching', label: 'Coaching individuel', visible: true, position: 1 },
+    ] },
+    { id: '2', href: '/contact', label: 'Contact', visible: true, position: 2 },
+    { id: '3', href: '/booking', label: 'Réserver', visible: true, position: 3, isCta: true },
+  ]
+  it('retrouve une adresse, y compris dans un menu déroulant', () => {
+    expect(navHasHref(menu, '/contact')).toBe(true)
+    expect(navHasHref(menu, '/coaching')).toBe(true)
+    expect(navHasHref(menu, '/p/nouvelle')).toBe(false)
+  })
+  it('ajoute le lien AVANT le bouton final, qui reste le dernier', () => {
+    const out = addNavLink(menu, ' Mes tarifs ', '/p/tarifs')
+    expect(out.map(i => i.label)).toEqual(['Coaching', 'Contact', 'Mes tarifs', 'Réserver'])
+    expect(out.map(i => i.position)).toEqual([1, 2, 3, 4])
+    expect(out[2]).toMatchObject({ href: '/p/tarifs', visible: true })
+  })
+  it('sans bouton final, ajoute à la fin ; n\'ajoute jamais deux fois la même adresse', () => {
+    const noCta = menu.slice(0, 2)
+    expect(addNavLink(noCta, 'X', '/p/x').map(i => i.href)).toEqual([undefined, '/contact', '/p/x'])
+    expect(addNavLink(menu, 'Contact bis', '/contact')).toBe(menu)
+  })
+  it('un titre vide donne un libellé par défaut', () => {
+    expect(addNavLink([], '   ', '/p/x')[0].label).toBe('Nouvelle page')
+  })
+  it('retire un lien du menu et des menus déroulants, en renumérotant', () => {
+    const out = removeNavLinkByHref(menu, '/coaching')
+    expect(out[0].dropdownItems).toEqual([])
+    const out2 = removeNavLinkByHref(menu, '/contact')
+    expect(out2.map(i => [i.label, i.position])).toEqual([['Coaching', 1], ['Réserver', 2]])
+    expect(removeNavLinkByHref(menu, '/absent')).toHaveLength(3)
+  })
+})
+
+describe('déplacer un lien d\'un menu déroulant (▲ ▼)', () => {
+  const menu = [
+    { id: 'm', label: 'Menu', visible: true, position: 1, isDropdown: true, dropdownItems: [
+      { id: 's1', href: '/a', label: 'A', visible: true, position: 1 },
+      { id: 's2', href: '/b', label: 'B', visible: true, position: 2 },
+    ] },
+    { id: 'x', href: '/x', label: 'X', visible: true, position: 2 },
+  ]
+  it('déplace dans le bon menu seulement', () => {
+    const out = moveSubItemBy(menu, 'm', 0, 1)
+    expect(out[0].dropdownItems!.map(s => s.id)).toEqual(['s2', 's1'])
+    expect(out[1]).toBe(menu[1])
+  })
+  it('hors limites ou menu inconnu : rien ne change', () => {
+    expect(moveSubItemBy(menu, 'm', 0, -1)[0].dropdownItems!.map(s => s.id)).toEqual(['s1', 's2'])
+    expect(moveSubItemBy(menu, 'zzz', 0, 1)[0].dropdownItems!.map(s => s.id)).toEqual(['s1', 's2'])
   })
 })

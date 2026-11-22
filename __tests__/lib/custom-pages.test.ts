@@ -1,8 +1,6 @@
 import { describe, it, expect } from 'vitest'
-import {
-  blankPage, findPage, findPublishedPage, isValidSlug, movePage, pageHref,
-  parsePages, removePage, serializePages, slugify, uniqueSlug, upsertPage, type CustomPage,
-} from '@/lib/custom-pages'
+import { blankPage, findPage, findPublishedPage, isValidSlug, movePage, pageHref,
+  parsePages, removePage, serializePages, slugify, uniqueSlug, upsertPage, type CustomPage, duplicatePage } from '@/lib/custom-pages'
 import { blankBlock } from '@/lib/custom-sections'
 
 const page = (patch: Partial<CustomPage> = {}): CustomPage => ({
@@ -116,5 +114,39 @@ describe('édition', () => {
 
   it('construit l’adresse publique', () => {
     expect(pageHref('ateliers')).toBe('/p/ateliers')
+  })
+})
+
+describe('duplicatePage', () => {
+  const original = {
+    id: 'p1', slug: 'mes-tarifs', title: 'Mes tarifs', intro: 'Intro', published: true,
+    blocks: [{ id: 'b1', type: 'texte', text: 'Bonjour', align: 'left' }] as never,
+    seoTitle: 'T', seoDescription: 'D', seoImage: '',
+  }
+  const out = duplicatePage([original, { ...original, id: 'p2', slug: 'autre', title: 'Autre' }], 'p1')
+
+  it('insère la copie juste après l\'original', () => {
+    expect(out.map(p => p.id)).toHaveLength(3)
+    expect(out[0].id).toBe('p1')
+    expect(out[1].title).toBe('Mes tarifs (copie)')
+    expect(out[2].id).toBe('p2')
+  })
+  it('la copie est HORS LIGNE avec une adresse libre', () => {
+    expect(out[1].published).toBe(false)
+    expect(out[1].slug).toBe('mes-tarifs-copie')
+    expect(out[1].id).not.toBe('p1')
+  })
+  it('une seconde copie reçoit une autre adresse', () => {
+    const twice = duplicatePage(out, 'p1')
+    expect(new Set(twice.map(p => p.slug)).size).toBe(twice.length)
+  })
+  it('les blocs sont copiés en profondeur avec de nouveaux identifiants', () => {
+    expect(out[1].blocks[0].id).not.toBe('b1')
+    ;(out[1].blocks[0] as { text: string }).text = 'modifié'
+    expect((original.blocks[0] as { text: string }).text).toBe('Bonjour')
+  })
+  it('page inconnue : liste inchangée', () => {
+    const list = [original]
+    expect(duplicatePage(list, 'zzz')).toBe(list)
   })
 })

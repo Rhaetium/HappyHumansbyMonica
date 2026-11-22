@@ -4,7 +4,7 @@ import React, { useEffect, useState } from 'react';
 import { DEFAULT_NAV, NAV_UPDATED_EVENT, type NavItem } from '@/hooks/useCmsNavigation';
 import { bustCmsCache } from '@/hooks/useCmsContent';
 import {
-  addNavItem, addSubItem, cloneNav, moveItem, moveSubItem,
+  addNavItem, addSubItem, cloneNav, moveItem, moveItemBy, moveSubItem, moveSubItemBy,
   removeNavItem, removeSubItem, updateNavItem, updateSubItem,
 } from '@/lib/cms-nav';
 
@@ -123,7 +123,7 @@ export default function NavigationEditor({ onSaved }: { onSaved?: () => void }) 
           <p style={{ margin: '.2rem 0 0', fontSize: '.8rem', color: '#7a7a7a', lineHeight: 1.45 }}>
             {locked
               ? 'Le glisser-déposer est désactivé : les liens ne peuvent plus être déplacés par erreur. Vous pouvez toujours renommer, masquer, ajouter ou supprimer un lien.'
-              : 'Les liens peuvent être déplacés par glisser-déposer. Activez le verrou une fois le menu en place pour le protéger.'}
+              : 'Déplacez les liens avec ▲ ▼ (ou par glisser-déposer sur ordinateur). Activez le verrou une fois le menu en place pour le protéger.'}
           </p>
         </div>
       </div>
@@ -142,6 +142,12 @@ export default function NavigationEditor({ onSaved }: { onSaved?: () => void }) 
             >
               <div style={{ display: 'flex', gap: '.5rem', alignItems: 'center', flexWrap: 'wrap' }}>
                 <span style={{ cursor: locked ? 'not-allowed' : 'grab', padding: '.35rem .25rem', color: locked ? '#d6d3d1' : '#999', fontSize: '1.1rem', lineHeight: 1, userSelect: 'none' }} title={locked ? 'Ordre verrouillé : déverrouillez pour déplacer ce lien' : 'Glisser pour changer l’ordre'}>⠿</span>
+                <button type="button" aria-label="Monter ce lien" title="Monter" disabled={locked || idx === 0}
+                  onClick={() => change(items => moveItemBy(items, idx, -1))}
+                  style={{ ...smallBtn, opacity: locked || idx === 0 ? 0.35 : 1, cursor: locked || idx === 0 ? 'not-allowed' : 'pointer' }}>▲</button>
+                <button type="button" aria-label="Descendre ce lien" title="Descendre" disabled={locked || idx === nav.length - 1}
+                  onClick={() => change(items => moveItemBy(items, idx, 1))}
+                  style={{ ...smallBtn, opacity: locked || idx === nav.length - 1 ? 0.35 : 1, cursor: locked || idx === nav.length - 1 ? 'not-allowed' : 'pointer' }}>▼</button>
                 <button type="button" onClick={() => change(items => updateNavItem(items, item.id, { visible: !item.visible }))}
                   title={item.visible ? 'Visible : cliquer pour masquer' : 'Masqué : cliquer pour afficher'}
                   style={{ ...smallBtn, background: item.visible ? '#ecfdf5' : '#fef2f2', borderColor: item.visible ? '#6ee7b7' : '#fca5a5' }}>
@@ -175,6 +181,12 @@ export default function NavigationEditor({ onSaved }: { onSaved?: () => void }) 
                           onDragEnd={() => { setDragSrcSub(null); setDragOverSub(null); }}
                           style={{ display: 'flex', gap: '.4rem', alignItems: 'center', flexWrap: 'wrap', padding: '.3rem', borderRadius: '.4rem', opacity: dragging ? 0.4 : 1, background: over ? '#f0fdf4' : 'transparent' }}>
                           <span style={{ cursor: 'grab', color: '#aaa', userSelect: 'none' }} title="Glisser pour changer l’ordre">⠿</span>
+                          <button type="button" aria-label="Monter ce lien" title="Monter" disabled={locked || subIdx === 0}
+                            onClick={() => change(items => moveSubItemBy(items, item.id, subIdx, -1))}
+                            style={{ ...smallBtn, opacity: locked || subIdx === 0 ? 0.35 : 1, cursor: locked || subIdx === 0 ? 'not-allowed' : 'pointer' }}>▲</button>
+                          <button type="button" aria-label="Descendre ce lien" title="Descendre" disabled={locked || subIdx === (item.dropdownItems?.length ?? 0) - 1}
+                            onClick={() => change(items => moveSubItemBy(items, item.id, subIdx, 1))}
+                            style={{ ...smallBtn, opacity: locked || subIdx === (item.dropdownItems?.length ?? 0) - 1 ? 0.35 : 1, cursor: locked || subIdx === (item.dropdownItems?.length ?? 0) - 1 ? 'not-allowed' : 'pointer' }}>▼</button>
                           <button type="button" onClick={() => change(items => updateSubItem(items, item.id, sub.id, { visible: !sub.visible }))}
                             style={{ ...smallBtn, background: sub.visible ? '#ecfdf5' : '#fef2f2', borderColor: sub.visible ? '#6ee7b7' : '#fca5a5' }}>{eye(sub.visible)}</button>
                           <input value={sub.label} onChange={e => change(items => updateSubItem(items, item.id, sub.id, { label: e.target.value }))}
