@@ -30,6 +30,7 @@ import SeoPreview from '@/components/cms/SeoPreview';
 import SeoHealth from '@/components/cms/SeoHealth';
 import VisibilityTab from '@/components/cms/admin/VisibilityTab';
 import ConnectionsTab from '@/components/cms/admin/ConnectionsTab';
+import { articleStatus, formatSchedule, fromDatetimeLocal, toDatetimeLocal } from '@/lib/article-schedule';
 import ArticleTemplatePanel from '@/components/cms/admin/ArticleTemplatePanel';
 import { TAB_GROUPS, groupCount, groupForTab, tabsOfGroup } from '@/lib/admin-tab-groups';
 import { actionableCount, auditSeo, type SeoIssue } from '@/lib/seo-audit';
@@ -1464,8 +1465,17 @@ export default function CMSAdmin() {
                   <input type="checkbox" checked={!!editingArticle?.published}
                     onChange={e => setEditingArticle(p => ({ ...p, published: e.target.checked }))}
                     style={{ width: 18, height: 18 }} />
-                  Publier immédiatement
+                  Publier
                 </label>
+                {editingArticle?.published && (
+                  <label style={{ display: 'flex', alignItems: 'center', gap: '.5rem', fontSize: '.85rem', color: '#555' }}>
+                    Date de publication
+                    <input type="datetime-local" value={toDatetimeLocal(editingArticle?.published_at)}
+                      onChange={e => setEditingArticle(p => ({ ...p, published_at: fromDatetimeLocal(e.target.value) ?? undefined }))}
+                      style={{ padding: '.35rem .5rem', border: '1.5px solid #e0dbd5', borderRadius: '.4rem', fontSize: '.85rem' }} />
+                    <span style={{ color: '#888', fontSize: '.78rem' }}>vide = maintenant ; une date à venir programme l’article</span>
+                  </label>
+                )}
               </div>
               <div style={{ gridColumn: '1/-1', display: 'flex', gap: '.6rem', flexWrap: 'wrap' }}>
                 <span style={metaChip}>URL: /blog/{editingArticle?.slug || slug(editingArticle?.title || '') || 'nouvel-article'}</span>
@@ -1492,7 +1502,7 @@ export default function CMSAdmin() {
                   )}
                   <div style={{ display: 'flex', gap: '.6rem', flexWrap: 'wrap', marginBottom: '1rem' }}>
                     {editingArticle?.category && <span style={metaChip}>{editingArticle.category}</span>}
-                    <span style={metaChip}>{editingArticle?.published ? 'Publication immédiate' : 'Brouillon'}</span>
+                    <span style={metaChip}>{{ draft: 'Brouillon', scheduled: `Programmé le ${formatSchedule(editingArticle?.published_at)}`, live: 'Publication immédiate' }[articleStatus(editingArticle ?? {})]}</span>
                     <span style={metaChip}>/blog/{editingArticle?.slug || slug(editingArticle?.title || '') || 'nouvel-article'}</span>
                   </div>
                   <h1 style={{ margin: 0, fontSize: 'clamp(1.8rem, 4vw, 2.6rem)', lineHeight: 1.1, color: '#1f1a17' }}>

@@ -3,6 +3,7 @@
 import type { Article } from '@/components/cms/admin/types';
 import { fmt, slug } from '@/components/cms/admin/helpers';
 import type { Dispatch, SetStateAction } from 'react';
+import { articleStatus, formatSchedule } from '@/lib/article-schedule';
 
 type Props = {
   search: string;
@@ -56,11 +57,11 @@ export default function ArticlesTab({ search, setSearch, loadArticles, statusFil
                     <span>{fmt(a.created_at)}</span>
                   </div>
                 </div>
-                <span style={{ padding: '.3rem .8rem', borderRadius: '9999px', fontSize: '.78rem', fontWeight: 600, background: a.published ? '#d4edda' : '#fff3cd', color: a.published ? '#155724' : '#856404' }}>
-                  {a.published ? '✅ Publié' : '📦 Brouillon'}
+                <span style={{ padding: '.3rem .8rem', borderRadius: '9999px', fontSize: '.78rem', fontWeight: 600, background: articleStatus(a) === 'live' ? '#d4edda' : articleStatus(a) === 'scheduled' ? '#dbeafe' : '#fff3cd', color: articleStatus(a) === 'live' ? '#155724' : articleStatus(a) === 'scheduled' ? '#1e40af' : '#856404' }}>
+                  {{ live: '✅ Publié', scheduled: `🕒 Programmé le ${formatSchedule(a.published_at)}`, draft: '📦 Brouillon' }[articleStatus(a)]}
                 </span>
                 <div style={{ display: 'flex', gap: '.5rem', flexWrap: 'wrap' }}>
-                  {a.published && (
+                  {articleStatus(a) === 'live' && (
                     <a href={`/blog/${a.slug}`} target="_blank" rel="noopener noreferrer"
                       style={{ padding: '.35rem .8rem', border: '1px solid #b8ddd6', borderRadius: '.4rem', background: '#f0faf8', color: '#01696f', textDecoration: 'none', fontSize: '.82rem' }}>👁 Voir</a>
                   )}

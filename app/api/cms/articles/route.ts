@@ -2,6 +2,7 @@ import { NextRequest, NextResponse } from 'next/server';
 import { createClient } from '@supabase/supabase-js';
 import { requireCmsAuth } from '@/lib/cms-auth';
 import { scheduleIndexNow } from '@/lib/indexnow';
+import { isArticleLive } from '@/lib/article-schedule';
 
 export const dynamic = 'force-dynamic';
 
@@ -84,6 +85,6 @@ export async function POST(req: NextRequest) {
 
   if (error) return NextResponse.json({ error: error.message }, { status: 500 });
   // Article publié : on prévient Bing & co. (après la réponse, sans ralentir l'enregistrement)
-  if (data?.published && data?.slug) scheduleIndexNow([`/blog/${data.slug}`, '/blog']);
+  if (data && isArticleLive(data) && data.slug) scheduleIndexNow([`/blog/${data.slug}`, '/blog']);
   return NextResponse.json({ article: data }, { status: 201 });
 }

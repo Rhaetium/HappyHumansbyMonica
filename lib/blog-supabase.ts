@@ -1,3 +1,4 @@
+import { isArticleLive, liveFilter } from '@/lib/article-schedule';
 import { createClient } from '@supabase/supabase-js';
 
 const supabaseUrl = process.env.NEXT_PUBLIC_SUPABASE_URL || '';
@@ -39,6 +40,7 @@ export async function getAllPosts(): Promise<BlogPost[]> {
     .from('cms_blog_posts')
     .select('*')
     .eq('published', true)
+    .or(liveFilter())
     .order('published_at', { ascending: false });
   if (error) {
     console.error('Supabase getAllPosts error:', error.message);
@@ -59,7 +61,8 @@ export async function getPostBySlug(slug: string): Promise<BlogPost | null> {
     console.error('Supabase getPostBySlug error:', error.message);
     return null;
   }
-  return data as BlogPost;
+  // Brouillon ou article programmé : pas encore public, l'adresse renvoie une 404
+  return isArticleLive(data as BlogPost) ? (data as BlogPost) : null;
 }
 
 /** Articles liés (même catégorie, sans l'article courant) */
@@ -74,6 +77,7 @@ export async function getRelatedPosts(
     .select('*')
     .eq('category', category ?? '')
     .eq('published', true)
+    .or(liveFilter())
     .neq('slug', currentSlug)
     .order('published_at', { ascending: false })
     .limit(limit);
@@ -90,7 +94,8 @@ export async function getAllSlugs(): Promise<{ slug: string }[]> {
   const { data, error } = await supabase
     .from('cms_blog_posts')
     .select('slug')
-    .eq('published', true);
+    .eq('published', true)
+    .or(liveFilter());
   if (error) {
     console.error('Supabase getAllSlugs error:', error.message);
     return [];
