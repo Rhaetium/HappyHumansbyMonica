@@ -24,6 +24,11 @@ describe('validateProviderValues', () => {
     expect(r).toEqual({ ok: true, values: { GEMINI_API_KEY: 'AIzaSyExampleKey12345678901234567890' } })
   })
 
+  it('accepte aussi le nouveau format de clé Google (« AQ. »)', () => {
+    expect(validateProviderValues(gemini, { GEMINI_API_KEY: 'AQ.FauxExempleDeCle1234567890' }).ok).toBe(true)
+    expect(validateProviderValues(gemini, { GEMINI_API_KEY: 'AQx-pas-le-bon-format' }).ok).toBe(false)
+  })
+
   it('refuse un mauvais préfixe, avec une explication', () => {
     const r = validateProviderValues(groq, { GROQ_API_KEY: 'sk-ant-pas-la-bonne-cle' })
     expect(r.ok).toBe(false)
