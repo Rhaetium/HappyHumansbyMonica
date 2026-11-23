@@ -1738,8 +1738,12 @@ export default function CMSAdmin() {
                             />
                           )}
 
+                          {/* Champs à gauche, aperçu du brouillon à droite (reste visible pendant qu'on défile les champs) */}
+                          <div style={showPreview
+                            ? { display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(min(100%, 420px), 1fr))', gap: '1.5rem', alignItems: 'start' }
+                            : undefined}>
                           {showPreview && (
-                            <div style={{ marginBottom: '1.5rem', border: '1.5px solid #ece8e2', borderRadius: '.75rem', overflow: 'hidden' }}>
+                            <div style={{ order: 2, position: 'sticky', top: '1rem', border: '1.5px solid #ece8e2', borderRadius: '.75rem', overflow: 'hidden' }}>
                               <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', padding: '.5rem .9rem', background: '#faf8f5', borderBottom: '1px solid #ece8e2' }}>
                                 <span style={{ fontSize: '.78rem', fontWeight: 700, color: '#888' }}>👁 Aperçu du brouillon — {pagePath}</span>
                                 <button onClick={() => setPreviewKey(k => k + 1)}
@@ -1747,11 +1751,15 @@ export default function CMSAdmin() {
                                   🔄 Rafraîchir
                                 </button>
                               </div>
+                              <p style={{ margin: 0, padding: '.35rem .9rem', fontSize: '.72rem', color: '#8a7a70', background: '#fdfcfa', borderBottom: '1px solid #ece8e2' }}>
+                                Se met à jour quand vous enregistrez le brouillon.
+                              </p>
                               <iframe key={previewKey} src={`${pagePath}${pagePath.includes('?') ? '&' : '?'}cms_preview=1`} title={`Aperçu ${config.label}`}
-                                style={{ width: '100%', height: 560, border: 'none', display: 'block', background: 'white' }} />
+                                style={{ width: '100%', height: 'calc(100vh - 9rem)', minHeight: 420, border: 'none', display: 'block', background: 'white' }} />
                             </div>
                           )}
 
+                          <div style={{ order: 1, minWidth: 0 }}>
                           {/* Aide à la saisie */}
                           <p style={{ fontSize: '.8rem', color: '#7a7a7a', background: '#faf8f5', border: '1px solid #ece8e2', borderRadius: '.5rem', padding: '.55rem .8rem', marginBottom: '1rem', lineHeight: 1.5 }}>
                             💡 Dans les textes longs : <code>**gras**</code>, <code>*italique*</code> et <code>[texte du lien](https://…)</code> sont reconnus.
@@ -1935,6 +1943,8 @@ export default function CMSAdmin() {
                                 {publishing ? '⏳ Publication…' : '🚀 Publier'}
                               </button>
                             )}
+                          </div>
+                          </div>
                           </div>
                         </div>
                       );
