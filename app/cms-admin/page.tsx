@@ -15,6 +15,7 @@ import { PAGE_DEFAULTS } from '@/lib/cms-page-defaults';
 import { basePage, draftPage, isDraftPage, planDraftSave } from '@/lib/cms-drafts';
 import { unreadVisitorCount, type MessageFilter } from '@/lib/cms-messages';
 import { type HealthCheck } from '@/lib/cms-health';
+import { validateField, validatePage } from '@/lib/field-validation';
 import { buildContentIndex, fieldAnchor, labelParts, replacementStats, type ContentField, type ReplacementPlanItem } from '@/lib/cms-search';
 import { PAGE_SECTIONS } from '@/lib/cms-sections';
 import { readList } from '@/lib/cms-lists';
@@ -600,7 +601,18 @@ export default function CMSAdmin() {
     if (!draftSupported) { showToast('✅ Modifications mises en ligne (publication directe).'); return; }
     if (draftKeys.length === 0) { showToast('Rien à publier : tout est déjà en ligne.'); return; }
     const n = draftKeys.length;
-    if (!confirm(`Publier ${n} modification${plural(n, '', 's')} sur « ${config.label} » ?\n\nElles seront visibles par tous les visiteurs.`)) {
+    // Validation façon Sanity : une erreur bloque la publication (le brouillon reste enregistré), un avertissement se confirme.
+    const issues = validatePage(config.sections, editedContent, pageKey, draftKeys);
+    const errors = issues.filter(i => i.level === 'error');
+    if (errors.length > 0) {
+      showToast(`⛔ Publication impossible : ${errors.length} champ${plural(errors.length, '', 's')} à corriger (« ${labelParts(errors[0].label).shortLabel} »…). Le brouillon est enregistré.`);
+      return;
+    }
+    const warnings = issues.filter(i => i.level === 'warning');
+    const warnText = warnings.length > 0
+      ? `\n\n⚠️ À vérifier avant de publier :\n${warnings.slice(0, 5).map(w => `• ${labelParts(w.label).shortLabel} : ${w.message}`).join('\n')}${warnings.length > 5 ? `\n… et ${warnings.length - 5} autre(s)` : ''}`
+      : '';
+    if (!confirm(`Publier ${n} modification${plural(n, '', 's')} sur « ${config.label} » ?\n\nElles seront visibles par tous les visiteurs.${warnText}`)) {
       showToast('📝 Enregistré en brouillon, pas encore publié.');
       return;
     }
@@ -1867,6 +1879,15 @@ export default function CMSAdmin() {
                                             placeholder={section.label}
                                           />
                                         )}
+                                        {(() => {
+                                          const issue = validateField(section, editedContent[key]);
+                                          return issue ? (
+                                            <p role={issue.level === 'error' ? 'alert' : 'status'}
+                                              style={{ margin: '.35rem 0 0', fontSize: '.78rem', fontWeight: 600, color: issue.level === 'error' ? '#b91c1c' : '#92400e' }}>
+                                              {issue.level === 'error' ? '⛔' : '⚠️'} {issue.message}
+                                            </p>
+                                          ) : null;
+                                        })()}
                                         {section.key === 'seo_title' && (
                                           // Le site ajoute « | Happy Humans » au titre : on compte ce que Google affiche vraiment
                                           <SeoLengthHint value={serpTitle(editedContent[key] ?? '')} ideal={SEO_TITLE_IDEAL} note="avec « | Happy Humans »" />
