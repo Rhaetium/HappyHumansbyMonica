@@ -18,6 +18,7 @@ import { type HealthCheck } from '@/lib/cms-health';
 import { validateField, validatePage } from '@/lib/field-validation';
 import { markdownToHtml } from '@/lib/markdown-lite';
 import AssistantTab from '@/components/cms/admin/AssistantTab';
+import TwoFactorCard from '@/components/cms/admin/TwoFactorCard';
 import ProofreadPanel from '@/components/cms/admin/ProofreadPanel';
 import JournalTab from '@/components/cms/admin/JournalTab';
 import type { AssistantChange } from '@/lib/assistant';
@@ -111,6 +112,8 @@ export default function CMSAdmin() {
   const [editedContent, setEditedContent] = useState<Record<string, string>>({});
   const [savingSettings, setSavingSettings] = useState(false);
   const [authLoading, setAuthLoading] = useState(false);
+  const [needsCode, setNeedsCode] = useState(false);   // double authentification : le mot de passe est bon, on attend le code
+  const [loginCode, setLoginCode] = useState('');
   const [suggestingSeo, setSuggestingSeo] = useState(false); // suggestion SEO de l'IA pour l'article en cours
   const [isDirty, setIsDirty] = useState(false);
   const [savedOk, setSavedOk] = useState(false);
@@ -301,7 +304,7 @@ export default function CMSAdmin() {
       const res = await fetch('/api/cms/auth', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ password: pwd }),
+        body: JSON.stringify({ password: pwd, ...(needsCode ? { code: loginCode } : {}) }),
       });
       const data = await res.json().catch(() => ({}));
       if (res.ok) {
@@ -309,6 +312,12 @@ export default function CMSAdmin() {
         // le mot de passe n'est plus gardé en mémoire ni dans le navigateur.
         setAuthed(true);
         setPwd('');
+        setLoginCode('');
+        setNeedsCode(false);
+      } else if (data.needsCode) {
+        // Mot de passe juste, double authentification activée : on demande le code
+        setNeedsCode(true);
+        setAuthErr(loginCode ? (data.error || 'Code incorrect.') : '');
       } else {
         setAuthErr(data.error || 'Mot de passe incorrect');
       }
@@ -1006,6 +1015,17 @@ export default function CMSAdmin() {
           onKeyDown={e => e.key === 'Enter' && login()}
           style={{ width: '100%', padding: '.75rem 1rem', border: '1.5px solid #ddd', borderRadius: '.5rem', fontSize: '1rem', marginBottom: '.75rem', outline: 'none' }}
         />
+        {needsCode && (
+          <>
+            <p style={{ color: '#4a4640', fontSize: '.85rem', margin: '0 0 .5rem' }}>🔐 Entrez le code à 6 chiffres de votre application (ou un code de secours).</p>
+            <input inputMode="text" autoComplete="one-time-code" autoFocus placeholder="Code" value={loginCode}
+              onChange={e => setLoginCode(e.target.value)}
+              onKeyDown={e => e.key === 'Enter' && login()}
+              aria-label="Code de double authentification"
+              style={{ width: '100%', padding: '.75rem 1rem', border: '1.5px solid #ddd', borderRadius: '.5rem', fontSize: '1rem', marginBottom: '.75rem', outline: 'none', letterSpacing: '.1em' }}
+            />
+          </>
+        )}
         {authErr && <p style={{ color: '#c0392b', fontSize: '.85rem', marginBottom: '.75rem' }}>{authErr}</p>}
         <button onClick={login} disabled={authLoading}
           style={{ width: '100%', padding: '.8rem', background: '#2d5f54', color: 'white', border: 'none', borderRadius: '.5rem', fontWeight: 700, fontSize: '1rem', cursor: authLoading ? 'wait' : 'pointer', opacity: authLoading ? .7 : 1 }}
@@ -2099,6 +2119,7 @@ export default function CMSAdmin() {
 
 
         {tab === 'messages' && <MessagesTab messages={messages} setMessages={setMessages} loadingMessages={loadingMessages} messageFilter={messageFilter} setMessageFilter={setMessageFilter} loadMessages={loadMessages} />}
+        {tab === 'settings' && <TwoFactorCard handleUnauthorized={handleUnauthorized} />}
         {tab === 'settings' && <SettingsTab loadingSettings={loadingSettings} settingsGroup={settingsGroup} setSettingsGroup={setSettingsGroup} settings={settings} editedSettings={editedSettings} setEditedSettings={setEditedSettings} handleImageFile={handleImageFile} saveSettings={saveSettings} savingSettings={savingSettings} />}
 
       </div>
