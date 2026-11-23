@@ -2,7 +2,7 @@
 
 import React from 'react'
 import {
-  BLOCK_TEMPLATES, blankBlock, duplicateBlock, moveBlock, parseBlocks, removeBlock,
+  BLOCK_TEMPLATES, blankBlock, duplicateBlock, moveBlock, parseBlocks, removeBlock, reorderBlocks,
   serializeBlocks, updateBlock,
   type CustomBlock, type CustomBlockType,
 } from '@/lib/custom-sections'
@@ -29,6 +29,10 @@ export default function CustomSectionsEditor({ value, onChange, hint }: { value:
   // Réglages avancés : fusionne le changement, retire ce qui est par défaut (voir lib/block-options.ts)
   const setStyle = (b: CustomBlock, patch: Partial<BlockStyle>) =>
     set(b.id, { style: normalizeStyle({ ...b.style, ...patch }) });
+  // Glisser-déposer (souris) : la poignée ⠿ déplace le bloc ; ▲ ▼ restent disponibles (clavier, téléphone)
+  const [dragId, setDragId] = React.useState<string | null>(null);
+  const [over, setOver] = React.useState<{ id: string; pos: 'before' | 'after' } | null>(null);
+  const endDrag = () => { setDragId(null); setOver(null); };
   const smallBtn: React.CSSProperties = { width: 28, height: 28, borderRadius: '.4rem', border: '1px solid #d6d3d1', background: 'white', color: '#44403c', fontSize: '.8rem', cursor: 'pointer' };
   const T = (label: string, val: string | undefined, onV: (v: string) => void, placeholder = '') => (
     <div style={{ marginBottom: '.5rem' }}>
@@ -45,7 +49,7 @@ export default function CustomSectionsEditor({ value, onChange, hint }: { value:
   return (
     <div>
       <p style={{ fontSize: '.8rem', color: '#7a7a7a', margin: '0 0 .75rem', lineHeight: 1.5 }}>
-        {hint ?? `Ajoutez des sections (texte, image, vidéo, cartes, témoignages, FAQ, chiffres clés, boutons…), déplacez-les avec ▲ ▼, copiez-les avec ⧉, et réglez leur fond, leur espacement ou leur ancre dans « ⚙️ Réglages avancés ».
+        {hint ?? `Ajoutez des sections (texte, image, vidéo, cartes, témoignages, FAQ, chiffres clés, boutons…), déplacez-les en glissant la poignée ⠿ (ou avec ▲ ▼), copiez-les avec ⧉, et réglez leur fond, leur espacement ou leur ancre dans « ⚙️ Réglages avancés ».
         Elles s'affichent juste avant l'appel à l'action final. Enregistrez le brouillon puis publiez.`}
       </p>
       {blocks.length === 0 && <p style={{ fontSize: '.82rem', color: '#a8a29e', margin: '0 0 .75rem' }}>Aucun bloc pour le moment.</p>}
@@ -53,8 +57,40 @@ export default function CustomSectionsEditor({ value, onChange, hint }: { value:
         {blocks.map((b, i) => {
           const tpl = BLOCK_TEMPLATES.find(t => t.type === b.type);
           return (
-            <div key={b.id} style={{ border: '1.5px solid #ece8e2', borderRadius: '.6rem', padding: '.7rem .8rem', background: 'white' }}>
+            <div key={b.id}
+              onDragOver={e => {
+                if (!dragId || dragId === b.id) return;
+                e.preventDefault();
+                const r = e.currentTarget.getBoundingClientRect();
+                const pos = e.clientY < r.top + r.height / 2 ? 'before' : 'after';
+                if (over?.id !== b.id || over.pos !== pos) setOver({ id: b.id, pos });
+              }}
+              onDrop={e => {
+                e.preventDefault();
+                if (dragId && over) apply(reorderBlocks(blocks, dragId, over.id, over.pos));
+                endDrag();
+              }}
+              style={{
+                border: '1.5px solid #ece8e2', borderRadius: '.6rem', padding: '.7rem .8rem', background: 'white',
+                opacity: dragId === b.id ? 0.45 : 1,
+                boxShadow: over?.id === b.id && dragId !== b.id ? (over.pos === 'before' ? '0 -3px 0 0 #2d5f54' : '0 3px 0 0 #2d5f54') : undefined,
+              }}>
               <div style={{ display: 'flex', alignItems: 'center', gap: '.5rem', marginBottom: '.6rem' }}>
+                <span
+                  draggable
+                  role="img"
+                  aria-label="Glisser pour déplacer ce bloc"
+                  title="Glisser pour déplacer"
+                  onDragStart={e => {
+                    e.dataTransfer.effectAllowed = 'move';
+                    e.dataTransfer.setData('text/plain', b.id);
+                    const card = e.currentTarget.closest('div[style]')?.parentElement;
+                    if (card) e.dataTransfer.setDragImage(card, 16, 16);
+                    setDragId(b.id);
+                  }}
+                  onDragEnd={endDrag}
+                  style={{ cursor: 'grab', fontSize: '1.1rem', color: '#a8a29e', userSelect: 'none', padding: '0 .15rem' }}
+                >⠿</span>
                 <span style={{ fontSize: '.75rem', fontWeight: 700, color: '#a8a29e' }}>{i + 1}</span>
                 <span style={{ flex: 1, fontSize: '.85rem', fontWeight: 600 }}>
                   {tpl ? `${tpl.emoji} ${tpl.label}` : b.type}
