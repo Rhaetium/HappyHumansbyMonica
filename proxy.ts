@@ -1,5 +1,6 @@
 import { NextRequest, NextResponse, type NextFetchEvent } from 'next/server'
 import { isAiCrawler, sendCrawlerLog } from '@/lib/ai-crawler-log'
+import { isCrossSiteWrite } from '@/lib/csrf'
 import { resolveRedirect } from '@/lib/redirects'
 import { getRedirects } from '@/lib/redirects-store'
 
@@ -52,6 +53,16 @@ async function isValidEditSession(token: string | undefined, secret: string): Pr
 }
 
 export async function proxy(req: NextRequest, event: NextFetchEvent) {
+  // Écriture sur l'API du CMS depuis un autre site : refusée (second verrou après SameSite=Strict)
+  if (isCrossSiteWrite({
+    method: req.method,
+    pathname: req.nextUrl.pathname,
+    origin: req.headers.get('origin'),
+    host: req.headers.get('x-forwarded-host') ?? req.headers.get('host'),
+  })) {
+    return NextResponse.json({ error: 'Origine non autorisée' }, { status: 403 })
+  }
+
   // Redirections gérées dans l'admin (onglet « Redirections ») : pages et articles renommés. Seulement pour une page
   // consultée (GET/HEAD), jamais pour l'API, l'admin ni les fichiers (adresse avec une extension).
   if ((req.method === 'GET' || req.method === 'HEAD') && !req.nextUrl.pathname.includes('.')) {
