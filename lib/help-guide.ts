@@ -29,7 +29,7 @@ export const HELP_RECIPES: HelpRecipe[] = [
   { id: 'redirections', emoji: '↪️', title: 'Renommer une page ou un article sans perdre les visiteurs', tab: 'redirections',
     steps: ['Après avoir changé l’adresse, ouvrez « Redirections » et « Ajouter une redirection ».', 'À gauche l’ancienne adresse (ex. /ancien-article), à droite la nouvelle (ex. /blog/nouvel-article).', 'Enregistrez : l’ancienne adresse renvoie vers la nouvelle en moins d’une minute.'] },
   { id: 'visibilite', emoji: '🔍', title: 'Savoir si Google et les assistants IA trouvent le site', tab: 'visibilite',
-    steps: ['Le résumé en haut donne l’état de la visibilité dans les assistants IA.', 'Search Console montre les recherches qui mènent au site.', 'Les fichiers llms.txt, robots.txt et sitemap.xml doivent tous être au vert.'] },
+    steps: ['Sur l’Accueil, « Vos priorités » liste les 10 corrections les plus utiles : corrigez-en quelques-unes par semaine.', 'Les alertes rouges ou orange en haut de l’Accueil disent si Google ou un assistant IA ne peut pas lire le site.', 'Dans Visibilité, « Articles à améliorer » détaille ce qui manque à chaque article (réponse courte, FAQ, liens, images).', 'Search Console montre les recherches qui mènent au site.', 'Les fichiers llms.txt, robots.txt et sitemap.xml doivent tous être au vert.'] },
   { id: 'connexions', emoji: '🔌', title: 'Brancher les e-mails, Instagram, Unsplash', tab: 'connexions',
     steps: ['Collez la clé demandée dans la case correspondante.', 'Enregistrez : elle est stockée chiffrée et n’est jamais réaffichée.'] },
   { id: 'messages', emoji: '💬', title: 'Répondre aux messages et aux réservations', tab: 'messages',
@@ -42,6 +42,7 @@ export type HelpRoutine = { id: string; label: string; tab: string }
 export const WEEKLY_ROUTINE: HelpRoutine[] = [
   { id: 'article', label: 'Écrire ou publier un article (un par semaine)', tab: 'new' },
   { id: 'brouillons', label: 'Publier les brouillons en attente', tab: 'contenu' },
+  { id: 'priorites', label: 'Corriger 2 ou 3 « priorités » de l’Accueil', tab: 'dashboard' },
   { id: 'visibilite', label: 'Regarder la visibilité (Google et assistants IA)', tab: 'visibilite' },
   { id: 'messages', label: 'Répondre aux messages', tab: 'messages' },
   { id: 'sauvegarde', label: 'Télécharger une sauvegarde du contenu (une fois par mois)', tab: 'aide' },
