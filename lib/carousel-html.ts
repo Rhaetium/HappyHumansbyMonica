@@ -64,11 +64,12 @@ export function buildCarouselHtml(inputUrls: string[]) {
   `;
 }
 
-export function buildImageHtml(url: string) {
+/** Image insérée dans un article. `alt` = description lue par les lecteurs d'écran et par Google (vide = image décorative). */
+export function buildImageHtml(url: string, alt = '') {
   const trimmedUrl = url.trim();
   if (!trimmedUrl) {
     return '';
   }
 
-  return `<img src="${escapeHtmlAttr(trimmedUrl)}" alt="" loading="lazy" />`;
+  return `<img src="${escapeHtmlAttr(trimmedUrl)}" alt="${escapeHtmlAttr(alt.trim())}" loading="lazy" />`;
 }

@@ -135,10 +135,17 @@ export default function RichEditor({
       method: 'POST',
       body: fd,
     });
-    const data = await res.json();
+    const data = await res.json().catch(() => ({}));
     if (data.url) {
-      insertHtml(buildImageHtml(data.url));
+      // Description de l'image (« alt ») : utile à Google, aux lecteurs d'écran et si l'image ne s'affiche pas
+      let alt = (prompt('Décrivez l’image en quelques mots (pour Google et l’accessibilité) :') ?? '').trim();
+      if (!alt && !confirm('Aucune description. Insérer l’image sans description ?\n\nOK = insérer sans description · Annuler = en saisir une')) {
+        alt = (prompt('Description de l’image :') ?? '').trim();
+      }
+      insertHtml(buildImageHtml(data.url, alt));
       if (onImageUpload) onImageUpload(data.url);
+    } else {
+      alert(data.error || 'L’envoi de l’image a échoué.');
     }
     e.target.value = '';
   };
