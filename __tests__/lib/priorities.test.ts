@@ -8,6 +8,29 @@ const health = (id: string, level: HealthCheck['level']): HealthCheck => ({ id, 
 const seo = (page: string, level: SeoIssue['level'], message = 'm'): SeoIssue => ({ page, label: page.toUpperCase(), field: 'seo_title', level, message })
 const art = (id: string, score: number): ArticleAuditResult => ({ id, title: `A${id}`, score, issues: [{ id: 'faq', label: 'Pas de FAQ', hint: '', weight: score }] })
 
+describe('buildPriorities : liens cassés', () => {
+  it('une priorité par endroit, en tête de liste, avec les adresses cassées', () => {
+    const res = buildPriorities({
+      health: [], seo: [seo('home', 'error')], articles: [art('1', 5)],
+      links: [
+        { where: 'Article « X »', tab: 'articles', href: '/blog/a' },
+        { where: 'Article « X »', tab: 'articles', href: '/blog/b' },
+        { where: 'Page Accueil — Bouton', tab: 'pages', href: '/coachng' },
+      ],
+    })
+    const links = res.filter(p => p.kind === 'links')
+    expect(links).toHaveLength(2)
+    expect(res[0].kind).toBe('links')
+    const x = links.find(p => p.title.includes('Article'))!
+    expect(x.title.startsWith('Liens cassés')).toBe(true)
+    expect(x.detail).toContain('/blog/a, /blog/b')
+    expect(x.tab).toBe('articles')
+  })
+  it('sans liens fournis, rien ne change', () => {
+    expect(buildPriorities({ health: [], seo: [], articles: [] })).toEqual([])
+  })
+})
+
 describe('buildPriorities', () => {
   it('range : santé en erreur, page en erreur, santé à surveiller, page à corriger, articles', () => {
     const res = buildPriorities({

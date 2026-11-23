@@ -5,10 +5,11 @@
 import type { HealthCheck } from '@/lib/cms-health'
 import type { SeoIssue } from '@/lib/seo-audit'
 import type { ArticleAuditResult } from '@/lib/article-audit'
+import type { BrokenLink } from '@/lib/link-audit'
 
 export type Priority = {
   id: string
-  kind: 'health' | 'page' | 'article'
+  kind: 'health' | 'page' | 'article' | 'links'
   level: 'error' | 'warn'
   title: string
   /** Ce qui ne va pas, en une phrase. */
@@ -16,7 +17,7 @@ export type Priority = {
   /** Ce qu'il faut faire, si on le sait. */
   fix?: string
   /** Onglet de l'admin où corriger (absent : la correction se fait ailleurs, voir `fix`). */
-  tab?: 'seo' | 'articles'
+  tab?: 'seo' | 'articles' | 'pages' | 'custom-pages'
   /** Rang de tri : plus grand = plus urgent. */
   rank: number
 }
@@ -27,8 +28,22 @@ export function buildPriorities(input: {
   health: HealthCheck[]
   seo: SeoIssue[]
   articles: ArticleAuditResult[]
+  /** Liens internes cassés (lib/link-audit.ts). Facultatif. */
+  links?: BrokenLink[]
 }): Priority[] {
   const out: Priority[] = []
+
+  // Un lien cassé = une erreur 404 pour le visiteur : on le range tout en haut. Une priorité par endroit.
+  const byPlace = new Map<string, BrokenLink[]>()
+  for (const l of input.links ?? []) byPlace.set(l.where, [...(byPlace.get(l.where) ?? []), l])
+  for (const [where, links] of byPlace) {
+    out.push({
+      id: `links:${where}`, kind: 'links', level: 'error',
+      title: `${links.length > 1 ? 'Liens cassés' : 'Lien cassé'} : ${where}`,
+      detail: `Mène à une page qui n’existe pas : ${links.slice(0, 3).map(l => l.href).join(', ')}${links.length > 3 ? '…' : ''}`,
+      tab: links[0].tab, rank: 950,
+    })
+  }
 
   for (const c of input.health) {
     if (c.level === 'ok') continue
