@@ -49,3 +49,12 @@ export function formatSchedule(iso: string | null | undefined): string {
   if (t === null) return ''
   return new Date(t).toLocaleString('fr-FR', { day: 'numeric', month: 'long', year: 'numeric', hour: '2-digit', minute: '2-digit' })
 }
+
+/** Articles passés « en ligne » entre `since` (exclu) et `now` (inclus) : ceux dont l'heure programmée vient d'arriver. */
+export function justWentLive<T extends ArticleLike>(articles: T[], since: Date, now: Date = new Date()): T[] {
+  return articles.filter(a => {
+    if (!a.published) return false
+    const t = time(a.published_at)
+    return t !== null && t > since.getTime() && t <= now.getTime()
+  })
+}

@@ -1,7 +1,22 @@
 import { describe, it, expect } from 'vitest'
-import { articleStatus, fromDatetimeLocal, isArticleLive, liveFilter, toDatetimeLocal } from '@/lib/article-schedule'
+import { articleStatus, fromDatetimeLocal, isArticleLive, justWentLive, liveFilter, toDatetimeLocal } from '@/lib/article-schedule'
 
 const now = new Date('2026-11-22T10:00:00.000Z')
+
+describe('justWentLive', () => {
+  const since = new Date('2026-11-21T08:00:00.000Z')
+  it('garde les articles dont l’heure est arrivée depuis la dernière exécution, et eux seuls', () => {
+    const list = [
+      { slug: 'a', published: true, published_at: '2026-11-21T20:00:00Z' }, // oui
+      { slug: 'b', published: true, published_at: '2026-11-21T07:00:00Z' }, // déjà en ligne avant
+      { slug: 'c', published: true, published_at: '2026-11-22T11:00:00Z' }, // pas encore
+      { slug: 'd', published: false, published_at: '2026-11-21T20:00:00Z' }, // brouillon
+      { slug: 'e', published: true, published_at: null },
+      { slug: 'f', published: true, published_at: '2026-11-22T10:00:00Z' }, // pile maintenant : inclus
+    ]
+    expect(justWentLive(list, since, now).map(a => a.slug)).toEqual(['a', 'f'])
+  })
+})
 
 describe('articleStatus', () => {
   it('brouillon : jamais en ligne, même avec une date passée', () => {
