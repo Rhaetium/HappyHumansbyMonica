@@ -17,7 +17,7 @@ import { unreadVisitorCount, type MessageFilter } from '@/lib/cms-messages';
 import { type HealthCheck } from '@/lib/cms-health';
 import { validateField, validatePage } from '@/lib/field-validation';
 import { markdownToHtml } from '@/lib/markdown-lite';
-import AssistantTab from '@/components/cms/admin/AssistantTab';
+import AssistantHub from '@/components/cms/admin/AssistantHub';
 import TwoFactorCard from '@/components/cms/admin/TwoFactorCard';
 import ProofreadPanel from '@/components/cms/admin/ProofreadPanel';
 import JournalTab from '@/components/cms/admin/JournalTab';
@@ -1258,7 +1258,7 @@ export default function CMSAdmin() {
       <div style={{ maxWidth: 1100, margin: '2rem auto', padding: '0 1.5rem' }}>
 
         {tab === 'journal' && <JournalTab onRestored={loadSettings} handleUnauthorized={handleUnauthorized} />}
-      {tab === 'assistant' && <AssistantTab applyChanges={applyAssistantChanges} handleTabChange={handleTabChange} handleUnauthorized={handleUnauthorized} />}
+      {tab === 'assistant' && <AssistantHub applyChanges={applyAssistantChanges} handleTabChange={handleTabChange} handleUnauthorized={handleUnauthorized} />}
       {tab === 'dashboard' && <DashboardTab healthChecks={healthChecks} articles={articles} setMessageFilter={setMessageFilter} handleTabChange={handleTabChange} messages={messages} dbStatus={dbStatus} openArticleEditor={openArticleEditor} seoIssues={seoAudit.issues} />}
 
         {tab === 'articles' && <ArticlesTab search={search} setSearch={setSearch} loadArticles={loadArticles} statusFilter={statusFilter} setStatusFilter={setStatusFilter} openArticleEditor={openArticleEditor} loadingArticles={loadingArticles} articles={articles} duplicateArticle={duplicateArticle} togglePublish={togglePublish} deleteArticle={deleteArticle} />}
