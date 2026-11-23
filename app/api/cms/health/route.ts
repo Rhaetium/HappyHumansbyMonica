@@ -17,6 +17,7 @@ import { extractVerificationToken, searchConsoleChecks, sitemapUrl } from '@/lib
 import { SITE_URL } from '@/lib/site-url';
 import { loadConnectionEnv } from '@/lib/connections';
 import { checkEnvironment, checkSupabase, toHealthChecks } from '@/lib/env-check';
+import { geoChecks } from '@/lib/geo-checks';
 
 /**
  * GET /api/cms/health — état des fonctions du site, pour le tableau de bord.
@@ -68,6 +69,31 @@ async function readConfigChecks(): Promise<HealthCheck[]> {
   return checks;
 }
 
+/** Texte d'une adresse publique, ou null si elle ne répond pas (réseau coupé, erreur) : on ne conclut alors à rien. */
+async function readPublicText(url: string): Promise<string | null> {
+  try {
+    const res = await fetch(url, { signal: AbortSignal.timeout(5000), cache: 'no-store' });
+    return res.ok ? await res.text() : null;
+  } catch {
+    return null;
+  }
+}
+
+// Même principe que ci-dessus : trois téléchargements du site public, gardés 10 minutes.
+let geoCache: { at: number; checks: HealthCheck[] } | null = null;
+
+async function readGeoChecks(): Promise<HealthCheck[]> {
+  if (geoCache && Date.now() - geoCache.at < CONFIG_TTL_MS) return geoCache.checks;
+  const [robotsTxt, llmsTxt, homeHtml] = await Promise.all([
+    readPublicText(`${SITE_URL}/robots.txt`),
+    readPublicText(`${SITE_URL}/llms.txt`),
+    readPublicText(SITE_URL),
+  ]);
+  const checks = geoChecks({ robotsTxt, llmsTxt, homeHtml });
+  geoCache = { at: Date.now(), checks };
+  return checks;
+}
+
 export async function GET(req: NextRequest) {
   const authError = requireCmsAuth(req);
   if (authError) return authError;
@@ -76,15 +102,17 @@ export async function GET(req: NextRequest) {
   const profileUrl = calendlyBase(kv[CALENDLY_BASE_SETTING] || CALENDLY_BASE_DEFAULT);
   const slug = calendlyProfileSlug(profileUrl) || 'happyhumans-coaching';
 
-  const [availability, sitemap, robots, configChecks] = await Promise.all([
+  const [availability, sitemap, robots, configChecks, seoGeoChecks] = await Promise.all([
     readCalendlyAvailability(profileUrl),
     readPublicPage(sitemapUrl(SITE_URL)),
     readPublicPage(`${SITE_URL}/robots.txt`, 'sitemap'),
     readConfigChecks(),
+    readGeoChecks(),
   ]);
 
   const checks: HealthCheck[] = [
     ...configChecks,
+    ...seoGeoChecks,
     bookingHealthCheck({ availability, profileUrl, slug }),
     ...searchConsoleChecks({
       token: extractVerificationToken(kv.gsc_verification),
