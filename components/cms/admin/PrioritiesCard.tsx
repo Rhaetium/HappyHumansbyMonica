@@ -4,6 +4,7 @@ import React, { useEffect, useMemo, useState } from 'react'
 import { buildPriorities } from '@/lib/priorities'
 import type { SeoIssue } from '@/lib/seo-audit'
 import type { ArticleAuditResult } from '@/lib/article-audit'
+import type { BrokenLink } from '@/lib/link-audit'
 
 /**
  * « Vos priorités » du tableau de bord : les 10 corrections les plus utiles pour être mieux trouvée
@@ -12,18 +13,24 @@ import type { ArticleAuditResult } from '@/lib/article-audit'
  */
 export default function PrioritiesCard({ seoIssues, onGoto }: { seoIssues: SeoIssue[]; onGoto: (tab: string) => void }) {
   const [articles, setArticles] = useState<ArticleAuditResult[] | null>(null)
+  const [links, setLinks] = useState<BrokenLink[]>([])
   useEffect(() => {
     let alive = true
     fetch('/api/cms/articles-audit', { cache: 'no-store' })
       .then(r => (r.ok ? r.json() : Promise.reject(new Error('audit'))))
       .then((d: { results: ArticleAuditResult[] }) => { if (alive) setArticles(d.results) })
       .catch(() => { if (alive) setArticles([]) })
+    // Les liens cassés s'ajoutent quand ils sont prêts ; une panne ne bloque pas le reste
+    fetch('/api/cms/links-audit', { cache: 'no-store' })
+      .then(r => (r.ok ? r.json() : Promise.reject(new Error('links'))))
+      .then((d: { broken: BrokenLink[] }) => { if (alive) setLinks(d.broken ?? []) })
+      .catch(() => { /* silencieux */ })
     return () => { alive = false }
   }, [])
 
   const priorities = useMemo(
-    () => buildPriorities({ health: [], seo: seoIssues, articles: articles ?? [] }),
-    [seoIssues, articles],
+    () => buildPriorities({ health: [], seo: seoIssues, articles: articles ?? [], links }),
+    [seoIssues, articles, links],
   )
 
   if (articles === null) return null
@@ -47,7 +54,10 @@ export default function PrioritiesCard({ seoIssues, onGoto }: { seoIssues: SeoIs
                     onClick={() => onGoto(p.tab!)}
                     style={{ marginTop: '.3rem', padding: '.25rem .7rem', borderRadius: '.5rem', border: '1.5px solid #2d5f54', background: 'white', color: '#2d5f54', fontWeight: 600, fontSize: '.78rem', cursor: 'pointer' }}
                   >
-                    {p.tab === 'seo' ? 'Corriger les titres et descriptions' : 'Ouvrir les articles'}
+                    {p.tab === 'seo' ? 'Corriger les titres et descriptions'
+                      : p.tab === 'articles' ? 'Ouvrir les articles'
+                      : p.tab === 'custom-pages' ? 'Ouvrir les pages libres'
+                      : 'Ouvrir les pages'}
                   </button>
                 )}
               </li>
