@@ -6,12 +6,14 @@
 //
 // Fichier SANS dépendance (partagé par les pages, l'admin et les tests).
 
+import { normalizeStyle, type BlockStyle } from './block-options';
+
 export const CUSTOM_KEY = 'custom_sections';
 
 export type SplitLayout = 'image-right' | 'image-left';
 export type TextAlign = 'left' | 'center';
 
-export type CustomBlock =
+type BlockShape =
   | { id: string; type: 'split'; badge?: string; title: string; text: string; image: string; imageAlt?: string; ctaLabel?: string; ctaHref?: string; layout: SplitLayout }
   | { id: string; type: 'texte'; badge?: string; title?: string; text: string; align: TextAlign }
   | { id: string; type: 'image'; image: string; alt?: string; caption?: string }
@@ -19,7 +21,15 @@ export type CustomBlock =
   | { id: string; type: 'citation'; quote: string; author?: string }
   | { id: string; type: 'faq'; badge?: string; title?: string; items: FaqEntry[] }
   | { id: string; type: 'liste'; badge?: string; title?: string; text: string }
-  | { id: string; type: 'chiffres'; title?: string; text: string };
+  | { id: string; type: 'chiffres'; title?: string; text: string }
+  | { id: string; type: 'cartes'; badge?: string; title?: string; text: string }
+  | { id: string; type: 'temoignages'; title?: string; text: string }
+  | { id: string; type: 'video'; url: string; title?: string; caption?: string }
+  | { id: string; type: 'bouton'; label: string; href: string; align: TextAlign }
+  | { id: string; type: 'espace'; size: 'petit' | 'moyen' | 'grand' };
+
+/** Tout bloc peut recevoir des réglages avancés (fond, espacement, ancre, masquage) : voir lib/block-options.ts. */
+export type CustomBlock = BlockShape & { style?: BlockStyle };
 
 /** Une question de la FAQ d'un bloc. */
 export type FaqEntry = { q: string; a: string };
@@ -35,6 +45,11 @@ export const BLOCK_TEMPLATES: { type: CustomBlockType; label: string; emoji: str
   { type: 'faq', label: 'Questions fréquentes (FAQ)', emoji: '❓' },
   { type: 'liste', label: 'Liste de points', emoji: '✅' },
   { type: 'chiffres', label: 'Chiffres clés', emoji: '🔢' },
+  { type: 'cartes', label: 'Cartes (3 à 4 atouts côte à côte)', emoji: '🗂️' },
+  { type: 'temoignages', label: 'Témoignages', emoji: '🗣️' },
+  { type: 'video', label: 'Vidéo (YouTube ou Vimeo)', emoji: '🎬' },
+  { type: 'bouton', label: 'Bouton seul', emoji: '🔘' },
+  { type: 'espace', label: 'Espace vide', emoji: '↕️' },
 ];
 
 export function makeId(): string {
@@ -51,6 +66,11 @@ export function blankBlock(type: CustomBlockType, id: string = makeId()): Custom
     case 'faq': return { id, type, title: '', items: [{ q: '', a: '' }] };
     case 'liste': return { id, type, title: '', text: '' };
     case 'chiffres': return { id, type, title: '', text: '' };
+    case 'cartes': return { id, type, title: '', text: '' };
+    case 'temoignages': return { id, type, title: '', text: '' };
+    case 'video': return { id, type, url: '' };
+    case 'bouton': return { id, type, label: '', href: '/contact', align: 'center' };
+    case 'espace': return { id, type, size: 'moyen' };
   }
 }
 
@@ -92,7 +112,14 @@ export function parseBlocks(json?: string | null): CustomBlock[] {
     const v = JSON.parse(json);
     if (!Array.isArray(v)) return [];
     // Un bloc FAQ dont la liste est absente ou abîmée garde une liste vide (la page ne casse jamais).
-    return v.filter(isBlock).map(b => (b.type === 'faq' && !Array.isArray((b as { items?: unknown }).items) ? { ...b, items: [] } : b));
+    return v.filter(isBlock).map(b => {
+      const fixed = b.type === 'faq' && !Array.isArray((b as { items?: unknown }).items) ? { ...b, items: [] } : b;
+      // Réglages avancés : seules les valeurs connues sont gardées
+      const style = normalizeStyle((b as { style?: unknown }).style);
+      const { style: _ignored, ...rest } = fixed as CustomBlock;
+      void _ignored;
+      return (style ? { ...rest, style } : rest) as CustomBlock;
+    });
   } catch {
     return [];
   }
