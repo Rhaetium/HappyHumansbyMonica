@@ -6,10 +6,13 @@ import {
   isValidCmsPassword,
 } from "@/lib/cms-auth"
 import { clearFailures, clientKey, recordFailure, retryAfterSeconds } from '@/lib/rate-limit'
+import { readTwoFactor, saveTwoFactor } from '@/lib/two-factor-store'
+import { consumeRecoveryCode, verifyTotp } from '@/lib/totp'
+import { secretBoxSecret } from '@/lib/secret-box'
 
 export async function POST(req: Request) {
   // Corps illisible : une réponse claire plutôt qu'une erreur serveur.
-  const body = await req.json().catch(() => null) as { password?: unknown } | null
+  const body = await req.json().catch(() => null) as { password?: unknown; code?: unknown } | null
   const password = typeof body?.password === 'string' ? body.password : ''
 
   if (!process.env.CMS_PASSWORD?.trim()) {
@@ -32,6 +35,33 @@ export async function POST(req: Request) {
   if (!isValidCmsPassword(password)) {
     recordFailure(key)
     return clearCmsSessionResponse(401, { error: "Mot de passe incorrect" })
+  }
+
+  // Double authentification (si Monica l'a activée) : le mot de passe seul ne suffit plus.
+  const twoFactor = await readTwoFactor()
+  if (twoFactor.status === 'error') {
+    // Par prudence on refuse plutôt que de laisser passer sans le second facteur (voir CMS_2FA_DISABLE pour débloquer).
+    return clearCmsSessionResponse(503, { error: `Vérification en deux étapes indisponible. ${twoFactor.reason} Réessayez dans un instant.` })
+  }
+  if (twoFactor.status === 'on') {
+    const code = typeof body?.code === 'string' ? body.code.trim() : ''
+    if (!code) {
+      // Mot de passe juste, code pas encore saisi : ce n'est pas un échec (le compteur ne bouge pas)
+      return clearCmsSessionResponse(401, { error: 'Entrez le code à 6 chiffres de votre application.', needsCode: true })
+    }
+    const secret = secretBoxSecret()
+    let ok = verifyTotp(twoFactor.state.secret, code)
+    if (!ok && secret) {
+      // Code de secours : valable une seule fois, retiré dès qu'il sert
+      const left = consumeRecoveryCode(twoFactor.state.recovery, code, secret)
+      if (left) {
+        ok = await saveTwoFactor({ ...twoFactor.state, recovery: left })
+      }
+    }
+    if (!ok) {
+      recordFailure(key) // deviner un code compte comme un essai raté
+      return clearCmsSessionResponse(401, { error: 'Code incorrect.', needsCode: true })
+    }
   }
 
   clearFailures(key)
