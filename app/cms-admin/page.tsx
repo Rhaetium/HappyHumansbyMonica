@@ -109,6 +109,7 @@ export default function CMSAdmin() {
   const [editedContent, setEditedContent] = useState<Record<string, string>>({});
   const [savingSettings, setSavingSettings] = useState(false);
   const [authLoading, setAuthLoading] = useState(false);
+  const [suggestingSeo, setSuggestingSeo] = useState(false); // suggestion SEO de l'IA pour l'article en cours
   const [isDirty, setIsDirty] = useState(false);
   const [savedOk, setSavedOk] = useState(false);
   const cleanHash = React.useRef('');
@@ -1388,7 +1389,46 @@ export default function CMSAdmin() {
               </div>
               {/* SEO Panel */}
               <div style={{ gridColumn: '1/-1', border: '1.5px solid #e8e3dc', borderRadius: '1rem', padding: '1.25rem 1.5rem', background: '#fafaf8' }}>
-                <p style={{ margin: '0 0 1rem', fontSize: '.78rem', fontWeight: 700, textTransform: 'uppercase', letterSpacing: '.08em', color: '#2d5f54' }}>🔍 SEO — Référencement Google</p>
+                <div style={{ display: 'flex', flexWrap: 'wrap', justifyContent: 'space-between', alignItems: 'center', gap: '.5rem', margin: '0 0 1rem' }}>
+                  <p style={{ margin: 0, fontSize: '.78rem', fontWeight: 700, textTransform: 'uppercase', letterSpacing: '.08em', color: '#2d5f54' }}>🔍 SEO — Référencement Google</p>
+                  <button
+                    type="button"
+                    disabled={suggestingSeo}
+                    onClick={async () => {
+                      const a = editingArticle;
+                      const filled = [a?.seo_title, a?.seo_description, a?.excerpt].some(v => (v || '').trim());
+                      if (filled && !confirm('Des champs SEO sont déjà remplis. Les remplacer par les propositions de l’IA ?\n\nVous pourrez relire et corriger avant d’enregistrer.')) return;
+                      setSuggestingSeo(true);
+                      try {
+                        const res = await fetch('/api/cms/article-seo', {
+                          method: 'POST',
+                          headers: { 'Content-Type': 'application/json' },
+                          body: JSON.stringify({ title: a?.title || '', content: a?.content || '', category: a?.category || '' }),
+                        });
+                        if (handleUnauthorized(res)) return;
+                        const data = await res.json().catch(() => ({}));
+                        if (!res.ok || !data.success) {
+                          alert((data.error || 'Suggestion impossible.') + (/IA|fournisseur|configur/i.test(data.error || '') ? '\n\nVérifiez la configuration dans l’onglet 🤖 IA.' : ''));
+                          return;
+                        }
+                        setEditingArticle(p => ({
+                          ...p,
+                          seo_title: data.seo_title || p?.seo_title,
+                          seo_description: data.seo_description || p?.seo_description,
+                          excerpt: data.excerpt || p?.excerpt,
+                        }));
+                        showToast('✨ Propositions placées dans les champs : relisez, corrigez, puis enregistrez l’article.');
+                      } catch {
+                        alert('Erreur de connexion : réessayez dans un instant.');
+                      } finally {
+                        setSuggestingSeo(false);
+                      }
+                    }}
+                    style={{ background: '#2d5f54', color: 'white', border: 'none', padding: '6px 14px', borderRadius: '6px', cursor: suggestingSeo ? 'default' : 'pointer', fontSize: '.8rem', fontWeight: 600, opacity: suggestingSeo ? 0.6 : 1 }}
+                  >
+                    {suggestingSeo ? 'Je réfléchis…' : '✨ Suggérer avec l’IA'}
+                  </button>
+                </div>
                 <div style={{ display: 'grid', gap: '1rem' }}>
                   <div>
                     <label style={lbl}>Titre SEO (optionnel — remplace le titre dans Google)</label>
