@@ -3,6 +3,7 @@
 // titres en double, image manquante, article ancien. Fonctions pures, testées dans __tests__/lib/article-audit.test.ts.
 
 import { checkArticle } from '@/lib/article-template'
+import { SITE_URL } from '@/lib/site-url'
 
 export type ArticleAuditInput = {
   id: string
@@ -33,6 +34,11 @@ const WEIGHTS: Record<string, number> = {
   answer: 5, faq: 4, description: 3, placeholders: 5, number: 2, h2: 2, title: 2, slug: 1,
 }
 
+/** Lien vers une page du site : adresse relative (« /coaching »), ou adresse complète du site. */
+const isInternalLink = (href: string): boolean =>
+  (/^\/(?!\/)/.test(href) && href.length > 1) ||
+  new RegExp(`^${SITE_URL.replace(/[.*+?^${}()|[\]\\]/g, '\\$&').replace('https://', 'https?://(www\\.)?')}(/|$)`, 'i').test(href)
+
 const norm = (s: string) => s.replace(/\s+/g, ' ').trim().toLowerCase()
 
 export function auditArticles(articles: ArticleAuditInput[], now: Date = new Date()): ArticleAuditResult[] {
@@ -50,6 +56,17 @@ export function auditArticles(articles: ArticleAuditInput[], now: Date = new Dat
       .filter(c => !c.ok)
       .map(c => ({ id: c.id, label: c.label, hint: c.hint, weight: WEIGHTS[c.id] ?? 1 }))
 
+    const html = a.content || ''
+    // Maillage : sans lien vers une autre page du site, l'article est une impasse pour Google comme pour le lecteur.
+    const hrefs = [...html.matchAll(/<a\s[^>]*href=["']([^"']+)["']/gi)].map(m => m[1])
+    if (!hrefs.some(isInternalLink)) {
+      issues.push({ id: 'links', label: 'Aucun lien vers une autre page du site', hint: 'Ajoutez un lien vers une offre, la page de réservation ou un article voisin.', weight: 2 })
+    }
+    // Accessibilité et référencement des images : une image sans texte alternatif est invisible pour Google et les lecteurs d'écran.
+    const noAlt = [...html.matchAll(/<img\b[^>]*>/gi)].filter(m => !/\balt=["'][^"']+["']/i.test(m[0])).length
+    if (noAlt > 0) {
+      issues.push({ id: 'alt', label: `${noAlt} image${noAlt > 1 ? 's' : ''} sans description`, hint: 'Cliquez sur l’image dans l’éditeur et décrivez-la en une phrase (texte alternatif).', weight: 2 })
+    }
     if (!a.featured_image) {
       issues.push({ id: 'image', label: 'Pas d’image de présentation', hint: 'Ajoutez une image : elle sert à l’aperçu du lien partagé.', weight: 1 })
     }
