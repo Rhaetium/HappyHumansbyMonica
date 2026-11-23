@@ -23,8 +23,6 @@ const PROTECTED: [string, string, string][] = [
   ['send-email', '@/app/api/send-email/route', 'POST'],
   ['instagram/post', '@/app/api/instagram/post/route', 'POST'],
   ['instagram/post', '@/app/api/instagram/post/route', 'GET'],
-  ['ai/generate', '@/app/api/ai/generate/route', 'POST'],
-  ['ai/generate', '@/app/api/ai/generate/route', 'GET'],
   ['blog/generate', '@/app/api/blog/generate/route', 'POST'],
   ['carousel/generate', '@/app/api/carousel/generate/route', 'POST'],
   ['test-upload', '@/app/api/test-upload/route', 'GET'],
