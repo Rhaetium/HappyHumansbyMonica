@@ -6,6 +6,7 @@ import {
   serializeBlocks, updateBlock,
   type CustomBlock, type CustomBlockType,
 } from '@/lib/custom-sections'
+import { suggestAlt } from '@/lib/alt-client'
 import { BG_OPTIONS, SPACE_OPTIONS, normalizeAnchor, normalizeStyle, videoEmbedUrl, type BlockBg, type BlockSpace, type BlockStyle } from '@/lib/block-options'
 
 /**
@@ -38,6 +39,29 @@ export default function CustomSectionsEditor({ value, onChange, hint }: { value:
     <div style={{ marginBottom: '.5rem' }}>
       <label style={{ ...lbl, fontSize: '.78rem' }}>{label}</label>
       <input value={val ?? ''} onChange={e => onV(e.target.value)} placeholder={placeholder} style={{ ...inp, padding: '.5rem .7rem', fontSize: '.85rem' }} />
+    </div>
+  );
+  // Texte alternatif d'une image, avec « ✨ Suggérer » : Gemini regarde l'image et propose une phrase (Monica corrige)
+  const [altBusy, setAltBusy] = React.useState<string | null>(null);
+  const [altNote, setAltNote] = React.useState<{ id: string; msg: string } | null>(null);
+  const ALT = (id: string, label: string, val: string | undefined, imageUrl: string | undefined, context: string | undefined, onV: (v: string) => void) => (
+    <div style={{ marginBottom: '.5rem' }}>
+      <label style={{ ...lbl, fontSize: '.78rem' }}>{label}</label>
+      <div style={{ display: 'flex', gap: '.4rem' }}>
+        <input value={val ?? ''} onChange={e => onV(e.target.value)} style={{ ...inp, padding: '.5rem .7rem', fontSize: '.85rem', flex: 1 }} />
+        <button type="button" disabled={!imageUrl?.trim() || altBusy === id}
+          title={imageUrl?.trim() ? 'Gemini regarde l’image et propose une description' : 'Ajoutez d’abord l’image'}
+          onClick={async () => {
+            setAltBusy(id); setAltNote(null);
+            const r = await suggestAlt(imageUrl!.trim(), context);
+            setAltBusy(null);
+            if (r.alt) onV(r.alt); else setAltNote({ id, msg: r.error || 'Suggestion indisponible.' });
+          }}
+          style={{ padding: '.4rem .7rem', border: '1.5px solid #2d5f54', background: 'white', color: '#2d5f54', borderRadius: '.5rem', cursor: imageUrl?.trim() ? 'pointer' : 'default', fontSize: '.78rem', fontWeight: 600, opacity: imageUrl?.trim() ? 1 : 0.5, whiteSpace: 'nowrap' }}>
+          {altBusy === id ? '…' : '✨ Suggérer'}
+        </button>
+      </div>
+      {altNote?.id === id && <p role="alert" style={{ margin: '.3rem 0 0', fontSize: '.76rem', color: '#b42318' }}>{altNote.msg}</p>}
     </div>
   );
   const TA = (label: string, val: string | undefined, onV: (v: string) => void) => (
@@ -108,7 +132,7 @@ export default function CustomSectionsEditor({ value, onChange, hint }: { value:
                   {T('Titre', b.title, v => set(b.id, { title: v }))}
                   {TA('Texte', b.text, v => set(b.id, { text: v }))}
                   {T("Image (URL — via la médiathèque ou collée)", b.image, v => set(b.id, { image: v }), 'https://…')}
-                  {T("Texte alternatif de l'image", b.imageAlt, v => set(b.id, { imageAlt: v }))}
+                  {ALT(b.id, "Texte alternatif de l'image", b.imageAlt, b.image, b.title, v => set(b.id, { imageAlt: v }))}
                   {T('Bouton (libellé, vide = sans bouton)', b.ctaLabel, v => set(b.id, { ctaLabel: v }))}
                   {T('Bouton (lien)', b.ctaHref, v => set(b.id, { ctaHref: v }), '/contact')}
                   <div style={{ marginBottom: '.5rem' }}>
@@ -137,7 +161,7 @@ export default function CustomSectionsEditor({ value, onChange, hint }: { value:
               {b.type === 'image' && (
                 <>
                   {T("Image (URL — via la médiathèque ou collée)", b.image, v => set(b.id, { image: v }), 'https://…')}
-                  {T("Texte alternatif", b.alt, v => set(b.id, { alt: v }))}
+                  {ALT(b.id, 'Texte alternatif', b.alt, b.image, b.caption, v => set(b.id, { alt: v }))}
                   {T('Légende (vide = sans légende)', b.caption, v => set(b.id, { caption: v }))}
                 </>
               )}

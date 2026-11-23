@@ -54,6 +54,28 @@ describe('generateText via Gemini', () => {
     expect(body.generationConfig.maxOutputTokens).toBeGreaterThan(300)
   })
 
+  it('avec une image : envoyée à Gemini avant la consigne, même si un autre fournisseur est préféré', async () => {
+    const fetchMock = vi.fn().mockResolvedValue(ok('Un chemin en forêt'))
+    vi.stubGlobal('fetch', fetchMock)
+    const res = await generateText(
+      { system: 's', prompt: 'Décris cette image.', maxTokens: 100, image: { mimeType: 'image/png', base64: 'QUJD' } },
+      { ...G, GROQ_API_KEY: 'g', AI_PROVIDER: 'groq' },
+    )
+    expect(res.provider).toBe('gemini')
+    const parts = JSON.parse(fetchMock.mock.calls[0][1].body).contents[0].parts
+    expect(parts[0]).toEqual({ inlineData: { mimeType: 'image/png', data: 'QUJD' } })
+    expect(parts[1].text).toBe('Décris cette image.')
+  })
+
+  it('avec une image mais sans clé Gemini : message clair, aucun appel', async () => {
+    const fetchMock = vi.fn()
+    vi.stubGlobal('fetch', fetchMock)
+    const err = await generateText({ system: 's', prompt: 'p', maxTokens: 10, image: { mimeType: 'image/png', base64: 'QUJD' } }, { GROQ_API_KEY: 'g' }).catch(e => e)
+    expect(err.status).toBe(503)
+    expect(err.message).toContain('Gemini')
+    expect(fetchMock).not.toHaveBeenCalled()
+  })
+
   it('GEMINI_MODEL remplace le modèle par défaut', async () => {
     const fetchMock = vi.fn().mockResolvedValue(ok('x'))
     vi.stubGlobal('fetch', fetchMock)

@@ -3,6 +3,7 @@
 import { useEffect, useRef, useState } from 'react';
 import CarouselBuilderModal from '@/components/cms/CarouselBuilderModal';
 import { buildCarouselHtml, buildImageHtml } from '@/lib/carousel-html';
+import { suggestAlt } from '@/lib/alt-client';
 
 type Props = {
   value: string;
@@ -138,7 +139,14 @@ export default function RichEditor({
     const data = await res.json().catch(() => ({}));
     if (data.url) {
       // Description de l'image (« alt ») : utile à Google, aux lecteurs d'écran et si l'image ne s'affiche pas
-      let alt = (prompt('Décrivez l’image en quelques mots (pour Google et l’accessibilité) :') ?? '').trim();
+      // Gemini regarde l'image et propose une phrase, déjà écrite dans la boîte : Monica la garde ou la corrige.
+      const suggestion = (await suggestAlt(data.url)).alt;
+      let alt = (prompt(
+        suggestion
+          ? 'Description proposée par l’IA — gardez-la ou corrigez-la (pour Google et l’accessibilité) :'
+          : 'Décrivez l’image en quelques mots (pour Google et l’accessibilité) :',
+        suggestion,
+      ) ?? '').trim();
       if (!alt && !confirm('Aucune description. Insérer l’image sans description ?\n\nOK = insérer sans description · Annuler = en saisir une')) {
         alt = (prompt('Description de l’image :') ?? '').trim();
       }
