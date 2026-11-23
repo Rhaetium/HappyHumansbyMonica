@@ -14,6 +14,8 @@ export type HelpRecipe = {
 export const HELP_RECIPES: HelpRecipe[] = [
   { id: 'texte', emoji: '✏️', title: 'Changer un texte du site', tab: 'pages',
     steps: ['Appuyez sur Ctrl + K (ou Cmd + K) et tapez quelques mots du texte.', 'Choisissez le texte dans la liste : il s’ouvre.', 'Modifiez-le, puis « Enregistrer le brouillon ».', 'Relisez, puis « Publier » : c’est en ligne.'] },
+  { id: 'assistant', emoji: '💬', title: 'Demander une modification à l’assistant', tab: 'assistant',
+    steps: ['Ouvrez l’onglet « 💬 Assistant » et écrivez en une phrase ce que vous voulez changer (ex. « rends l’intro du Coaching plus chaleureuse »).', 'Cliquez sur « Proposer des modifications » : il montre l’avant et l’après pour chaque texte.', 'Décochez ce qui ne vous convient pas, puis « Mettre en brouillon ».', 'Relisez dans l’onglet « 🔎 Contenu », puis « Publier » : l’assistant ne publie jamais seul.'] },
   { id: 'photo', emoji: '📷', title: 'Changer une photo', tab: 'pages',
     steps: ['Ouvrez la page, puis le bloc qui contient la photo.', '« Upload » (ou « Médiathèque » pour une photo déjà envoyée).', 'Enregistrez le brouillon, puis publiez.'] },
   { id: 'article', emoji: '📝', title: 'Écrire un article', tab: 'new',
