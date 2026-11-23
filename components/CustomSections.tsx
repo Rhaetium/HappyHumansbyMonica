@@ -1,4 +1,6 @@
+import type React from 'react';
 import Link from 'next/link';
+import { parseCardLines, parseTestimonialLines, videoEmbedUrl, wrapperClasses } from '@/lib/block-options';
 import { parseBlocks, parseListLines, parseStatLines, validFaqItems, type CustomBlock } from '@/lib/custom-sections';
 import { faqPageSchema, safeJsonLd } from '@/lib/json-ld';
 
@@ -7,7 +9,7 @@ import { faqPageSchema, safeJsonLd } from '@/lib/json-ld';
  * positionnés librement dans « Structure »).
  * Rendu sobre, cohérent avec le site ; les images peuvent venir de la médiathèque.
  */
-export function CustomBlockView({ b }: { b: CustomBlock }) {
+function renderBlock(b: CustomBlock): React.ReactElement | null {
   switch (b.type) {
     case 'split': {
       const imageRight = b.layout !== 'image-left';
@@ -142,7 +144,98 @@ export function CustomBlockView({ b }: { b: CustomBlock }) {
         </section>
       );
     }
+    case 'cartes': {
+      const cards = parseCardLines(b.text);
+      if (cards.length === 0) return null;
+      return (
+        <section className="bg-white px-6 py-14 md:px-10 md:py-20">
+          <div className="mx-auto max-w-5xl">
+            {b.badge && <p className="mb-2 text-center text-xs font-bold uppercase tracking-[0.22em] text-amber-800">{b.badge}</p>}
+            {b.title && <h2 className="mb-10 text-center text-2xl font-serif font-light text-stone-900 md:text-3xl">{b.title}</h2>}
+            <ul className="grid gap-6 sm:grid-cols-2 lg:grid-cols-3">
+              {cards.map((c, i) => (
+                <li key={i} className="rounded-2xl border border-stone-200 bg-white/70 p-6 shadow-sm">
+                  {c.icon && <p aria-hidden className="mb-3 text-3xl">{c.icon}</p>}
+                  <h3 className="mb-2 text-lg font-serif font-medium text-stone-900">{c.title}</h3>
+                  {c.text && <p className="text-sm leading-relaxed text-stone-600">{c.text}</p>}
+                </li>
+              ))}
+            </ul>
+          </div>
+        </section>
+      );
+    }
+    case 'temoignages': {
+      const items = parseTestimonialLines(b.text);
+      if (items.length === 0) return null;
+      return (
+        <section className="bg-[color:var(--hh-bg)] px-6 py-14 md:px-10 md:py-20">
+          <div className="mx-auto max-w-5xl">
+            {b.title && <h2 className="mb-10 text-center text-2xl font-serif font-light text-stone-900 md:text-3xl">{b.title}</h2>}
+            <div className="grid gap-6 md:grid-cols-2">
+              {items.map((t, i) => (
+                <figure key={i} className="rounded-2xl bg-white p-6 shadow-sm">
+                  <blockquote className="font-serif text-lg font-light italic leading-relaxed text-stone-800">« {t.quote} »</blockquote>
+                  {t.author && <figcaption className="mt-4 text-sm font-semibold uppercase tracking-[0.15em] text-stone-500">— {t.author}</figcaption>}
+                </figure>
+              ))}
+            </div>
+          </div>
+        </section>
+      );
+    }
+    case 'video': {
+      const src = videoEmbedUrl(b.url);
+      if (!src) return null;
+      return (
+        <section className="bg-white px-6 py-10 md:px-10 md:py-14">
+          <div className="mx-auto max-w-4xl">
+            {b.title && <h2 className="mb-6 text-center text-2xl font-serif font-light text-stone-900 md:text-3xl">{b.title}</h2>}
+            <div className="aspect-video w-full overflow-hidden rounded-2xl shadow-sm">
+              <iframe
+                src={src}
+                title={b.title || 'Vidéo'}
+                loading="lazy"
+                allow="accelerometer; encrypted-media; gyroscope; picture-in-picture; fullscreen"
+                allowFullScreen
+                referrerPolicy="strict-origin-when-cross-origin"
+                className="h-full w-full border-0"
+              />
+            </div>
+            {b.caption && <p className="mt-3 text-center text-sm text-stone-500">{b.caption}</p>}
+          </div>
+        </section>
+      );
+    }
+    case 'bouton': {
+      if (!b.label || !b.href) return null;
+      return (
+        <section className={`bg-white px-6 py-8 md:px-10 ${b.align === 'left' ? 'text-left' : 'text-center'}`}>
+          <div className="mx-auto max-w-3xl">
+            <Link href={b.href} className="inline-block rounded-full bg-[color:var(--hh-primary)] px-8 py-3 text-sm font-semibold text-white transition hover:bg-[color:var(--hh-dark)]">
+              {b.label}
+            </Link>
+          </div>
+        </section>
+      );
+    }
+    case 'espace':
+      return <section aria-hidden className={`bg-white ${b.size === 'petit' ? 'h-6' : b.size === 'grand' ? 'h-24' : 'h-12'}`} />;
   }
+}
+
+/** Bloc + réglages avancés : sans réglage, le HTML est exactement celui du bloc seul. */
+export function CustomBlockView({ b }: { b: CustomBlock }) {
+  const inner = renderBlock(b);
+  if (!inner) return null;
+  const classes = wrapperClasses(b.style);
+  const anchor = b.style?.anchor;
+  if (!classes && !anchor) return inner;
+  return (
+    <div id={anchor} className={`${classes} ${anchor ? 'scroll-mt-24' : ''}`.trim() || undefined}>
+      {inner}
+    </div>
+  );
 }
 
 export default function CustomSections({ blocksJson }: { blocksJson?: string | null }) {

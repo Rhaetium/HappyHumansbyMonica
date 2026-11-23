@@ -37,7 +37,7 @@ const securityHeaders = [
       "style-src 'self' 'unsafe-inline' https://api.fontshare.com https://fonts.googleapis.com https://assets.calendly.com",
       `img-src 'self' data: blob: https://images.unsplash.com https://*.supabase.co ${OWN_HOSTS.map(h => `https://${h}`).join(' ')} https://behold.pictures https://cdn2.behold.pictures https://*.calendly.com https://www.googletagmanager.com https://*.google-analytics.com`,
       "font-src 'self' https://api.fontshare.com https://fonts.gstatic.com",
-      "frame-src 'self' https://calendly.com https://*.calendly.com",
+      "frame-src 'self' https://calendly.com https://*.calendly.com https://www.youtube-nocookie.com https://player.vimeo.com",
       "connect-src 'self' https://*.supabase.co https://api.perplexity.ai https://api.unsplash.com https://api.bufferapp.com https://calendly.com https://*.calendly.com https://www.googletagmanager.com https://*.google-analytics.com https://*.analytics.google.com https://*.googletagmanager.com",
       // 'self' (au lieu de 'none') : permet l'aperçu iframe du site dans /cms-admin
       "frame-ancestors 'self'",
