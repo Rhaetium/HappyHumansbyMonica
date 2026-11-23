@@ -33,7 +33,11 @@ const securityHeaders = [
     key: 'Content-Security-Policy',
     value: [
       "default-src 'self'",
-      "script-src 'self' 'unsafe-inline' 'unsafe-eval' https://assets.calendly.com https://www.googletagmanager.com https://*.google-analytics.com",
+      // 'unsafe-eval' seulement en développement (rechargement à chaud de React). En production, aucun code du site n'en a besoin.
+      // 'unsafe-inline' reste : Next.js injecte ses scripts de démarrage en ligne ; le retirer demande un « nonce » par requête,
+      // donc des pages 100 % dynamiques (plus de cache statique, site plus lent). Les contenus HTML sont nettoyés (lib/sanitize-html.ts).
+      `script-src 'self' 'unsafe-inline'${process.env.NODE_ENV === 'production' ? '' : " 'unsafe-eval'"} https://assets.calendly.com https://www.googletagmanager.com https://*.google-analytics.com`,
+      "object-src 'none'",
       "style-src 'self' 'unsafe-inline' https://api.fontshare.com https://fonts.googleapis.com https://assets.calendly.com",
       `img-src 'self' data: blob: https://images.unsplash.com https://*.supabase.co ${OWN_HOSTS.map(h => `https://${h}`).join(' ')} https://behold.pictures https://cdn2.behold.pictures https://*.calendly.com https://www.googletagmanager.com https://*.google-analytics.com`,
       "font-src 'self' https://api.fontshare.com https://fonts.gstatic.com",
