@@ -1,6 +1,7 @@
 import { NextRequest, NextResponse } from 'next/server';
 import { requireCmsAuth } from '@/lib/cms-auth';
 import { getSupabaseServer } from '@/lib/supabase-server';
+import { NOT_AN_IMAGE_MESSAGE, sniffImage } from '@/lib/image-sniff';
 
 export const dynamic = 'force-dynamic';
 
@@ -65,12 +66,10 @@ export async function POST(req: NextRequest) {
     }
 
     const buffer = Buffer.from(await imgRes.arrayBuffer());
-    const contentType = imgRes.headers.get('content-type') || 'image/jpeg';
-
-    const validTypes = ['image/jpeg', 'image/png', 'image/gif', 'image/webp', 'image/svg+xml'];
-    if (!validTypes.includes(contentType)) {
-      return NextResponse.json({ error: `Type ${contentType} non autorisé` }, { status: 400 });
-    }
+    // Type lu dans le contenu du fichier (pas l'en-tête du site distant) ; SVG refusé
+    const image = sniffImage(buffer);
+    if (!image) return NextResponse.json({ error: NOT_AN_IMAGE_MESSAGE }, { status: 400 });
+    const contentType = image.contentType;
 
     const maxSize = 10 * 1024 * 1024; // 10 Mo
     if (buffer.length > maxSize) {

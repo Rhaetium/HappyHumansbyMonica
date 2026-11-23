@@ -1,6 +1,7 @@
 import { NextRequest, NextResponse } from 'next/server';
 import { requireCmsAuth } from '@/lib/cms-auth';
 import { createClient } from '@supabase/supabase-js';
+import { NOT_AN_IMAGE_MESSAGE, sniffImage } from '@/lib/image-sniff';
 
 export const dynamic = 'force-dynamic';
 
@@ -26,20 +27,18 @@ export async function POST(req: NextRequest) {
       return NextResponse.json({ error: 'Aucun fichier fourni' }, { status: 400 });
     }
 
-    const validTypes = ['image/jpeg', 'image/png', 'image/gif', 'image/webp', 'image/svg+xml'];
-    if (!validTypes.includes(file.type)) {
-      return NextResponse.json({ error: 'Type de fichier non autorisé' }, { status: 400 });
-    }
-
     const maxSize = 5 * 1024 * 1024; // 5 Mo
     if (file.size > maxSize) {
       return NextResponse.json({ error: 'Fichier trop volumineux (max 5 Mo)' }, { status: 400 });
     }
 
-    const ext = file.name.split('.').pop()?.toLowerCase() || 'jpg';
-    const fileName = `uploads/${Date.now()}-${Math.random().toString(36).substring(7)}.${ext}`;
     const arrayBuffer = await file.arrayBuffer();
     const buffer = Buffer.from(arrayBuffer);
+    // Type lu dans le contenu du fichier (pas celui annoncé) ; SVG refusé
+    const image = sniffImage(buffer);
+    if (!image) return NextResponse.json({ error: NOT_AN_IMAGE_MESSAGE }, { status: 400 });
+
+    const fileName = `uploads/${Date.now()}-${Math.random().toString(36).substring(7)}.${image.ext}`;
 
     // First ensure the bucket exists
     const { data: bucketData, error: bucketError } = await sb.storage.getBucket('cms-assets');
@@ -55,7 +54,7 @@ export async function POST(req: NextRequest) {
     const { data, error } = await sb.storage
       .from('cms-assets')
       .upload(fileName, buffer, {
-        contentType: file.type,
+        contentType: image.contentType,
         upsert: true,
       });
 
