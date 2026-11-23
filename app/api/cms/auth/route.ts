@@ -5,9 +5,12 @@ import {
   getCmsAuthStatus,
   isValidCmsPassword,
 } from "@/lib/cms-auth"
+import { clearFailures, clientKey, recordFailure, retryAfterSeconds } from '@/lib/rate-limit'
 
 export async function POST(req: Request) {
-  const { password } = await req.json()
+  // Corps illisible : une réponse claire plutôt qu'une erreur serveur.
+  const body = await req.json().catch(() => null) as { password?: unknown } | null
+  const password = typeof body?.password === 'string' ? body.password : ''
 
   if (!process.env.CMS_PASSWORD?.trim()) {
     return NextResponse.json(
@@ -16,10 +19,22 @@ export async function POST(req: Request) {
     )
   }
 
+  // Trop d'essais ratés depuis cette adresse : on refuse sans même comparer le mot de passe.
+  const key = clientKey(req.headers)
+  const wait = retryAfterSeconds(key)
+  if (wait > 0) {
+    return NextResponse.json(
+      { error: `Trop d'essais. Réessayez dans ${Math.ceil(wait / 60)} minute${wait > 120 ? 's' : ''}.` },
+      { status: 429, headers: { 'Retry-After': String(wait) } }
+    )
+  }
+
   if (!isValidCmsPassword(password)) {
+    recordFailure(key)
     return clearCmsSessionResponse(401, { error: "Mot de passe incorrect" })
   }
 
+  clearFailures(key)
   return createCmsSessionResponse()
 }
 
