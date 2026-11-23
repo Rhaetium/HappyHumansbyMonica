@@ -66,7 +66,20 @@ describe('generateText via Gemini', () => {
     await expect(generateText({ system: 's', prompt: 'p', maxTokens: 10 }, G)).rejects.toMatchObject({ status: 429, message: expect.stringContaining('Gemini') })
   })
 
-  it('clé refusée : message utile, sans détail technique ni clé', async () => {
+  it('modèle introuvable (404) : dit de changer le modèle et relaie le message de Google', async () => {
+    vi.stubGlobal('fetch', vi.fn().mockResolvedValue(new Response(JSON.stringify({ error: { message: 'models/vieux is not found' } }), { status: 404 })))
+    const err = await generateText({ system: 's', prompt: 'p', maxTokens: 10 }, G).catch(e => e)
+    expect(err.message).toContain('Modèle')
+    expect(err.message).toContain('models/vieux is not found')
+  })
+
+  it('n’affiche jamais un message de Google qui contiendrait la clé', async () => {
+    vi.stubGlobal('fetch', vi.fn().mockResolvedValue(new Response(JSON.stringify({ error: { message: `bad ${G.GEMINI_API_KEY}` } }), { status: 400 })))
+    const err = await generateText({ system: 's', prompt: 'p', maxTokens: 10 }, G).catch(e => e)
+    expect(err.message).not.toContain(G.GEMINI_API_KEY)
+  })
+
+  it('clé refusée : message utile, sans clé', async () => {
     vi.stubGlobal('fetch', vi.fn().mockResolvedValue(new Response(JSON.stringify({ error: { message: 'API key not valid' } }), { status: 400 })))
     const err = await generateText({ system: 's', prompt: 'p', maxTokens: 10 }, G).catch(e => e)
     expect(err.status).toBe(502)
