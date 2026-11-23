@@ -1,7 +1,7 @@
 import { describe, it, expect } from 'vitest'
 import {
   blankBlock, customSectionDefs, customSectionId, duplicateBlock, isCustomSectionId, makeId, moveBlock, parseBlocks,
-  parseListLines, parseStatLines, removeBlock, serializeBlocks, splitForCustom, updateBlock, validFaqItems,
+  parseListLines, parseStatLines, removeBlock, reorderBlocks, serializeBlocks, splitForCustom, updateBlock, validFaqItems,
   type CustomBlock,
 } from '@/lib/custom-sections'
 
@@ -115,5 +115,26 @@ describe('blocs FAQ, liste et chiffres clés', () => {
     const defs = customSectionDefs([{ ...blankBlock('faq', 'f'), title: 'Vos questions' } as CustomBlock, blankBlock('liste', 'l')])
     expect(defs[0].label).toContain('Vos questions')
     expect(defs.map(d => d.id)).toEqual(['custom:f', 'custom:l'])
+  })
+})
+
+describe('reorderBlocks (glisser-déposer)', () => {
+  const ids = (bs: { id: string }[]) => bs.map(b => b.id).join('')
+  const bs = ['a', 'b', 'c', 'd'].map(id => blankBlock('texte', id))
+
+  it('place un bloc avant ou après un autre, dans les deux sens', () => {
+    expect(ids(reorderBlocks(bs, 'a', 'c', 'after'))).toBe('bcad')
+    expect(ids(reorderBlocks(bs, 'a', 'c', 'before'))).toBe('bacd')
+    expect(ids(reorderBlocks(bs, 'd', 'a', 'before'))).toBe('dabc')
+    expect(ids(reorderBlocks(bs, 'c', 'b', 'before'))).toBe('acbd')
+  })
+  it('renvoie la même liste quand rien ne change', () => {
+    expect(reorderBlocks(bs, 'b', 'b', 'after')).toBe(bs)
+    expect(reorderBlocks(bs, 'b', 'a', 'after')).toBe(bs) // déjà juste après a
+    expect(reorderBlocks(bs, 'x', 'a', 'before')).toBe(bs)
+    expect(reorderBlocks(bs, 'a', 'x', 'before')).toBe(bs)
+  })
+  it('ne perd ni ne duplique aucun bloc', () => {
+    expect(ids(reorderBlocks(bs, 'b', 'd', 'after')).split('').sort().join('')).toBe('abcd')
   })
 })

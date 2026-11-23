@@ -140,6 +140,22 @@ export function moveBlock(blocks: CustomBlock[], id: string, dir: -1 | 1): Custo
   return next;
 }
 
+/**
+ * Glisser-déposer : place le bloc `fromId` juste avant ou juste après le bloc `toId`.
+ * Renvoie la même liste (même objet) si rien ne change : même bloc, bloc inconnu, ou déjà à cet endroit.
+ */
+export function reorderBlocks(blocks: CustomBlock[], fromId: string, toId: string, position: 'before' | 'after'): CustomBlock[] {
+  if (fromId === toId) return blocks;
+  const from = blocks.findIndex(b => b.id === fromId);
+  const to = blocks.findIndex(b => b.id === toId);
+  if (from < 0 || to < 0) return blocks;
+  const without = blocks.filter(b => b.id !== fromId);
+  const target = without.findIndex(b => b.id === toId);
+  const insertAt = position === 'before' ? target : target + 1;
+  const next = [...without.slice(0, insertAt), blocks[from], ...without.slice(insertAt)];
+  return next.every((b, i) => b === blocks[i]) ? blocks : next;
+}
+
 /** Copie un bloc juste après l'original (nouvel identifiant, contenu copié en profondeur). */
 export function duplicateBlock(blocks: CustomBlock[], id: string, newId: string = makeId()): CustomBlock[] {
   const i = blocks.findIndex(b => b.id === id);
