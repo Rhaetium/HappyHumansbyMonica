@@ -40,7 +40,7 @@ export const PROVIDERS: ProviderInfo[] = [
     note: 'Quota quotidien gratuit. Bon français. Les demandes envoyées à l’offre gratuite peuvent servir à améliorer les produits de Google : n’y mettez pas de données de clients.',
     help: { url: 'https://aistudio.google.com/apikey', label: 'Créer une clé (Google AI Studio)' },
     fields: [
-      { env: 'GEMINI_API_KEY', label: 'Clé API Gemini', secret: true, placeholder: 'AIza…', check: withPrefix('AIza', 'Gemini') },
+      { env: 'GEMINI_API_KEY', label: 'Clé API Gemini', secret: true, placeholder: 'AIza… ou AQ.…', check: v => common(v) ?? (/^(AIza|AQ\.)/.test(v) ? null : 'Une clé Gemini commence par « AIza » ou « AQ. ».') },
       { env: 'GEMINI_MODEL', label: 'Modèle (facultatif)', secret: false, optional: true, placeholder: 'gemini-2.5-flash', check: v => (/^[a-z0-9.-]{3,60}$/i.test(v) ? null : 'Nom de modèle invalide.') },
     ],
   },
