@@ -17,6 +17,8 @@ import { unreadVisitorCount, type MessageFilter } from '@/lib/cms-messages';
 import { type HealthCheck } from '@/lib/cms-health';
 import { validateField, validatePage } from '@/lib/field-validation';
 import { markdownToHtml } from '@/lib/markdown-lite';
+import AssistantTab from '@/components/cms/admin/AssistantTab';
+import type { AssistantChange } from '@/lib/assistant';
 import { buildContentIndex, fieldAnchor, labelParts, replacementStats, type ContentField, type ReplacementPlanItem } from '@/lib/cms-search';
 import { PAGE_SECTIONS } from '@/lib/cms-sections';
 import { readList } from '@/lib/cms-lists';
@@ -724,6 +726,46 @@ export default function CMSAdmin() {
 
 // ── Remplacer un mot dans plusieurs textes (onglet « 🔎 Contenu ») ──
   // Tout part en brouillon : le site en ligne ne change pas avant « Publier ».
+  // Assistant (onglet « 💬 Assistant ») : enregistre les propositions acceptées EN BROUILLON, jamais en ligne.
+  const applyAssistantChanges = async (changes: AssistantChange[]): Promise<boolean> => {
+    if (!changes.length) return false;
+    // Ne jamais écraser une saisie non enregistrée
+    const unsaved = changes.filter(c => {
+      const id = `${c.page}__${c.key}`;
+      const saved = drafts[id] ?? baseline[id] ?? '';
+      return id in editedContent && (editedContent[id] ?? '') !== saved && (editedContent[id] ?? '') !== c.before;
+    });
+    if (unsaved.length > 0) {
+      showToast(`⚠️ ${unsaved.length} de ces textes a des modifications non enregistrées — enregistrez-les d'abord (onglet Pages).`);
+      return false;
+    }
+    try {
+      const responses = await Promise.all(changes.map(c => fetch('/api/cms/content', {
+        method: 'PUT',
+        headers: jsonHeaders,
+        body: JSON.stringify({ page: c.page, block_key: c.key, value: c.after, draft: true }),
+      })));
+      if (responses.some(res => handleUnauthorized(res))) return false;
+      const failed = responses.find(res => !res.ok);
+      if (failed) {
+        const data = await failed.json().catch(() => ({}));
+        showToast(`❌ ${data.draftUnsupported ? 'Cette base ne gère pas les brouillons.' : (data.error || 'Enregistrement impossible')}`);
+        return false;
+      }
+      const saved: Record<string, string> = {};
+      for (const c of changes) saved[`${c.page}__${c.key}`] = c.after;
+      setDrafts(prev => ({ ...prev, ...saved }));
+      setEditedContent(prev => ({ ...prev, ...saved }));
+      markClean(saved);
+      for (const page of new Set(changes.map(c => c.page))) bustCmsCache(page);
+      showToast(`📝 ${changes.length} modification${plural(changes.length, '', 's')} en brouillon — rien n'est en ligne avant « Publier ».`);
+      return true;
+    } catch {
+      showToast('Enregistrement impossible : erreur réseau.');
+      return false;
+    }
+  };
+
   const replaceInContent = async (plan: ReplacementPlanItem[]) => {
     if (!plan.length) return;
     // Ne jamais écraser une saisie non enregistrée : on demande de l'enregistrer d'abord.
@@ -972,6 +1014,7 @@ export default function CMSAdmin() {
   // ─── CMS ──────────────────────────────────────────────────
   const TABS = [
     { id: 'dashboard', label: '🏠 Tableau de bord', count: null },
+    { id: 'assistant', label: '💬 Assistant', count: null },
     { id: 'aide',      label: '🆘 Aide', count: null },
     { id: 'articles', label: '📝 Articles', count: articles.length },
     { id: 'new',      label: '✏️ Nouvel article', count: null },
@@ -1190,7 +1233,8 @@ export default function CMSAdmin() {
 
       <div style={{ maxWidth: 1100, margin: '2rem auto', padding: '0 1.5rem' }}>
 
-        {tab === 'dashboard' && <DashboardTab healthChecks={healthChecks} articles={articles} setMessageFilter={setMessageFilter} handleTabChange={handleTabChange} messages={messages} dbStatus={dbStatus} openArticleEditor={openArticleEditor} seoIssues={seoAudit.issues} />}
+        {tab === 'assistant' && <AssistantTab applyChanges={applyAssistantChanges} handleTabChange={handleTabChange} handleUnauthorized={handleUnauthorized} />}
+      {tab === 'dashboard' && <DashboardTab healthChecks={healthChecks} articles={articles} setMessageFilter={setMessageFilter} handleTabChange={handleTabChange} messages={messages} dbStatus={dbStatus} openArticleEditor={openArticleEditor} seoIssues={seoAudit.issues} />}
 
         {tab === 'articles' && <ArticlesTab search={search} setSearch={setSearch} loadArticles={loadArticles} statusFilter={statusFilter} setStatusFilter={setStatusFilter} openArticleEditor={openArticleEditor} loadingArticles={loadingArticles} articles={articles} duplicateArticle={duplicateArticle} togglePublish={togglePublish} deleteArticle={deleteArticle} />}
 
