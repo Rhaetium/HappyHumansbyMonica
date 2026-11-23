@@ -185,8 +185,12 @@ async function viaGemini(req: AiTextRequest, apiKey: string, model: string): Pro
   if (!res.ok) {
     const detail = ((await res.json().catch(() => null)) as { error?: { message?: string } } | null)?.error?.message ?? ''
     console.error('Gemini error', res.status, detail.slice(0, 300))
-    const hint = res.status === 400 || res.status === 403 ? ' Vérifiez la clé et le nom du modèle.' : ''
-    throw new AiError(`Le service d’IA (Gemini) a refusé la demande (code ${res.status}).${hint}`, 502)
+    const hint =
+      res.status === 404 ? ' Le modèle est introuvable ou retiré : changez le champ « Modèle » (ex. gemini-3.5-flash).'
+      : res.status === 400 || res.status === 403 ? ' Vérifiez la clé et le nom du modèle.' : ''
+    // Le message de Google (ex. « models/xxx is not found ») aide à comprendre ; jamais affiché s'il contenait la clé.
+    const why = detail && !detail.includes(apiKey) ? ` Google : « ${detail.slice(0, 160)} »` : ''
+    throw new AiError(`Le service d’IA (Gemini) a refusé la demande (code ${res.status}).${hint}${why}`, 502)
   }
   return geminiText(await res.json())
 }
