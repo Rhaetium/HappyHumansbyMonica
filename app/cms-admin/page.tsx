@@ -19,6 +19,7 @@ import { validateField, validatePage } from '@/lib/field-validation';
 import { markdownToHtml } from '@/lib/markdown-lite';
 import AssistantTab from '@/components/cms/admin/AssistantTab';
 import ProofreadPanel from '@/components/cms/admin/ProofreadPanel';
+import JournalTab from '@/components/cms/admin/JournalTab';
 import type { AssistantChange } from '@/lib/assistant';
 import { buildContentIndex, fieldAnchor, labelParts, replacementStats, type ContentField, type ReplacementPlanItem } from '@/lib/cms-search';
 import { PAGE_SECTIONS } from '@/lib/cms-sections';
@@ -1022,6 +1023,7 @@ export default function CMSAdmin() {
     { id: 'new',      label: '✏️ Nouvel article', count: null },
     { id: 'pages',    label: '🗂️ Pages', count: null },
     { id: 'contenu',  label: '🔎 Contenu', count: contentIndex.filter(f => f.isPending).length || null },
+    { id: 'journal',  label: '🕘 Journal', count: null },
     { id: 'visibilite', label: '🔍 Visibilité SEO & IA', count: null },
     { id: 'seo',      label: '🩺 Référencement', count: actionableCount(seoAudit.issues) || null },
     { id: 'stats-google', label: '📊 Statistiques Google', count: null },
@@ -1235,7 +1237,8 @@ export default function CMSAdmin() {
 
       <div style={{ maxWidth: 1100, margin: '2rem auto', padding: '0 1.5rem' }}>
 
-        {tab === 'assistant' && <AssistantTab applyChanges={applyAssistantChanges} handleTabChange={handleTabChange} handleUnauthorized={handleUnauthorized} />}
+        {tab === 'journal' && <JournalTab onRestored={loadSettings} handleUnauthorized={handleUnauthorized} />}
+      {tab === 'assistant' && <AssistantTab applyChanges={applyAssistantChanges} handleTabChange={handleTabChange} handleUnauthorized={handleUnauthorized} />}
       {tab === 'dashboard' && <DashboardTab healthChecks={healthChecks} articles={articles} setMessageFilter={setMessageFilter} handleTabChange={handleTabChange} messages={messages} dbStatus={dbStatus} openArticleEditor={openArticleEditor} seoIssues={seoAudit.issues} />}
 
         {tab === 'articles' && <ArticlesTab search={search} setSearch={setSearch} loadArticles={loadArticles} statusFilter={statusFilter} setStatusFilter={setStatusFilter} openArticleEditor={openArticleEditor} loadingArticles={loadingArticles} articles={articles} duplicateArticle={duplicateArticle} togglePublish={togglePublish} deleteArticle={deleteArticle} />}
