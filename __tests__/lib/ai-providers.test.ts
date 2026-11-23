@@ -24,6 +24,11 @@ describe('validateProviderValues', () => {
     expect(r).toEqual({ ok: true, values: { GEMINI_API_KEY: 'AIzaSyExampleKey12345678901234567890' } })
   })
 
+  it('refuse un nom de modèle terminé par un point (faute de frappe vue en vrai)', () => {
+    expect(validateProviderValues(gemini, { GEMINI_MODEL: 'gemini-3.5-flash.' }).ok).toBe(false)
+    expect(validateProviderValues(gemini, { GEMINI_MODEL: 'gemini-3.5-flash' }).ok).toBe(true)
+  })
+
   it('accepte aussi le nouveau format de clé Google (« AQ. »)', () => {
     expect(validateProviderValues(gemini, { GEMINI_API_KEY: 'AQ.FauxExempleDeCle1234567890' }).ok).toBe(true)
     expect(validateProviderValues(gemini, { GEMINI_API_KEY: 'AQx-pas-le-bon-format' }).ok).toBe(false)
