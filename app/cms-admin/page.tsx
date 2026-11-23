@@ -16,6 +16,7 @@ import { basePage, draftPage, isDraftPage, planDraftSave } from '@/lib/cms-draft
 import { unreadVisitorCount, type MessageFilter } from '@/lib/cms-messages';
 import { type HealthCheck } from '@/lib/cms-health';
 import { validateField, validatePage } from '@/lib/field-validation';
+import { markdownToHtml } from '@/lib/markdown-lite';
 import { buildContentIndex, fieldAnchor, labelParts, replacementStats, type ContentField, type ReplacementPlanItem } from '@/lib/cms-search';
 import { PAGE_SECTIONS } from '@/lib/cms-sections';
 import { readList } from '@/lib/cms-lists';
@@ -1310,20 +1311,26 @@ export default function CMSAdmin() {
                         return;
                       }
                       try {
-                        const topic = editingArticle?.title || editingArticle?.content?.slice(0, 50) || 'voyages';
-                        const res = await fetch('/api/ai/generate', {
+                        // Fournisseur d'IA configuré dans l'onglet 🤖 IA (gratuit possible) : voir lib/ai-text.ts
+                        const topic = (editingArticle?.title || (editingArticle?.content || '').replace(/<[^>]*>/g, ' ').trim().slice(0, 120)).slice(0, 300);
+                        const res = await fetch('/api/blog/generate', {
                           method: 'POST',
                           headers: { 'Content-Type': 'application/json' },
-                          body: JSON.stringify({ topic, platform: 'instagram' })
+                          body: JSON.stringify({ topic })
                         });
                         const data = await res.json();
                         if (data.success && data.content) {
-                          setEditingArticle(p => ({ ...p, content: (p?.content || '') + '<p>' + data.content + '</p>' }));
+                          setEditingArticle(p => ({
+                            ...p,
+                            title: p?.title || data.title,
+                            seo_description: p?.seo_description || data.excerpt,
+                            content: (p?.content || '') + markdownToHtml(data.content),
+                          }));
                         } else {
-                          alert('Erreur: ' + (data.error || data.message || 'Impossible de generer le contenu'));
+                          alert('Erreur : ' + (data.error || 'Impossible de générer le contenu') + '\n\nVérifiez qu’un fournisseur d’IA est configuré (onglet 🤖 IA).');
                         }
-                      } catch (err) {
-                        alert('Erreur de connexion: Ollama nest peut-etre pas actif');
+                      } catch {
+                        alert('Erreur de connexion : réessayez dans un instant.');
                       }
                     }}
                     style={{ background: '#10b981', color: 'white', border: 'none', padding: '8px 16px', borderRadius: '6px', cursor: 'pointer', fontSize: '0.85rem', fontWeight: 600 }}
