@@ -20,6 +20,8 @@ export type AiTextRequest = {
   prompt: string
   /** Longueur maximale de la réponse visible. */
   maxTokens: number
+  /** Une image à regarder (description d'image) : seul Gemini la reçoit ; aucune clé Gemini → erreur claire. */
+  image?: { mimeType: string; base64: string }
 }
 
 export type AiTextResult = { text: string; provider: AiProvider }
@@ -69,7 +71,11 @@ export const AI_NOT_CONFIGURED =
  */
 export async function generateText(req: AiTextRequest, env?: Env): Promise<AiTextResult> {
   const keys = env ?? (await loadAiEnv())
-  const provider = pickProvider(keys)
+  // Avec une image, seul Gemini sait la lire (dans cette application) : on l'utilise même s'il n'est pas le fournisseur préféré.
+  if (req.image && !keys.GEMINI_API_KEY?.trim()) {
+    throw new AiError('Pour décrire une image, ajoutez une clé Gemini (gratuite) dans l’onglet 🤖 IA.', 503)
+  }
+  const provider = req.image ? ('gemini' as const) : pickProvider(keys)
   if (!provider) throw new AiError(AI_NOT_CONFIGURED, 503)
   const text =
     provider === 'anthropic' ? await viaAnthropic(req, keys.ANTHROPIC_API_KEY!.trim())
@@ -176,7 +182,13 @@ async function viaGemini(req: AiTextRequest, apiKey: string, model: string): Pro
       headers: { 'x-goog-api-key': apiKey, 'Content-Type': 'application/json' },
       body: JSON.stringify({
         systemInstruction: { parts: [{ text: req.system }] },
-        contents: [{ role: 'user', parts: [{ text: req.prompt }] }],
+        contents: [{
+          role: 'user',
+          parts: [
+            ...(req.image ? [{ inlineData: { mimeType: req.image.mimeType, data: req.image.base64 } }] : []),
+            { text: req.prompt },
+          ],
+        }],
         generationConfig: { maxOutputTokens: req.maxTokens + GEMINI_THINKING_HEADROOM },
       }),
     },
