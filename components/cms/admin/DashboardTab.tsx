@@ -3,6 +3,8 @@
 import { unreadVisitorCount, unreadAlertCount } from '@/lib/cms-messages';
 import { healthNeedsAttention, healthProblemCount } from '@/lib/cms-health';
 import { fmt } from '@/components/cms/admin/helpers';
+import PrioritiesCard from '@/components/cms/admin/PrioritiesCard';
+import type { SeoIssue } from '@/lib/seo-audit';
 import type { Article, ContactMessage } from '@/components/cms/admin/types';
 import type { HealthCheck } from '@/lib/cms-health';
 import type { MessageFilter } from '@/lib/cms-messages';
@@ -15,10 +17,11 @@ type Props = {
   messages: ContactMessage[];
   dbStatus: 'ok' | 'down' | 'checking';
   openArticleEditor: (article?: Partial<Article>) => void;
+  seoIssues: SeoIssue[];
 };
 
 /** Onglet « dashboard » de l'admin du CMS (déplacé de app/cms-admin/page.tsx, JSX inchangé). */
-export default function DashboardTab({ healthChecks, articles, setMessageFilter, handleTabChange, messages, dbStatus, openArticleEditor }: Props) {
+export default function DashboardTab({ healthChecks, articles, setMessageFilter, handleTabChange, messages, dbStatus, openArticleEditor, seoIssues }: Props) {
   return (
     <div>
       {/* Salutation */}
@@ -61,6 +64,8 @@ export default function DashboardTab({ healthChecks, articles, setMessageFilter,
           })}
         </div>
       )}
+
+      <PrioritiesCard seoIssues={seoIssues} onGoto={handleTabChange} />
 
       {/* Cartes stats */}
       <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(180px, 1fr))', gap: '1rem', marginBottom: '1.5rem' }}>

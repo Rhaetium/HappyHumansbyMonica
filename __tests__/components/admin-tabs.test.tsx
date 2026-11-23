@@ -65,7 +65,7 @@ describe('onglets de l’admin du CMS', () => {
   it('Tableau de bord : sans article ni message, base de données connectée', () => {
     const out = renderToStaticMarkup(
       <DashboardTab healthChecks={null} articles={[]} setMessageFilter={noop} handleTabChange={noop}
-        messages={[]} dbStatus="ok" openArticleEditor={noop} />,
+        messages={[]} dbStatus="ok" openArticleEditor={noop} seoIssues={[]} />,
     )
     expect(out.length).toBeGreaterThan(200)
   })
@@ -73,7 +73,7 @@ describe('onglets de l’admin du CMS', () => {
   it('Tableau de bord : avec un article', () => {
     const out = renderToStaticMarkup(
       <DashboardTab healthChecks={[]} articles={[article]} setMessageFilter={noop} handleTabChange={noop}
-        messages={[message]} dbStatus="down" openArticleEditor={noop} />,
+        messages={[message]} dbStatus="down" openArticleEditor={noop} seoIssues={[]} />,
     )
     expect(out).toContain('Un article')
   })
