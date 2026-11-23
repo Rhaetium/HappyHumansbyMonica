@@ -10,7 +10,7 @@ const GOOD_HTML = `<p>${ANSWER}</p>
 <h2>${FAQ_HEADING}</h2>
 <h3>Faut-il un diagnostic ?</h3><p>Oui.</p>
 <h3>Est-ce possible en visio ?</h3><p>Oui.</p>
-<h3>Quelle durée ?</h3><p>Une journée.</p>`
+<h3>Quelle durée ?</h3><p>Une journée. <a href="/booking">Réserver un échange</a>.</p>`
 const DESC = 'Combien coûte un atelier de cohésion d’équipe : fourchette de prix, ce qui la fait varier et comment obtenir un devis.'
 const NOW = new Date('2026-11-23T00:00:00Z')
 
@@ -47,6 +47,21 @@ describe('auditArticles', () => {
   it('retombe sur la date de publication si l’article n’a jamais été mis à jour', () => {
     const res = auditArticles([{ ...good, updated_at: null, published_at: '2024-01-01T00:00:00Z' }], NOW)
     expect(res[0].issues.map(i => i.id)).toEqual(['stale'])
+  })
+
+  it('signale un article sans lien interne, mais pas celui qui renvoie vers le site', () => {
+    const none = GOOD_HTML.replace(/<a [^>]*>[^<]*<\/a>/, 'lien')
+    expect(auditArticles([{ ...good, content: none }], NOW)[0].issues.map(i => i.id)).toEqual(['links'])
+    const ext = none + '<p><a href="https://example.com/x">ailleurs</a> <a href="//cdn.example.com">cdn</a> <a href="/">accueil</a></p>'
+    expect(auditArticles([{ ...good, content: ext }], NOW)[0].issues.map(i => i.id)).toEqual(['links'])
+    const abs = none + '<p><a href="https://happyhumans.fr/coaching">coaching</a></p>'
+    expect(auditArticles([{ ...good, content: abs }], NOW)).toEqual([])
+  })
+
+  it('compte les images sans texte alternatif', () => {
+    const imgs = GOOD_HTML + '<img src="/a.webp"><img src="/b.webp" alt=""><img src="/c.webp" alt="Un atelier">'
+    const issue = auditArticles([{ ...good, content: imgs }], NOW)[0].issues.find(i => i.id === 'alt')
+    expect(issue?.label).toBe('2 images sans description')
   })
 
   it('signale les crochets du modèle non remplis', () => {
