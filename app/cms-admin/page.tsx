@@ -18,6 +18,7 @@ import { type HealthCheck } from '@/lib/cms-health';
 import { validateField, validatePage } from '@/lib/field-validation';
 import { markdownToHtml } from '@/lib/markdown-lite';
 import AssistantTab from '@/components/cms/admin/AssistantTab';
+import ProofreadPanel from '@/components/cms/admin/ProofreadPanel';
 import type { AssistantChange } from '@/lib/assistant';
 import { buildContentIndex, fieldAnchor, labelParts, replacementStats, type ContentField, type ReplacementPlanItem } from '@/lib/cms-search';
 import { PAGE_SECTIONS } from '@/lib/cms-sections';
@@ -1383,6 +1384,11 @@ export default function CMSAdmin() {
                     ✨ Generer avec IA
                   </button>
                 </div>
+                <ProofreadPanel
+                  content={editingArticle?.content || ''}
+                  onApply={html => setEditingArticle(p => ({ ...p, content: html }))}
+                  handleUnauthorized={handleUnauthorized}
+                />
                 <RichEditor value={editingArticle?.content || ''}
                   onChange={html => setEditingArticle(p => ({ ...p, content: html }))}
                   placeholder="Commence à écrire ton article ici…" />
