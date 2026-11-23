@@ -29,7 +29,7 @@ export const AI_MODELS = {
   cloudflare: '@cf/meta/llama-3.3-70b-instruct-fp8-fast',
   groq: 'llama-3.3-70b-versatile',
   // Modèle par défaut de l'offre gratuite ; modifiable sans code (admin → 🤖 IA, ou GEMINI_MODEL dans Vercel).
-  gemini: 'gemini-2.5-flash',
+  gemini: 'gemini-3.5-flash',
 } as const
 
 export class AiError extends Error {
