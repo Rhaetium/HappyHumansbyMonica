@@ -130,6 +130,55 @@ function ReferencingCard({ onGoto }: { onGoto: (tab: string) => void }) {
   )
 }
 
+type ArticleAuditPayload = {
+  total: number
+  results: { id: string; title: string; score: number; issues: { id: string; label: string; hint: string }[] }[]
+}
+
+/** Articles publiés qui ne respectent pas encore le gabarit (réponse courte, FAQ, description…), les plus utiles à corriger d'abord. */
+function ArticlesToImproveCard({ onGoto }: { onGoto: (tab: string) => void }) {
+  const [data, setData] = useState<ArticleAuditPayload | null>(null)
+  const [failed, setFailed] = useState(false)
+  useEffect(() => {
+    let alive = true
+    fetch('/api/cms/articles-audit', { cache: 'no-store' })
+      .then(r => (r.ok ? r.json() : Promise.reject(new Error('audit'))))
+      .then((d: ArticleAuditPayload) => { if (alive) setData(d) })
+      .catch(() => { if (alive) setFailed(true) })
+    return () => { alive = false }
+  }, [])
+
+  return (
+    <div style={card}>
+      <h3 style={{ margin: '0 0 .3rem', fontSize: '1.05rem', color: '#2d5f54' }}>📝 Articles à améliorer</h3>
+      <p style={{ margin: '0 0 .75rem', color: '#777', fontSize: '.84rem' }}>
+        Ce qui aide Google et les assistants IA à citer vos articles : une réponse courte en début d’article, une FAQ, une description. Les plus utiles à corriger sont en premier.
+      </p>
+      {failed && <p style={{ color: '#a33', fontSize: '.86rem' }}>Impossible de contrôler les articles pour l’instant. Réessayez dans un moment.</p>}
+      {!failed && !data && <p style={{ color: '#777', fontSize: '.86rem' }}>Contrôle en cours…</p>}
+      {data && data.results.length === 0 && (
+        <p style={{ fontSize: '.88rem' }}>✅ {data.total === 0 ? 'Aucun article publié pour le moment.' : `Les ${data.total} articles publiés respectent le gabarit.`}</p>
+      )}
+      {data?.results.slice(0, 8).map(r => (
+        <div key={r.id} style={{ padding: '.55rem 0', borderBottom: '1px solid #f2efeb', fontSize: '.86rem' }}>
+          <div style={{ fontWeight: 700 }}>{r.title}</div>
+          <ul style={{ margin: '.25rem 0 0', paddingLeft: '1.1rem', color: '#555' }}>
+            {r.issues.map(i => <li key={i.id} title={i.hint}>{i.label}</li>)}
+          </ul>
+        </div>
+      ))}
+      {data && data.results.length > 8 && (
+        <p style={{ color: '#777', fontSize: '.82rem' }}>… et {data.results.length - 8} autres articles. Corrigez ceux-ci d’abord, puis revenez.</p>
+      )}
+      {data && data.results.length > 0 && (
+        <div style={{ marginTop: '.9rem' }}>
+          <button style={btn} onClick={() => onGoto('articles')}>✏️ Ouvrir les articles</button>
+        </div>
+      )}
+    </div>
+  )
+}
+
 export default function VisibilityTab({ onGoto }: { onGoto: (tab: string) => void }) {
   return (
     <div style={{ display: 'grid', gap: '1.25rem' }}>
@@ -140,6 +189,7 @@ export default function VisibilityTab({ onGoto }: { onGoto: (tab: string) => voi
       <SearchableOverview />
       <div style={card}><SearchConsoleStats /></div>
       <AnalyticsCard />
+      <ArticlesToImproveCard onGoto={onGoto} />
       <ReferencingCard onGoto={onGoto} />
     </div>
   )
