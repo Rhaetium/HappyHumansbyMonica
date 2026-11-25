@@ -4,6 +4,21 @@ Issu de l'audit Searchable du 19/11/2026 (4 thèmes à 0 % de visibilité, 19 pr
 
 **Comment répondre :** « OK » pour accepter la recommandation, ou une phrase pour la changer. « Je ne sais pas » est une réponse valable : le défaut s'applique alors.
 
+## État du site au 22/11/2026 (vérifié dans le code publié)
+
+Depuis la rédaction de ce document, une partie des points de la section A a bougé. Ce qui reste vraiment à décider :
+
+| # | État | Ce qu'il reste à faire |
+|---|---|---|
+| 1 | **Toujours ouvert, c'est une vraie contradiction** | La FAQ dit « jusqu'à 48h avant, au-delà la séance est due » ; la page de réservation dit « jusqu'à 24h avant, sans frais ». Choisir une règle, puis aligner les deux textes. |
+| 2 | **Presque réglé** | Les pages affichent « séance découverte gratuite », « séance individuelle 120 € » et « programmes sur devis » (page Coaching et FAQ). Confirmer que 120 € est le bon tarif. |
+| 3 | **Toujours ouvert** | AoEC et EMCC Practitioner sont cités dans les accroches (accueil, coaching, sparring partner), mais la page À propos n'en donne pas le détail. Fournir l'intitulé exact des accréditations, ou retirer la mention. |
+| 4 | **À valider** | La définition est en ligne : « 12 séances + 4 follow-ups », neurosciences, psychologie positive, philosophie pratique, design thinking. Dire si c'est juste. |
+| 5 | **Réglé** | Le sous-titre du blog ne parle plus de voyage : « des articles et des réflexions sur le coaching, les relations et le leadership ». Si Monica l'avait déjà modifié dans l'admin, sa version prime : à vérifier dans Pages → Blog. |
+| 6 | **Toujours ouvert** | La section « Ils témoignent » de la page Coaching n'a aucun témoignage par défaut. Soit en publier (avec l'accord écrit de leurs auteurs), soit masquer la section, pour ne pas laisser un titre vide. |
+
+Les points 7 à 19 ne changent pas.
+
 ## Comment retrouver ce fichier
 
 - **Sur GitHub (le plus simple) :** ouvrez le dépôt `Rhaetium/HappyHumansbyMonica`, dossier `docs`, puis `contenu-seo`, puis `DECISIONS-MONICA.md`. Tant que la pull request n'est pas fusionnée, ouvrez la pull request « Docs : liste de décisions Searchable pour Monica » (onglet Pull requests), puis « Files changed ».
