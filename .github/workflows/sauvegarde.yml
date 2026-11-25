@@ -1,0 +1,57 @@
+name: Sauvegarde du contenu
+
+# Chaque nuit, copie le contenu du CMS (pages, réglages, articles, médias, réservations, messages) vers un dépôt
+# GitHub PRIVÉ séparé. Chaque sauvegarde est un commit : l'historique permet de retrouver et comparer n'importe quel jour.
+# Mise en place : docs/SAUVEGARDE.md.
+
+on:
+  schedule:
+    - cron: '17 2 * * *'
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+concurrency:
+  group: sauvegarde
+  cancel-in-progress: false
+
+jobs:
+  sauvegarde:
+    runs-on: ubuntu-latest
+    timeout-minutes: 10
+    steps:
+      - name: Récupérer le script
+        uses: actions/checkout@v4
+        with:
+          path: site
+
+      - name: Récupérer le dépôt de sauvegarde (privé)
+        uses: actions/checkout@v4
+        with:
+          repository: ${{ secrets.BACKUP_REPO }}
+          token: ${{ secrets.BACKUP_REPO_TOKEN }}
+          path: sauvegardes
+
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 22
+
+      - name: Exporter les tables
+        env:
+          SUPABASE_URL: ${{ secrets.SUPABASE_URL }}
+          SUPABASE_SERVICE_ROLE_KEY: ${{ secrets.SUPABASE_SERVICE_ROLE_KEY }}
+        run: node site/scripts/backup-supabase.mjs sauvegardes/contenu
+
+      - name: Enregistrer s'il y a des changements
+        working-directory: sauvegardes
+        run: |
+          git config user.name "sauvegarde-happyhumans"
+          git config user.email "sauvegarde@users.noreply.github.com"
+          git add -A
+          if git diff --cached --quiet; then
+            echo "Aucun changement depuis la dernière sauvegarde."
+          else
+            git commit -m "Sauvegarde du $(date -u +%Y-%m-%d)"
+            git push
+          fi
